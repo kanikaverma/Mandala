@@ -1,16 +1,16 @@
 %{ open Ast %}
 
-%token PLUS MINUS TIMES DIVIDE EQUALS COMMA EOF
+%token PLUS MINUS TIMES DIVIDE EQUALS COMMA COLON EOF
 %token <int> LITERAL VARIABLE
 
-%left COMMA
+%left  COMMA
+%right COLON
 %right EQUALS
-%left PLUS MINUS
-%left TIMES DIVIDE
-
+%left  PLUS MINUS
+%left  TIMES DIVIDE
 
 %start expr
-%type < Ast.expr> expr
+%type  <Ast.expr> expr
 
 %%
 
@@ -23,3 +23,4 @@ expr:
 | VARIABLE             { Var($1) }
 | VARIABLE EQUALS expr { Asn($1, $3) } 
 | expr COMMA expr      { Seq($1, $3) }
+| expr COLON expr      { Col($1, $3) }
