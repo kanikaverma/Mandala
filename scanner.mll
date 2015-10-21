@@ -65,28 +65,28 @@ rule token = parse
 | '.'                  { PERIOD }
 
 (* functions *)
-| addTo                { ADDTO }
-| create               { CREATE }
-| draw                 { DRAW }
-| return               { RETURN }
+| "addTo"              { ADDTO }
+| "create"             { CREATE }
+| "draw"               { DRAW }
+| "return"             { RETURN }
 
 (* language specific keywords *)
-| radius               { RADIUS }
-| count                { COUNT }
-| size                 { SIZE }
-| color                { COLOR }
-| rotation             { ROTATION }
-| offset               { OFFSET }
-| Template             { TEMPLATE }
+| "radius"             { RADIUS }
+| "count"              { COUNT }
+| "size"               { SIZE }
+| "color"              { COLOR }
+| "rotation"           { ROTATION }
+| "offset"             { OFFSET }
+| "Template"           { TEMPLATE }
 
 (* types *)
-| type                 { TYPE }
-| Shape                { SHAPE }
-| Circle               { CIRCLE }
-| Triangle             { TRIANGLE }
-| Square               { SQUARE }
-| Layer                { LAYER }
-| Mandala              { MANDALA }
+| "type"               { TYPE }
+| "Shape"              { SHAPE }
+| "Circle"             { CIRCLE }
+| "Triangle"           { TRIANGLE }
+| "Square"             { SQUARE }
+| "Layer"              { LAYER }
+| "Mandala"            { MANDALA }
 
 (* literals and variables *)
 | digit+ as lit        { LITERAL(int_of_string lit) }
