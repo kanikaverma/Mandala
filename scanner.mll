@@ -4,7 +4,6 @@
 
 let digit = ['0'-'9']
 let alpha = ['a'-'z']
-let float = '-'? num+ '.' num* | '.' num+ 
 
 rule token = parse
 
@@ -19,6 +18,7 @@ rule token = parse
 | '-'                  { MINUS }
 | '*'                  { TIMES }
 | '/'                  { DIVIDE }
+| '%'                  { MODULUS }
 
 (* conditional operators *)
 | "=="                 { EQ }
@@ -90,7 +90,6 @@ rule token = parse
 
 (* literals and variables *)
 | digit+ as lit        { LITERAL(int_of_string lit) }
-| float as lit         { LITERAL(float_of_string lit) }
 | alpha as lit         { VARIABLE(int_of_char lit - 97) }
 
 (* end of file *)
