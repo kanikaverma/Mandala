@@ -19,6 +19,7 @@ rule token = parse
 | '*'                  { TIMES }
 | '/'                  { DIVIDE }
 | '%'                  { MODULUS }
+| '^'                  { EXP }
 
 (* conditional operators *)
 | "=="                 { EQ }
