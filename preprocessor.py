@@ -24,8 +24,25 @@ def process(input_file):
   linejoin = False 
 
   for i, line in enumerate(input_file):
-    print i, line 
+    clean_line = sanitize(line) # remove comments 
 
+    if clean_line:
+      # throw error on invalid characters 
+      for char in invalid_characters:
+        if char in clean_line:
+          sys.exit("Invalid character: {0}. Found on line: {1}".format(char, i))
+
+# removes comments from the line 
+def sanitize(line):
+  if comment_symbol in line:
+    regex_pattern = "^(.*?)#.*|.*"
+    match = re.match(regex_pattern, line)
+    sans_comments = match.group(1)
+  else:
+    sans_comments = line
+  return sans_comments.rstrip()
+
+# main 
 if __name__ == "__main__":
 
   # sanitize usage 
@@ -36,8 +53,7 @@ if __name__ == "__main__":
   try:
     infile = open(sys.argv[1], 'r')
   except IOError:
-    sys.stderr.write("Cannot read input file." + '\n')
-    sys.exit(1)
+    sys.exit("Cannot read input file.")
 
   # get the path 
   filename = os.path.basename(infile.name)
@@ -47,7 +63,7 @@ if __name__ == "__main__":
   if filename.lower().endswith(extensions):
     new_filename = os.path.splitext(filename)[0] 
   else:
-    sys.stderr.write("Input file must have Mandala file extension")
+    sys.exit("Input file must have Mandala file extension.")
 
   # process the input file 
   output = process(infile)
