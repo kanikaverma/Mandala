@@ -1,0 +1,55 @@
+create Mandala m
+
+create Layer layer1
+  radius 3
+
+create Shape circle1
+  type Circle
+  size 3
+  color yellow
+  rotation 0
+
+create Shape triangle1
+  type Triangle
+  size 3
+  color green
+  rotation 0
+
+create Shape square1
+  type Square
+  size 4
+  color blue
+  rotation 45
+
+create Layer layer2
+  radius 10
+Shape circle1
+count 8
+offset 0
+
+create Layer layer3
+  radius 15
+  Shape triangle1
+  count 8
+  offset 22.5
+
+create Layer layer4
+  radius 20
+  Shape square1
+  count 8
+  offset 22.5
+
+addTo m: layer1 layer2 layer3 layer4 
+
+create Integer latestRadius=25
+
+foreach i=1 to i=5 
+  create Layer currentLayer
+  radius latestRadius
+  Shape circle1
+  count 8
+  offset 0
+add m: currentLayer
+latestRadius=latestRadius+5
+
+draw m
