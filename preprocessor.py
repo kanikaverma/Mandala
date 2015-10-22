@@ -12,15 +12,14 @@ try:
 except:
   from StringIO import StringIO
 
-invalid_characters = ('{', '}', '[', ']', ';')
-comment_symbol = '#'
-extensions = (".md", ".mndl", ".mandala")
+invalid_characters = ('{', '}', '[', ']', ';', '?', '~') # characters not in the language 
+comment_symbol = '#' # character for commenting 
+extensions = (".mndl", ".mandala") # file extensions for the language 
 
 def process(input_file):
   stack = [0]
   output = StringIO()
   newindent = False
-  commented = False
   linejoin = False 
 
   for i, line in enumerate(input_file):
@@ -31,6 +30,46 @@ def process(input_file):
       for char in invalid_characters:
         if char in clean_line:
           sys.exit("Invalid character: {0}. Found on line: {1}".format(char, i))
+
+      if not linejoin:
+        wcount = len(clean_line) - len(clean_line.lstrip(' '))
+        if newindent:
+          if wcount > stack[-1]:
+            stack.append(wcount)
+            newindent = False
+          else:
+            sys.exit("Indentation error1 on line {}".format(i))
+
+        if wcount > stack[-1]:
+          print clean_line
+          sys.exit("Indentation error on line {}".format(i))
+
+        else:
+          while (wcount < stack[-1]):
+            clean_line = "}" + clean_line
+            stack.pop()
+          if wcount != stack[-1]:
+            sys.exit("Indentation error on line {}".format(i))
+
+      if clean_line[-1] == ':':
+        newindent = True
+        clean_line = clean_line + "{\n"
+        
+      elif clean_line[-1] == "\\":
+        linejoin = True
+        clean_line = clean_line[:-1]
+
+      else:
+        linejoin = False 
+        clean_line = clean_line + ";\n"
+      
+      output.write(clean_line)
+
+  while 0 < stack[-1]:
+    output.write("}")
+    stack.pop()
+
+  return output 
 
 # removes comments from the line 
 def sanitize(line):
@@ -68,5 +107,6 @@ if __name__ == "__main__":
   # process the input file 
   output = process(infile)
 
-  outfile = open(directory + new_filename + ".proc.md", 'w')
+  # create output file 
+  outfile = open(directory + new_filename + ".proc.mandala", 'w')
   outfile.write(output.getvalue())
