@@ -1,3 +1,5 @@
+# sample program 
+
 create Mandala m
 
 create Layer layer1:
@@ -39,6 +41,10 @@ create Layer layer4:
   count 8
   offset 22.5
 
+def returnType functionName <- argType funcArg1, argType funcArg2:
+  # code here 
+  return funcArg1
+
 addTo m: layer1 layer2 layer3 layer4 
 
 create latestRadius = 25
@@ -54,4 +60,4 @@ add m: currentLayer
 
 latestRadius = latestRadius + 5
 
-draw m
+draw m # make mandala
