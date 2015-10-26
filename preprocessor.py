@@ -12,7 +12,7 @@ try:
 except:
   from StringIO import StringIO
 
-invalid_characters = ('{', '}', '[', ']', ';', '?', '~') # characters not in the language 
+invalid_characters = ('{', '}', ';', '?', '~') # characters not in the language 
 comment_symbol = '#' # character for commenting 
 extensions = (".mndl", ".mandala") # file extensions for the language 
 

@@ -1,63 +1,31 @@
 # sample program 
+# Author: Sam Wiener 
 
-create Mandala m
+/# Creates and draws an evenly-spaced Mandala of specified radius with one shape of specified type, and number of shapes to be spaced #/
 
-create Layer layer1:
-  radius 3
+/#
 
-create Shape circle1:
-  type Circle
-  size 3
-  color yellow
-  rotation 0
+def Void simpleEvenlySpaced(String shape_name, Number r, Number num_shapes):
 
-create Shape triangle1:
-  type Triangle
-  size 3
-  color green
-  rotation 0
+  Mandala m = create Mandala
 
-create Shape square1:
-  type Square
-  size 4
-  color blue
-  rotation 45
+  foreach i = 1 to i = num_shapes:
 
-create Layer layer2:
-  radius 10
-  Shape circle1
-  count 8
-  offset 0
+    Shape temp_shape = create Shape:
+      type shape_name
+      size r / 5
+      rotation 0
+      
+    Layer temp_layer = create Layer:
+      radius r
+      Shape temp_shape
+      count 1
+      offset i * 360 / num_shapes
 
-create Layer layer3:
-  radius 15
-  Shape triangle1
-  count 8
-  offset 22.5
+    addTo: m, temp_layer
 
-create Layer layer4:
-  radius 20
-  Shape square1
-  count 8
-  offset 22.5
+draw: m
 
-def returnType functionName <- argType funcArg1, argType funcArg2:
-  # code here 
-  return funcArg1
+simpleEvenlySpaced: Circle, 10, 6
 
-addTo m: layer1 layer2 layer3 layer4 
-
-create latestRadius = 25
-
-foreach i=1 to i=5: 
-  create Layer currentLayer
-  radius latestRadius
-  Shape circle1
-  count 8
-  offset 0
-
-add m: currentLayer
-
-latestRadius = latestRadius + 5
-
-draw m # make mandala
+#/
