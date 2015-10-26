@@ -9,12 +9,12 @@ let number = '-'? num* '.'? num*
 rule token = parse
 
 (* white space *)
-| [' ' '\t' '\r' '\n']             { token lexbuf }
+| [' ' '\t' '\r' '\n']                { token lexbuf }
 
 (* literals and variables *)
-| digit+ as lit                    { LITERAL(int_of_string lit) }
-| alpha+ (alpha | digit)* as lit   { VARIABLE(int_of_char lit - 97) }
-| number as lit                    { LITERAL(float_of_string lit) }
+| digit+ as lit                       { LITERAL(int_of_string lit) }
+| alpha+ (alpha | digit)* as lit      { VARIABLE(int_of_char lit - 97) }
+| number as lit                       { LITERAL(float_of_string lit) }
 
 (* comments *)
 | "/#"         { comment lexbuf }
@@ -53,26 +53,21 @@ rule token = parse
 | '{'          { LBRACE }   | '}'       { RBRACE }
 | ','          { COMMA }    | '.'       { PERIOD }
 
-(* functions and constructors *)
+(* built-in functions and constructors *)
 | "def"        { DEF }      | "return"  { RETURN }
-| "draw"       { DRAW }     | "addTo"      { ADDTO }      
+| "draw"       { DRAW }     | "addTo"   { ADDTO }      
 | "create"     { CREATE }
 
 (* language specific keywords *)
 | "radius"     { RADIUS }   | "count"   { COUNT }
 | "size"       { SIZE }     | "color"   { COLOR }
 | "rotation"   { ROTATION } | "offset"  { OFFSET }
-| "Template"   { TEMPLATE }
 
 (* types *)
-| "Number"     { NUMBER }
-| "String"     { STRING }
-| "Shape"      { SHAPE } 
-| "Layer"      { LAYER }  
-| "Mandala"    { MANDALA }  
-| "Geo"        { GEO }
-| "Boolean"    { BOOLEAN }
-| "Void"       { VOID }
+| "Number"     { NUMBER }   | "String"     { STRING }
+| "Boolean"    { BOOLEAN }  | "Void"       { VOID }
+| "Shape"      { SHAPE }    | "Geo"        { GEO }
+| "Layer"      { LAYER }    | "Mandala"    { MANDALA }  
 
 (* geo *)
 | "Circle"     { CIRCLE }

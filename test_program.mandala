@@ -1,9 +1,7 @@
 # sample program 
-# Author: Sam Wiener 
+# Author: Edo Roth
 
 /# Creates and draws an evenly-spaced Mandala of specified radius with one shape of specified type, and number of shapes to be spaced #/
-
-/#
 
 def Void simpleEvenlySpaced(String shape_name, Number r, Number num_shapes):
 
@@ -27,5 +25,3 @@ def Void simpleEvenlySpaced(String shape_name, Number r, Number num_shapes):
 draw: m
 
 simpleEvenlySpaced: Circle, 10, 6
-
-#/
