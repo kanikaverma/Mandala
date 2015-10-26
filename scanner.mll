@@ -54,8 +54,9 @@ rule token = parse
 | ','          { COMMA }    | '.'       { PERIOD }
 
 (* functions and constructors *)
-| "addTo"      { ADDTO }    | "create"  { CREATE }
-| "draw"       { DRAW }     | "return"  { RETURN }
+| "def"        { DEF }      | "return"  { RETURN }
+| "draw"       { DRAW }     | "addTo"      { ADDTO }      
+| "create"     { CREATE }
 
 (* language specific keywords *)
 | "radius"     { RADIUS }   | "count"   { COUNT }
@@ -64,10 +65,13 @@ rule token = parse
 | "Template"   { TEMPLATE }
 
 (* types *)
+| "Number"     { NUMBER }
+| "String"     { STRING }
 | "Shape"      { SHAPE } 
 | "Layer"      { LAYER }  
 | "Mandala"    { MANDALA }  
 | "Geo"        { GEO }
+| "Void"       { VOID }
 
 (* geo *)
 | "Circle"     { CIRCLE }
