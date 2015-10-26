@@ -71,6 +71,7 @@ rule token = parse
 | "Layer"      { LAYER }  
 | "Mandala"    { MANDALA }  
 | "Geo"        { GEO }
+| "Boolean"    { BOOLEAN }
 | "Void"       { VOID }
 
 (* geo *)
