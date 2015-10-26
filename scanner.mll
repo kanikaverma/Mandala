@@ -3,23 +3,21 @@
 { open Parser }
 
 let digit = ['0'-'9']
-let alpha = ['a'-'z']
+let alpha = ['a'-'z' 'A'-'Z' '_']
 let number = '-'? num* '.'? num*
 
 rule token = parse
 
 (* white space *)
-| [' ' '\t' '\r' '\n'] { token lexbuf }
+| [' ' '\t' '\r' '\n']             { token lexbuf }
 
 (* literals and variables *)
-| digit+ as lit        { LITERAL(int_of_string lit) }
-| alpha as lit         { VARIABLE(int_of_char lit - 97) }
-| number as lit        { LITERAL(float_of_string lit) }
+| digit+ as lit                    { LITERAL(int_of_string lit) }
+| alpha+ (alpha | digit)* as lit   { VARIABLE(int_of_char lit - 97) }
+| number as lit                    { LITERAL(float_of_string lit) }
 
 (* comments *)
-| '#'          { comment lexbuf }
 | "/#"         { comment lexbuf }
-| "#/"         { comment lexbuf }
 
 (* arithmetic operators *)
 | '+'          { PLUS }     | '*'     { TIMES }
@@ -66,10 +64,19 @@ rule token = parse
 | "Template"   { TEMPLATE }
 
 (* types *)
-| "Shape"      { SHAPE }    | "Triangle"{ TRIANGLE }
-| "Square"     { SQUARE }   | "Circle"  { CIRCLE }
-| "Mandala"    { MANDALA }  | "Layer"   { LAYER }
-| "type"       { TYPE }
+| "Shape"      { SHAPE } 
+| "Layer"      { LAYER }  
+| "Mandala"    { MANDALA }  
+| "Geo"        { GEO }
+
+(* geo *)
+| "Circle"     { CIRCLE }
+| "Square"     { SQUARE }
+| "Triangle"   { TRIANGLE }
 
 (* end of file *)
 | eof          { EOF }
+
+and comment = parse 
+
+| "#/"         { token lexbuf } 
