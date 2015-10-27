@@ -4,7 +4,12 @@
 
 let digit = ['0'-'9']
 let alpha = ['a'-'z' 'A'-'Z' '_']
+<<<<<<< HEAD
 let number = '-'? digit* '.'? digit*
+=======
+(* should num be digit? *)
+let number = '-'? num* '.'? num*
+>>>>>>> 3eac59245ec72e7ccf90c3ab2b49f7cbd16677c6
 
 rule token = parse
 
