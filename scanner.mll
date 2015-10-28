@@ -1,6 +1,6 @@
 (* Authors: Edo Roth, Harsha Vemuri *)
 
-{ open Parser }
+{ open Parser;; }
 
 let digit = ['0'-'9']
 let alpha = ['a'-'z' 'A'-'Z' '_']
@@ -43,9 +43,8 @@ rule token = parse
 | "else"       { ELSE }
 
 (* loop words *)
-| "while"      { WHILE }    | "break" { BREAK }
-| "foreach"    { FOREACH }  | "to"    { TO }
-| "continue"   { CONTINUE } | "pass"  { PASS }
+| "break" { BREAK }			| "foreach"    { FOREACH }  
+| "to"    { TO }			| "continue"   { CONTINUE } 
 
 (* punctuation and delimiters *)
 | '('          { LPAREN }   | ')'       { RPAREN }
@@ -62,6 +61,7 @@ rule token = parse
 | "radius"     { RADIUS }   | "count"   { COUNT }
 | "size"       { SIZE }     | "color"   { COLOR }
 | "rotation"   { ROTATION } | "offset"  { OFFSET }
+| "angularShift" { ANGULARSHIFT }
 
 (* types *)
 | "Number"     { NUMBER }   | "String"     { STRING }

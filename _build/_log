@@ -1,0 +1,23 @@
+### Starting build.
+# Target: parser.mly, tags: { extension:mly, file:parser.mly, ocaml, ocamlyacc, parser, quiet }
+/usr/local/bin/ocamlyacc parser.mly # cached
+# Target: parser.ml.depends, tags: { extension:ml, file:parser.ml, ocaml, ocamldep, quiet }
+/usr/local/bin/ocamldep.opt -modules parser.ml > parser.ml.depends # cached
+# Target: parser.mli.depends, tags: { extension:mli, file:parser.mli, ocaml, ocamldep, quiet }
+/usr/local/bin/ocamldep.opt -modules parser.mli > parser.mli.depends # cached
+# Target: ast.ml.depends, tags: { extension:ml, file:ast.ml, ocaml, ocamldep, quiet }
+/usr/local/bin/ocamldep.opt -modules ast.ml > ast.ml.depends # cached
+# Target: ast.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:ast.cmo, file:ast.ml, implem, ocaml, quiet }
+/usr/local/bin/ocamlc.opt -c -o ast.cmo ast.ml # cached
+# Target: parser.cmi, tags: { byte, compile, extension:mli, file:parser.mli, interf, ocaml, quiet }
+/usr/local/bin/ocamlc.opt -c -o parser.cmi parser.mli # cached
+# Target: ast.cmx, tags: { compile, extension:cmx, extension:ml, file:ast.cmx, file:ast.ml, implem, native, ocaml, quiet }
+/usr/local/bin/ocamlopt.opt -c -o ast.cmx ast.ml # cached
+# Target: parser.cmx, tags: { compile, extension:cmx, extension:ml, file:parser.cmx, file:parser.ml, implem, native, ocaml, quiet }
+/usr/local/bin/ocamlopt.opt -c -o parser.cmx parser.ml
++ /usr/local/bin/ocamlopt.opt -c -o parser.cmx parser.ml
+File "parser.mly", line 135, characters 14-58:
+Error: This expression has type Ast.var_decl
+       but an expression was expected of type string
+Command exited with code 2.
+# Compilation unsuccessful.
