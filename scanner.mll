@@ -13,8 +13,8 @@ rule token = parse
 
 (* literals and variables *)
 | digit+ as lit                       { LITERAL(int_of_string lit) }
-| alpha+ (alpha | digit)* as lit      { ID(int_of_char lit - 97) }
 | number as lit                       { LITERAL(float_of_string lit) }
+| alpha+ (alpha | digit)* as lit      { ID(int_of_char lit - 97) }
 
 (* comments *)
 | "/#"         { comment lexbuf }
