@@ -1,13 +1,13 @@
 %{ open Ast;; %}
 
-%token LPAREN RPAREN LBRACKET RBRACKET LBRACE RBRACE COLON COMMMA 
+%token LPAREN RPAREN LBRACKET RBRACKET LBRACE RBRACE COLON COMMA 
 %token PLUS MINUS TIMES DIVIDE MODULUS EXP  
 %token ASSIGN EQ NEQ LT LEQ GT GEQ 
 %token RETURN IF ELSE FOREACH BREAK CONTINUE
 %token TRUE FALSE AND OR NOT XOR
 %token TO DEF DRAW CREATE ADDTO 
 %token RADIUS COUNT SIZE COLOR ROTATION OFFSET ANGULARSHIFT
-%token NUMBER BOOLEAN SHAPE STRING VOID GEO SHAPE LAYER MANDALA
+%token NUMBER BOOLEAN STRING VOID GEO SHAPE LAYER MANDALA
 %token CIRCLE TRIANGLE SQUARE
 %token <int> LITERAL
 %token <string> ID
@@ -165,16 +165,6 @@ cdecl:
 			returntype = Mandalat;
 			formals = $5;
 		}}
-	| CREATE LAYER ID COLON construct_args
-		{{ fname = $3;
-			returntype = Layert;
-			formals = $5;
-		}}
-	| CREATE SHAPE ID COLON construct_args
-		{{ fname = $3;
-			returntype = Shapet;
-			formals = $5;
-		}}
 
 construct_args:
 	mandala_args 		{ [] }
@@ -190,53 +180,10 @@ layer_args:
 				lcount = $6;
 				loffset = $8;
 				langularshift = $10 }}
-	| SHAPE expr RADIUS expr COUNT expr OFFSET expr
-			{{ lshape = $2;
-				lradius = $4;
-				lcount = $6;
-				loffset = $8;
-				langularshift = 0 }}
-	| SHAPE expr RADIUS expr COUNT expr ANGULARSHIFT expr
-			{{ lshape = $2;
-				lradius = $4;
-				lcount = $6;
-				loffset = 0;
-				langularshift = $8 }}
-	| SHAPE expr RADIUS expr COUNT expr 
-			{{ lshape = $2;
-				lradius = $4;
-				lcount = $6;
-				loffset = 0;
-				langularshift = 0}}
+
 shape_args:
 	GEO expr SIZE expr COLOR expr ROTATION expr
 		{{ sgeoname = $2;
 		ssize = $4;
 		scolor = $6;
 		srotation = $8 }}
-	| GEO expr SIZE expr COLOR expr
-		{{ sgeoname = $2;
-		ssize = $4;
-		scolor = $6;
-		srotation = 0 }}
-	| GEO expr SIZE expr ROTATION expr
-		{{ sgeoname = $2;
-		ssize = $4;
-		scolor = 0;
-		srotation = $6 }}
-	| GEO expr SIZE expr
-	{{ sgeoname = $2;
-		ssize = $4;
-		scolor = 0;
-		srotation = 0 }}
-
-expr:
-  expr PLUS   expr     { Binop($1, Add, $3) }
-| expr MINUS  expr     { Binop($1, Sub, $3) }
-| expr TIMES  expr     { Binop($1, Mul, $3) }
-| expr DIVIDE expr     { Binop($1, Div, $3) }
-| LITERAL              { Lit($1) }
-| ID             	   { Var($1) }
-| ID ASSIGN expr 	   { Asn($1, $3) } 
-| expr COMMA expr      { Seq($1, $3) }
-| expr COLON expr      { Col($1, $3) }

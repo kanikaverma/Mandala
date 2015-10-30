@@ -42,7 +42,7 @@ type func_decl = {
 }
 type var_decl = {
 	kind : mndlt;
-	vname : Stringt;
+	vname : string;
 }
 
 type program = var_decl list * func_decl list
