@@ -3,7 +3,7 @@
 %token LPAREN RPAREN LBRACKET RBRACKET LBRACE RBRACE COLON COMMMA 
 %token PLUS MINUS TIMES DIVIDE MODULUS EXP  
 %token ASSIGN EQ NEQ LT LEQ GT GEQ 
-%token RETURN IF ELSEIF ELSE FOREACH BREAK CONTINUE
+%token RETURN IF ELSE FOREACH BREAK CONTINUE
 %token TRUE FALSE AND OR NOT XOR
 %token TO DEF DRAW CREATE ADDTO 
 %token RADIUS COUNT SIZE COLOR ROTATION OFFSET ANGULARSHIFT
@@ -75,43 +75,7 @@ fdecl:
 		formals = $5;
 		locals = List.rev $8;
 		body = List.rev $9 }}
-	| DEF MANDALA LBRACKET RBRACKET ID LPAREN formals_opt RPAREN COLON vdecl_list stmt_list 
-		{ { fname = $5;
-		returntype = Arrayt;
-		formals = $7;
-		locals = List.rev $10;
-		body = List.rev $11 }}
-	| DEF LAYER LBRACKET RBRACKET ID LPAREN formals_opt RPAREN COLON vdecl_list stmt_list 
-		{ { fname = $5;
-		returntype = Arrayt;
-		formals = $7;
-		locals = List.rev $10;
-		body = List.rev $11 }}
-	| DEF SHAPE LBRACKET RBRACKET ID LPAREN formals_opt RPAREN COLON vdecl_list stmt_list 
-		{ { fname = $5;
-		returntype = Arrayt;
-		formals = $7;
-		locals = List.rev $10;
-		body = List.rev $11 }}
-	| DEF GEO LBRACKET RBRACKET ID LPAREN formals_opt RPAREN COLON vdecl_list stmt_list 
-		{ { fname = $5;
-		returntype = Arrayt;
-		formals = $7;
-		locals = List.rev $10;
-		body = List.rev $11 }}
-	| DEF NUMBER LBRACKET RBRACKET ID LPAREN formals_opt RPAREN COLON vdecl_list stmt_list 
-		{ { fname = $5;
-		returntype = Arrayt;
-		formals = $7;
-		locals = List.rev $10;
-		body = List.rev $11 }}
-	| DEF STRING LBRACKET RBRACKET ID LPAREN formals_opt RPAREN COLON vdecl_list stmt_list 
-		{ { fname = $5;
-		returntype = Arrayt;
-		formals = $7;
-		locals = List.rev $10;
-		body = List.rev $11 }}
-
+	
 	/* need to add in all options for RETURN_TYPE and see if cdecl fits under here */
 	/* NUMBER STRING GEO MANDALA LAYER SHAPE NUMBER[] STRING[] GEO[] LAYER[] SHAPE[] MANDALA[]*/
 
@@ -132,22 +96,22 @@ formal_list:
 	| formal_list COMMA formal	{ $3 :: $1 }
 /* WHATSHOULD BE IN VVALUE FOR VARIABLES? */
 formal:
-	| SHAPE ID 		{{ kind = Shapet; vname = $2; vvalue = [0]}}			
-	| MANDALA ID 	{{ kind = Mandalat; vname = $2; vvalue = [0]}}
-	| GEO ID 		{{ kind = Geot; vname = $2; vvalue = [0]}}
-	| STRING ID 	{{ kind = Stringt; vname = $2; vvalue = [0]}}
-	| NUMBER ID 	{{ kind = Numbert; vname = $2; vvalue = [0]}}
-	| LAYER ID 		{{ kind = Layert; vname = $2; vvalue = [0]}}
+	| SHAPE ID 		{{ kind = Shapet; vname = $2;}}			
+	| MANDALA ID 	{{ kind = Mandalat; vname = $2;}}
+	| GEO ID 		{{ kind = Geot; vname = $2;}}
+	| STRING ID 	{{ kind = Stringt; vname = $2;}}
+	| NUMBER ID 	{{ kind = Numbert; vname = $2;}}
+	| LAYER ID 		{{ kind = Layert; vname = $2;}}
 vdecl_list:
 	/* nothing */ 				{ [] }
 	| vdecl_list vdecl 			{ $2 :: $1 }
 vdecl:
-	| SHAPE ID 		{{ kind = Shapet; vname = $2; vvalue = [0] }}			
-	| MANDALA ID 	{{ kind = Mandalat; vname = $2; vvalue = [0] }}
-	| GEO ID 		{{ kind = Geot; vname = $2; vvalue = [0] }}
-	| STRING ID 	{{ kind = Stringt; vname = $2; vvalue = [0] }}
-	| NUMBER ID 	{{ kind = Numbert; vname = $2; vvalue = [0] }}
-	| LAYER ID 		{{ kind = Layert; vname = $2; vvalue = [0] }}
+	| SHAPE ID 		{{ kind = Shapet; vname = $2;}}			
+	| MANDALA ID 	{{ kind = Mandalat; vname = $2;}}
+	| GEO ID 		{{ kind = Geot; vname = $2;}}
+	| STRING ID 	{{ kind = Stringt; vname = $2;}}
+	| NUMBER ID 	{{ kind = Numbert; vname = $2;}}
+	| LAYER ID 		{{ kind = Layert; vname = $2;}}
 stmt_list:
 	/* nothing */ 				{ [] }
 	| stmt_list stmt 			{ $2 :: $1 }

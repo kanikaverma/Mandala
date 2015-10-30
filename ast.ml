@@ -4,7 +4,6 @@ type mndlt =
 	| Numbert
 	| Stringt
 	| Booleant
-	| Voidt
 	| Shapet
 	| Geot
 	| Layert
@@ -43,7 +42,6 @@ type func_decl = {
 type var_decl = {
 	kind : mndlt;
 	vname : string;
-	vvalue : int list;
 }
 
 type program = var_decl list * func_decl list

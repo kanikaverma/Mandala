@@ -22,7 +22,6 @@ type token =
   | GEQ
   | RETURN
   | IF
-  | ELSEIF
   | ELSE
   | FOREACH
   | BREAK
