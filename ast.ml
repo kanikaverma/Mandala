@@ -18,6 +18,7 @@ type expr =
 	| Mandala of expr
 	| Layer of expr
 	| Arrayt of expr
+	| Stringt of string 
 	| Noexpr
 	| Id of string
 	| Assign of string * expr
@@ -41,7 +42,7 @@ type func_decl = {
 }
 type var_decl = {
 	kind : mndlt;
-	vname : string;
+	vname : Stringt;
 }
 
 type program = var_decl list * func_decl list
