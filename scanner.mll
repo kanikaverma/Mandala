@@ -5,11 +5,16 @@
 let digit = ['0'-'9']
 let alpha = ['a'-'z' 'A'-'Z' '_']
 let number = '-'? digit* '.'? digit*
+(*let tab = '\009'
+let cr = '\013'
+let lf = '010'
+let eol = cr | lf | cr lf *)
 
 rule token = parse
 
 (* white space *)
-| [' ' '\t' '\r' '\n']                { token lexbuf }
+| [' ' '\t' '\r']                { token lexbuf }
+| ['\n'] 						 { EOL }
 
 (* literals and variables *)
 | digit+ as lit                       { LITERAL(int_of_string lit) }
@@ -39,7 +44,6 @@ rule token = parse
 
 (* conditional words *)
 | "if"         { IF }
-| "elif"       { ELIF }
 | "else"       { ELSE }
 
 (* loop words *)
@@ -51,6 +55,7 @@ rule token = parse
 | '['          { LBRACK }   | ']'       { RBRACK }
 | '{'          { LBRACE }   | '}'       { RBRACE }
 | ','          { COMMA }    | '.'       { PERIOD }
+| ';' 		   { SEMI }
 
 (* built-in functions and constructors *)
 | "def"        { DEF }      | "return"  { RETURN }
