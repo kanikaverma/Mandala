@@ -2,7 +2,6 @@ type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq
 
 type mndlt =
 	| Numbert
-	| Stringt
 	| Booleant
 	| Shapet
 	| Geot
@@ -13,11 +12,7 @@ type mndlt =
 type expr =
 	 Literal of float
 	| Number of float
-	(* | Shape of expr * expr * expr * expr * expr *)
-	(* | Mandala of expr *)
-	(* | Layer of expr *)
-	| Arrayt of expr * expr
-	| Stringt of string 
+	
 	| Noexpr
 	| Id of string
 	| Binop of expr * op * expr
@@ -38,6 +33,7 @@ type stmt =
 	| Shape of expr * expr * expr * expr * expr
 	| Mandala of expr
 	| Layer of expr * expr * expr * expr * expr * expr 
+	| ArrAssign of expr * expr
 	
 
 (*int[] x = [1.,2.,3.,4.,5.,6.]*)

@@ -8,7 +8,7 @@
 /* conditional keywords */
 %token IF ELSE
 /* loop keywords */
-%token /*BREAK*/ FOREACH TO /*CONTINUE*/
+%token BREAK FOREACH TO CONTINUE
 /* boolean operators */
 /* %token TRUE FALSE AND OR NOT XOR */
 /* assignment operators */
@@ -18,7 +18,7 @@
 /* language specific keywords */
 %token RADIUS COUNT SIZE COLOR ROTATION OFFSET ANGULARSHIFT
 /* types */
-%token NUMBER /*BOOLEAN VOID */ SHAPE GEO LAYER MANDALA
+%token NUMBER BOOLEAN VOID SHAPE GEO LAYER MANDALA
 /* geo types */
 %token CIRCLE TRIANGLE SQUARE
 /* need to add geo_type to AST possibly, define cases for different GEO TYPES */
@@ -49,7 +49,6 @@ program:
 
 decls:
 	/* nothing */ { [], [] }
-	| decls vdecl SEMI { ($2 :: fst $1), snd $1 }
 	| decls fdecl { fst $1, ($2 :: snd $1) }
 	| decls stmt { ($2 :: fst $1), snd $1 }
 	
@@ -60,12 +59,11 @@ def ReturnType functionName(Type param1, Type param2, ...):
       functionBody */
 fdecl:
 	DEF type_id ID LPAREN formals_opt RPAREN COLON 
-	LBRACE vdecl_list stmt_list RBRACE
+	LBRACE stmt_list RBRACE
 		{{ 
 			fname = $3; 				(* function name *)
 			returntype = $2;  	(* return type *)
 			formals = $5; 				(* formal parameters, list of args *)
-			locals = List.rev $8; 		(* varaiable list *)
 			body = List.rev $9 			(* statement list *)
 		}}
 	
@@ -111,21 +109,12 @@ type_id:
 	MANDALA 				{ Mandalat }
 	| LAYER 				{ Layert }
 	| SHAPE 				{ Shapet }
+	
+
+basic_types:
+	NUMBER 					{ Numbert }
+	| BOOLEAN 				{ Booleant }
 	| GEO 					{ Geot }
-	| NUMBER 				{ Numbert }
-
-vdecl_list:
-	/* nothing 	*/			{ [] }
-	| vdecl_list vdecl		{ $2 :: $1 }
-
-vdecl:
-	/*NUMBER ID 		{ $2 }*/
-	type_id ID 	
-	{{ 
-		kind = $1; 		(* variable type *)
-		vname = $2;  	(* variable name *)
-	}}
-
 
 stmt_list:
 	/* nothing */ 				{ [] }
@@ -137,16 +126,18 @@ stmt:
 	| IF LPAREN expr RPAREN stmt %prec NOELSE 	{ IF($3, $5, Block([])) }
 	| IF LPAREN expr RPAREN stmt ELSE stmt 		{ IF($3, $5, $7) }
 	| FOREACH expr_opt TO expr_opt COLON stmt 	{ Foreach($2, $4, $6) }
-	| CREATE SHAPE ID ASSIGN SHAPE COLON GEO expr 
+	| assign_expr ASSIGN CREATE SHAPE COLON GEO expr 
 		SIZE expr 
 		COLOR expr 
 		ROTATION expr SEMI			{ Shape($2, $5, $7, $9, $11) }
-	| CREATE MANDALA ID ASSIGN MANDALA 	SEMI	{ Mandala($3) }
-	| CREATE LAYER ID ASSIGN LAYER COLON RADIUS expr
+	| assign_expr ASSIGN CREATE MANDALA 	SEMI	{ Mandala($3) }
+	| assign_expr ASSIGN CREATE LAYER COLON RADIUS expr
 		SHAPE expr
 		COUNT expr
 		OFFSET expr 
 		ANGULARSHIFT expr 	SEMI			{ Layer($3, $8, $10, $12, $14, $16) }
+	| assign_expr ASSIGN expr 	SEMI		{ Assign($1, $3) }
+	| array_expr ASSIGN LBRACE actuals_list RBRACE SEMI 	{ ArrAssign($1, $4) }
 
 	
 expr_opt:
@@ -158,11 +149,6 @@ expr:
 	/*| literal_expr 				{ $1 }*/
 	 LITERAL 					{ Literal($1) }
 	| ID 						{ Id($1) }
-	/*GEO expr SIZE expr COLOR expr ROTATION expr*/
-	/*| CREATE SHAPE ID ASSIGN SHAPE ID COLON GEO expr 
-		SIZE expr 
-		COLOR expr 
-		ROTATION expr 			{ Shape($2, $5, $7, $9, $11) }*/
 	| expr PLUS expr			{ Binop($1, Add, $3) }
 	| expr MINUS expr			{ Binop($1, Sub, $3) }
 	| expr TIMES expr 			{ Binop($1, Mult, $3) }
@@ -173,10 +159,21 @@ expr:
 	| expr LEQ expr 			{ Binop($1, Leq, $3) }
 	| expr GT expr				{ Binop($1, Greater, $3) }
 	| expr GEQ expr 			{ Binop($1, Geq, $3) }
-	| ID ASSIGN expr 			{ Assign($1, $3) }
+
 	| ID LPAREN actuals_opt RPAREN { Call($1, $3) }
 	| LPAREN expr RPAREN 		{ $2 }
-/* assign_expr:*/
+	
+	
+array_expr:
+	any_id LBRACKET RBRACKET 	{ $1 }
+
+any_id:
+	type_id 			{ $1 }
+	| basic_types 		{ $1 }	
+
+ assign_expr:
+ 	type_id ID 			{ $2 }
+ 	| basic_types ID 	{ $2 }
 
 
 actuals_opt:
