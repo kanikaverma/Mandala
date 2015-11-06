@@ -13,9 +13,9 @@ type mndlt =
 type expr =
 	 Literal of float
 	| Number of float
-	| Shape of string * expr * string * expr * string * expr * string * expr
-	| Mandala of expr
-	| Layer of expr
+	(* | Shape of expr * expr * expr * expr * expr *)
+	(* | Mandala of expr *)
+	(* | Layer of expr *)
 	| Arrayt of expr * expr
 	| Stringt of string 
 	| Noexpr
@@ -35,6 +35,9 @@ type stmt =
 	| If of expr * stmt * stmt
 	| Foreach of expr * expr * expr * stmt
 	| While of expr * stmt
+	| Shape of expr * expr * expr * expr * expr
+	| Mandala of expr
+	| Layer of expr * expr * expr * expr * expr * expr 
 	
 
 (*int[] x = [1.,2.,3.,4.,5.,6.]*)

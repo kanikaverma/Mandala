@@ -5,16 +5,12 @@
 let digit = ['0'-'9']
 let alpha = ['a'-'z' 'A'-'Z' '_']
 let number = '-'? digit* '.'? digit*
-(*let tab = '\009'
-let cr = '\013'
-let lf = '010'
-let eol = cr | lf | cr lf *)
+
 
 rule token = parse
 
 (* white space *)
-| [' ' '\t' '\r']                { token lexbuf }
-| ['\n'] 						 { EOL }
+| [' ' '\t' '\r' '\n']                { token lexbuf }
 
 (* literals and variables *)
 | digit+ as lit                       { LITERAL(int_of_string lit) }

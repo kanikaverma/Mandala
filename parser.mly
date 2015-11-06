@@ -1,6 +1,6 @@
 %{ open Ast;; %}
 /* punctuation and delimiters */
-%token LPAREN RPAREN LBRACKET RBRACKET LBRACE RBRACE COMMA SEMI/* PERIOD add accessors */
+%token LPAREN RPAREN LBRACKET RBRACKET LBRACE RBRACE COMMA SEMI/* PERIOD add accessors*/
 /* arithmetic operators */
 %token PLUS MINUS TIMES DIVIDE /* MODULUS EXP */
 /* conditional operators */  
@@ -14,13 +14,13 @@
 /* assignment operators */
 %token ASSIGN COLON 
 /* built in functions and constructors */
-%token DEF RETURN /* DRAW ADDTO */ /*CREATE*/
+%token DEF RETURN CREATE /* DRAW ADDTO */ /*CREATE*/
 /* language specific keywords */
-/*%token RADIUS COUNT SIZE COLOR ROTATION OFFSET ANGULARSHIFT*/
+%token RADIUS COUNT SIZE COLOR ROTATION OFFSET ANGULARSHIFT
 /* types */
 %token NUMBER /*BOOLEAN VOID */ SHAPE GEO LAYER MANDALA
 /* geo types */
-/* %token CIRCLE TRIANGLE SQUARE */
+%token CIRCLE TRIANGLE SQUARE
 /* need to add geo_type to AST possibly, define cases for different GEO TYPES */
 /* literals and variables, or ids */
 %token <int> LITERAL
@@ -68,42 +68,6 @@ fdecl:
 			locals = List.rev $8; 		(* varaiable list *)
 			body = List.rev $9 			(* statement list *)
 		}}
-/*	| DEF LAYER ID LPAREN formals_opt RPAREN COLON vdecl_list stmt_list 
-		{ { fname = $3;
-		returntype = Layert;
-		formals = $5;
-		locals = List.rev $8;
-		body = List.rev $9 }}
-	| DEF SHAPE ID LPAREN formals_opt RPAREN COLON vdecl_list stmt_list 
-		{ { fname = $3;
-		returntype = Shapet;
-		formals = $5;
-		locals = List.rev $8;
-		body = List.rev $9 }}
-	| DEF GEO ID LPAREN formals_opt RPAREN COLON vdecl_list stmt_list 
-		{ { fname = $3;
-		returntype = Geot;
-		formals = $5;
-		locals = List.rev $8;
-		body = List.rev $9 }}
-	| DEF NUMBER ID LPAREN formals_opt RPAREN COLON vdecl_list stmt_list 
-		{ { fname = $3;
-		returntype = Numbert;
-		formals = $5;
-		locals = List.rev $8;
-		body = List.rev $9 }}
-	| DEF STRING ID LPAREN formals_opt RPAREN COLON vdecl_list stmt_list 
-		{ { fname = $3;
-		returntype = Stringt;
-		formals = $5;
-		locals = List.rev $8;
-		body = List.rev $9 }}
-	| DEF VOID ID LPAREN formals_opt RPAREN COLON vdecl_list stmt_list 
-		{ { fname = $3;
-		returntype = Stringt;
-		formals = $5;
-		locals = List.rev $8;
-		body = List.rev $9 }}*/
 	
 	/* need to add in all options for RETURN_TYPE and see if cdecl fits under here */
 	/* NUMBER STRING GEO MANDALA LAYER SHAPE NUMBER[] STRING[] GEO[] LAYER[] SHAPE[] MANDALA[]*/
@@ -166,13 +130,24 @@ vdecl:
 stmt_list:
 	/* nothing */ 				{ [] }
 	| stmt_list stmt 			{ $2 :: $1 }
-
+/* Note syntax change for construction of Mandala, Layer and Shape */
 stmt:
 	expr SEMI									{ Expr($1) }
 	| RETURN expr SEMI 								{ Return($2) }
 	| IF LPAREN expr RPAREN stmt %prec NOELSE 	{ IF($3, $5, Block([])) }
 	| IF LPAREN expr RPAREN stmt ELSE stmt 		{ IF($3, $5, $7) }
 	| FOREACH expr_opt TO expr_opt COLON stmt 	{ Foreach($2, $4, $6) }
+	| CREATE SHAPE ID ASSIGN SHAPE COLON GEO expr 
+		SIZE expr 
+		COLOR expr 
+		ROTATION expr SEMI			{ Shape($2, $5, $7, $9, $11) }
+	| CREATE MANDALA ID ASSIGN MANDALA 	SEMI	{ Mandala($3) }
+	| CREATE LAYER ID ASSIGN LAYER COLON RADIUS expr
+		SHAPE expr
+		COUNT expr
+		OFFSET expr 
+		ANGULARSHIFT expr 	SEMI			{ Layer($3, $8, $10, $12, $14, $16) }
+
 	
 expr_opt:
 	/* nothing */ 		{ Noexpr }
@@ -184,10 +159,10 @@ expr:
 	 LITERAL 					{ Literal($1) }
 	| ID 						{ Id($1) }
 	/*GEO expr SIZE expr COLOR expr ROTATION expr*/
-	/*| GEO * expr * 
-		SIZE * expr * 
-		COLOR * expr * 
-		ROTATION * expr 		{ Shape($2, $4, $6, $8) }*/
+	/*| CREATE SHAPE ID ASSIGN SHAPE ID COLON GEO expr 
+		SIZE expr 
+		COLOR expr 
+		ROTATION expr 			{ Shape($2, $5, $7, $9, $11) }*/
 	| expr PLUS expr			{ Binop($1, Add, $3) }
 	| expr MINUS expr			{ Binop($1, Sub, $3) }
 	| expr TIMES expr 			{ Binop($1, Mult, $3) }
@@ -201,6 +176,8 @@ expr:
 	| ID ASSIGN expr 			{ Assign($1, $3) }
 	| ID LPAREN actuals_opt RPAREN { Call($1, $3) }
 	| LPAREN expr RPAREN 		{ $2 }
+/* assign_expr:*/
+
 
 actuals_opt:
 	/* nothing */ 				{ [] }
