@@ -1,6 +1,6 @@
 open Graphics;;
 
-open graph " 640x480";;
+open_graph " 640x480";;
 
 draw_circle 250 250 20;
 draw_circle 350 250 20;
@@ -12,3 +12,7 @@ read_line ();;
 (*COMPILE WITH:
 ocamlc graphics.cma graphicsTest.ml -o graphicsTest
 *)
+
+(*MUST INSTALL:
+opam install gg
+opam install vg*)
