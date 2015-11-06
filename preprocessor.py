@@ -38,7 +38,7 @@ def process(input_file):
             stack.append(wcount)
             newindent = False
           else:
-            sys.exit("Indentation error1 on line {}".format(i))
+            sys.exit("Indentation error on line {}".format(i))
 
         if wcount > stack[-1]:
           print clean_line

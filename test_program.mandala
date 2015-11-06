@@ -1,27 +1,33 @@
 # sample program 
 # Author: Edo Roth
 
-/# Creates and draws an evenly-spaced Mandala of specified radius with one shape of specified type, and number of shapes to be spaced #/
+/# Creates and draws a Mandala of specified radius with one shape of specified type
+Draws eight shapes in a staggered fashion #/
 
-def Void simpleEvenlySpaced(String shape_name, Number r, Number num_shapes):
-
+# function 
+def Void weirdlySpacedEight(Geo shape_name, Number r):
   Mandala m = create Mandala
-
-  foreach i = 1 to i = num_shapes:
-
+  foreach i = 1 to i = 8:
     Shape temp_shape = create Shape:
-      type shape_name
+      figure shape_name
       size r / 5
       rotation 0
-      
+
+    Number x = 5
+
+    if i > 4:
+      Number x = 85
+
     Layer temp_layer = create Layer:
       radius r
       Shape temp_shape
       count 1
-      offset i * 360 / num_shapes
+      offset x + (i % 4 - 1) * 90
 
-    addTo: m, temp_layer
+    addTo: m, temp_layer 
 
-draw: m
+  draw: m # draw mandala 
 
-simpleEvenlySpaced: Circle, 10, 6
+weirdlySpacedEight: Circle, 10 # call the function 
+
+# end program 
