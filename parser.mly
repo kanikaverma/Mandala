@@ -58,13 +58,22 @@ decls:
 def ReturnType functionName(Type param1, Type param2, ...):
       functionBody */
 fdecl:
-	DEF type_id ID LPAREN formals_opt RPAREN COLON 
+	DEF any_id ID LPAREN formals_opt RPAREN COLON 
 	LBRACE stmt_list RBRACE
 		{{ 
 			fname = $3; 				(* function name *)
 			returntype = $2;  	(* return type *)
 			formals = $5; 				(* formal parameters, list of args *)
 			body = List.rev $9 			(* statement list *)
+		}}
+
+	| 	DEF any_id LBRACKET RBRACKET ID LPAREN formals_opt RPAREN COLON 
+	LBRACE stmt_list RBRACE
+		{{ 
+			fname = $5; 				(* function name *)
+			returntype = $2;  	(* return type *)
+			formals = $7; 				(* formal parameters, list of args *)
+			body = List.rev $11 			(* statement list *)
 		}}
 	
 	/* need to add in all options for RETURN_TYPE and see if cdecl fits under here */
@@ -140,8 +149,9 @@ stmt:
 		COUNT expr
 		OFFSET expr 
 		ANGULARSHIFT expr RBRACE SEMI			{ Layer($3, $8, $10, $12, $14, $16) }
-	| assign_expr ASSIGN expr 	SEMI		{ Assign($1, $3) }
+	| assign_expr ASSIGN expr SEMI		{ Assign($1, $3) }
 	| array_expr ASSIGN LBRACE actuals_list RBRACE SEMI 	{ ArrAssign($1, $4) }
+	| array_expr ASSIGN func_call SEMI 	{ ArrAssign($1, $3) }
 	| assign_expr ASSIGN func_call SEMI 	{Assign($1,$3)}
 	| func_call SEMI 						{$1}
 
@@ -172,12 +182,11 @@ expr:
 	
 	
 array_expr:
-	any_id LBRACKET RBRACKET 	{ $1 }
+	any_id LBRACKET RBRACKET ID	{ $1 }
 
 
  assign_expr:
- 	type_id ID 			{ $2 }
- 	| basic_types ID 	{ $2 }
+ 	any_id ID 			{ $2 }
 
 actuals_opt:
 	/* nothing */ 				{ [] }
