@@ -14,12 +14,14 @@ except:
 
 invalid_characters = ('{', '}', ';', '?', '~') # characters not in the language 
 comment_symbol = '#' # character for commenting 
+blockcomment = ['/#', '#/']
 extensions = (".mndl", ".mandala") # file extensions for the language 
 
 def process(input_file):
   stack = [0]
   output = StringIO()
   newindent = False
+  commented = False 
   linejoin = False 
 
   for i, line in enumerate(input_file):
@@ -31,39 +33,51 @@ def process(input_file):
         if char in clean_line:
           sys.exit("Invalid character: {0}. Found on line: {1}".format(char, i))
 
-      if not linejoin:
-        wcount = len(clean_line) - len(clean_line.lstrip(' '))
-        if newindent:
-          if wcount > stack[-1]:
-            stack.append(wcount)
-            newindent = False
-          else:
-            sys.exit("Indentation error on line {}".format(i))
+      stripped_line = clean_line.lstrip()
 
-        if wcount > stack[-1]:
-          print clean_line
-          sys.exit("Indentation error on line {}".format(i))
+      if len(stripped_line) > 1 and blockcomment[0] == stripped_line[:2]:
+        commented = True
 
-        else:
-          while (wcount < stack[-1]):
-            clean_line = "}" + clean_line
-            stack.pop()
-          if wcount != stack[-1]:
-            sys.exit("Indentation error on line {}".format(i))
-
-      if clean_line[-1] == ':':
-        newindent = True
-        clean_line = clean_line + "{\n"
-        
-      elif clean_line[-1] == "\\":
-        linejoin = True
-        clean_line = clean_line[:-1]
+      if commented:
+        if len(clean_line) > 1 and blockcomment[1] == clean_line[-2:]:
+          commented = False 
 
       else:
-        linejoin = False 
-        clean_line = clean_line + ";\n"
-      
-      output.write(clean_line)
+
+        if not linejoin:
+          wcount = len(clean_line) - len(clean_line.lstrip(' '))
+
+          if newindent:
+            if wcount > stack[-1]:
+              stack.append(wcount)
+              newindent = False
+            else:
+              sys.exit("Indentation error on line {}".format(i))
+
+          if wcount > stack[-1]:
+            print clean_line
+            sys.exit("Indentation error on line {}".format(i))
+
+          else:
+            while wcount < stack[-1]:
+              clean_line = "}" + clean_line
+              stack.pop()
+            if wcount != stack[-1]:
+              sys.exit("Indentation error on line {}".format(i))
+
+        if clean_line[-1] == ':':
+          newindent = True
+          clean_line = clean_line + "{\n"
+          
+        elif clean_line[-1] == "\\":
+          linejoin = True
+          clean_line = clean_line[:-1]
+
+        else:
+          linejoin = False 
+          clean_line = clean_line + ";\n"
+        
+        output.write(clean_line)
 
   while 0 < stack[-1]:
     output.write("}")
@@ -73,7 +87,7 @@ def process(input_file):
 
 # removes comments from the line 
 def sanitize(line):
-  if comment_symbol in line:
+  if blockcomment[0] not in line and blockcomment[1] not in line and comment_symbol in line:
     regex_pattern = "^(.*?)#.*|.*"
     match = re.match(regex_pattern, line)
     sans_comments = match.group(1)
