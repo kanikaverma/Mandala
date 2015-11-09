@@ -1,0 +1,34 @@
+# sample program 
+# Author: Edo Roth
+
+/# Creates a mandala with alternating circles and triangles
+   of specified size and count #/
+
+def Layer[] alternatingLayers(Number s1, Number s2, Number num_each):
+
+  Shape myCircle = create Shape:
+    figure Circle
+    size s1
+    rotation 0
+
+  Shape myTriangle = create Triangle:
+    type Triangle
+    size s2
+    rotation 45
+
+  Layer temp1 = create Layer:
+    radius 12
+    Shape myCircle
+    count num_each
+
+  Layer temp2 = create Layer:
+    radius 12
+    Shape myTriangle
+    count num_each
+    offset (360 / num_each) / 2
+
+  Layer[] layers = {temp1, temp2}
+
+  return layers 
+
+layers = alternatingLayers(1, 5, 4)
