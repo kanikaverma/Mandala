@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd ../compiler
+
 set -e
 
 PARSE='

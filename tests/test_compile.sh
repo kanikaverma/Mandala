@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd ../compiler
+
 ocamllex scanner.mll
 ocamlyacc parser.mly
 ocamlc -c ast.mli

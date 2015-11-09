@@ -8,5 +8,5 @@ outfile="parser_error_log.txt"
 while IFS= read line 
 do
     echo "$line" >> "$outfile"
-    echo "$line" | menhir --interpret parser.mly --explain >> "$outfile"
+    echo "$line" | menhir --interpret ../../compiler/parser.mly --explain >> "$outfile"
 done <"$infile" 
