@@ -12,7 +12,7 @@ try:
 except:
   from StringIO import StringIO
 
-invalid_characters = ('{', '}', ';', '?', '~') # characters not in the language 
+invalid_characters = (';', '?', '~') # characters not in the language 
 comment_symbol = '#' # character for commenting 
 blockcomment = ['/#', '#/']
 extensions = (".mndl", ".mandala") # file extensions for the language 
@@ -110,7 +110,7 @@ if __name__ == "__main__":
 
   # get the path 
   filename = os.path.basename(infile.name)
-  directory = os.path.dirname(infile.name)
+  directory = os.path.dirname(infile.name) + '/'
 
   # get the filename without extension 
   if filename.lower().endswith(extensions):
