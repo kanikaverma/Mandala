@@ -132,7 +132,7 @@ stmt:
 		OFFSET expr 
 		ANGULARSHIFT expr RBRACE SEMI			{ Layer($1, $8, $10, $12, $14, $16) }
 	| assign_expr ASSIGN expr SEMI		{ Assign($1, $3) }
-	| array_expr ASSIGN LBRACE actuals_list RBRACE SEMI 	{ Assign($1, $4) }
+	| array_expr ASSIGN LBRACE actuals_opt RBRACE SEMI 	{ ArrAssign($1, $4) } 
 /*	| array_expr ASSIGN func_call SEMI 	{ Assign($1, $3) }
 	| assign_expr ASSIGN func_call SEMI 	{Assign($1,$3)}
 	| func_call SEMI 						{ FuncCall($1) }*/
@@ -160,7 +160,7 @@ expr:
 	| expr GT expr				{ Binop($1, Greater, $3) }
 	| expr GEQ expr 			{ Binop($1, Geq, $3) }
 	| LPAREN expr RPAREN 		{ $2 }
-	| ID COLON LPAREN actuals_opt RPAREN      { Call($1, $4) }
+	| ID COLON LPAREN actuals_opt RPAREN      { Call($1, []) }
 	
 	
 array_expr:
@@ -177,9 +177,14 @@ array_expr:
 			vname = $2; 	(* variable name *)
 		}}
 
-actuals_opt:
-	/* nothing */ 				{ [] }
+ actuals_opt:
+	/*nothing*/					{ [] }
 	| actuals_list 				{ List.rev $1 }
 actuals_list:
 	expr  								{ [$1] }
 	| actuals_list COMMA expr 			{ $3 :: $1 }
+
+/*actuals_opt:
+ nothing  							{ [] }
+|expr           						{[$1]}g
+| actuals_opt COMMA expr 				{$1 @ [ $3 ]}*/

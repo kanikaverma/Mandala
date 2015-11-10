@@ -27,6 +27,7 @@ type stmt =
 	| Block of stmt list
 	| Expr of expr (* commented out because we are seeing if it is necessary *)
 	| Assign of var_decl * expr
+	| ArrAssign of var_decl * expr list
 	| Return of expr
 	| IF of expr * stmt * stmt
 	| Foreach of string * int * int * stmt list
