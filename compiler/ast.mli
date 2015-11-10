@@ -25,11 +25,11 @@ type var_decl = {
 
 type stmt =
 	| Block of stmt list
-	(*| Expr of expr commented out because we are seeing if it is necessary *)
+	| Expr of expr (* commented out because we are seeing if it is necessary *)
 	| Assign of var_decl * expr
 	| Return of expr
 	| IF of expr * stmt * stmt
-	| Foreach of expr * expr * stmt
+	| Foreach of string * int * int * stmt list
 	| While of expr * stmt
 	| Shape of var_decl * expr * expr * expr * expr
 	| Mandala of var_decl
