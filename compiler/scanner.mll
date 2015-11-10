@@ -4,7 +4,7 @@
 
 let digit = ['0'-'9']
 let alpha = ['a'-'z' 'A'-'Z' '_']
-let number = '-'? digit* '.'? digit*
+let number = '-'? digit+ '.' digit* | '-'? digit* '.' digit+
 
 
 rule token = parse
@@ -13,9 +13,9 @@ rule token = parse
 | [' ' '\t' '\r' '\n']                { token lexbuf }
 
 (* literals and variables *)
-| digit+ as lit                       { LITERAL(int_of_string lit) }
-| number as lit                       { LITERAL(float_of_string lit) }
-| alpha+ (alpha | digit)* as lit      { ID(int_of_char lit - 97) }
+| '-'? digit+ as lit                       { LITERAL(int_of_string lit) }
+| number as lit                		    { FLOAT_LITERAL(float_of_string lit) }
+| alpha (alpha | digit)* as lxm        { ID(lxm) }
 
 (* comments *)
 | "/#"         { comment lexbuf }
@@ -23,7 +23,7 @@ rule token = parse
 (* arithmetic operators *)
 | '+'          { PLUS }     | '*'     { TIMES }
 | '-'          { MINUS }    | '/'     { DIVIDE }
-| '%'          { MODULUS }  | '^'     { EXP }
+(*| '%'          { MODULUS }  | '^'     { EXP } *)
 
 (* conditional operators *)
 | "=="         { EQ }       | "!="    { NEQ }
@@ -31,9 +31,9 @@ rule token = parse
 | "<="         { LEQ }      | ">="    { GEQ }
 
 (* boolean operators *)
-| "true"       { TRUE }     | "false" { FALSE }
+(*| "true"       { TRUE }     | "false" { FALSE }
 | "and"        { AND }      | "or"    { OR }
-| "not"        { NOT }      | "xor"   { XOR }
+| "not"        { NOT }      | "xor"   { XOR }*)
 
 (* assignment *)
 | '='          { ASSIGN }   | ':'     { COLON }  
@@ -47,15 +47,15 @@ rule token = parse
 | "to"    { TO }			| "continue"   { CONTINUE } 
 
 (* punctuation and delimiters *)
-| '('          { LPAREN }   | ')'       { RPAREN }
-| '['          { LBRACK }   | ']'       { RBRACK }
-| '{'          { LBRACE }   | '}'       { RBRACE }
-| ','          { COMMA }    | '.'       { PERIOD }
+| '('          { LPAREN }     | ')'       { RPAREN }
+| '['          { LBRACKET }   | ']'       { RBRACKET }
+| '{'          { LBRACE }     | '}'       { RBRACE }
+| ','          { COMMA }      (*| '.'       { PERIOD }*)
 | ';' 		   { SEMI }
 
 (* built-in functions and constructors *)
 | "def"        { DEF }      | "return"  { RETURN }
-| "draw"       { DRAW }     | "addTo"   { ADDTO }      
+(*| "draw"       { DRAW }     | "addTo"   { ADDTO }*)    
 | "create"     { CREATE }
 
 (* language specific keywords *)
@@ -65,7 +65,7 @@ rule token = parse
 | "angularShift" { ANGULARSHIFT }
 
 (* types *)
-| "Number"     { NUMBER }   | "String"     { STRING }
+| "Number"     { NUMBER }   (*| "String"     { STRING }*)
 | "Boolean"    { BOOLEAN }  | "Void"       { VOID }
 | "Shape"      { SHAPE }    | "Geo"        { GEO }
 | "Layer"      { LAYER }    | "Mandala"    { MANDALA }  
