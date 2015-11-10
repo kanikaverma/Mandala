@@ -119,7 +119,8 @@ stmt:
 	| RETURN expr SEMI 								{ Return($2) }
 	| IF LPAREN expr RPAREN stmt %prec NOELSE 	{ IF($3, $5, Block([])) }
 	| IF LPAREN expr RPAREN stmt ELSE stmt 		{ IF($3, $5, $7) }
-	| FOREACH expr_opt TO expr_opt COLON stmt 	{ Foreach($2, $4, $6) }
+	| FOREACH ID ASSIGN LITERAL TO LITERAL COLON 
+		LBRACE stmt_list RBRACE					{ Foreach($2, $4, $6, $9) }
 	| assign_expr ASSIGN CREATE SHAPE COLON LBRACE GEO expr 
 		SIZE expr 
 		COLOR expr 
@@ -132,13 +133,13 @@ stmt:
 		ANGULARSHIFT expr RBRACE SEMI			{ Layer($1, $8, $10, $12, $14, $16) }
 	| assign_expr ASSIGN expr SEMI		{ Assign($1, $3) }
 	| array_expr ASSIGN LBRACE actuals_list RBRACE SEMI 	{ Assign($1, $4) }
-	| array_expr ASSIGN func_call SEMI 	{ Assign($1, $3) }
+/*	| array_expr ASSIGN func_call SEMI 	{ Assign($1, $3) }
 	| assign_expr ASSIGN func_call SEMI 	{Assign($1,$3)}
-	| func_call SEMI 						{ FuncCall($1) }
+	| func_call SEMI 						{ FuncCall($1) }*/
 
 
-func_call:
-	| ID COLON actuals_opt      { Call($1, $3) }
+/*func_call:
+	| ID COLON actuals_opt      { Call($1, $3) }*/
 	
 expr_opt:
 	/* nothing */ 		{ Noexpr }
@@ -159,6 +160,7 @@ expr:
 	| expr GT expr				{ Binop($1, Greater, $3) }
 	| expr GEQ expr 			{ Binop($1, Geq, $3) }
 	| LPAREN expr RPAREN 		{ $2 }
+	| ID COLON LPAREN actuals_opt RPAREN      { Call($1, $4) }
 	
 	
 array_expr:
@@ -181,9 +183,3 @@ actuals_opt:
 actuals_list:
 	expr  								{ [$1] }
 	| actuals_list COMMA expr 			{ $3 :: $1 }
-
-
-
-
-	
-
