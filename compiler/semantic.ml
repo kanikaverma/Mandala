@@ -54,12 +54,14 @@ let rec semantic_stmt (env:translation_enviornment):(Ast.stmt -> Sast.sstmt * sd
 	| Ast.Assign(lefthand, righthand) ->
 		let right_assign =
 			semantic_expr env righthand
-		in let (name, typ) = right_assign in
+		in let (assign_val, typ) = right_assign in
 		let (typ2, name2) =(lefthand.kind, lefthand.vname) 
 
 		in match typ with (*Assign of svar_decl * sexpr*)
-			 typ2 -> Sast.Assign(({skind = typ2; svname = name2}), name), typ (* check strctural equality *)
+			 typ2 -> Sast.Assign(({skind = typ2; svname = name2}), assign_val), typ (* check strctural equality *)
 			(* | _ -> raise (Error("it didn't work")) *)
+
+
 		
 	(* | _ -> raise (Error("undeclared identifier")) *)
 (* for function call we can check if it's drwa then check input typ *)
