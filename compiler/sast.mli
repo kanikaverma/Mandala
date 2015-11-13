@@ -22,7 +22,7 @@ type sexpr =
 	| Noexpr
 	| Id of string
 	| Binop of sexpr * op * sexpr
-	| Call of sfunc_decl * sexpr list
+	| Call of string * sexpr list
 
 
 and svar_decl = {
