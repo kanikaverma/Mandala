@@ -20,15 +20,15 @@ type sexpr =
 	| Float_Literal of float
 	| Number of float
 	| Noexpr
-	| Id of string * sdata_type
+	| Id of string
 	| Binop of sexpr * op * sexpr
 	| Call of sfunc_decl * sexpr list
 
 
 and svar_decl = {
 
-	kind : sdata_type;
-	vname : string;
+	skind : sdata_type;
+	svname : string;
 	
 }
 
