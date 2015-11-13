@@ -6,7 +6,7 @@ exception Error of string
 (*symbol table *)
 type symbol_table={
 	parent : symbol_table option;
-	variables: var_decl list
+	variables: (sdata_type*string) list 
 }
 
 type function_table={
@@ -27,7 +27,7 @@ let rec find_variable (scope: symbol_table) name=
 			Some(parent)-> find_variable parent name
 		| _ -> raise Not_found
 
-let rec expr env = function
+let rec expr (env:translation_enviornment):Sast.Id = function
 
 Ast.Id(vname) ->
 	let vdecl = try
@@ -36,7 +36,7 @@ Ast.Id(vname) ->
 		raise (Error("undeclared identifier"^vname))
 	in 
 	let (typ,_) =vdecl in 
-	typ, Sast.Id(vdecl)
+	Sast.Id(vdecl, typ), typ
 
 
 
