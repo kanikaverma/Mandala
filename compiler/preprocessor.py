@@ -122,5 +122,5 @@ if __name__ == "__main__":
   output = process(infile)
 
   # create output file 
-  outfile = open(directory + new_filename + ".proc.mandala", 'w')
+  outfile = open(directory + new_filename + ".mandala.proc", 'w')
   outfile.write(output.getvalue())
