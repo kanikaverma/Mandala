@@ -14,29 +14,29 @@ type sdata_type =
 
 type expr_wrapper =
 	Expr of sexpr * sdata_type
-type sexpr =
+and sexpr =
  	Literal of int
 	| Float_Literal of float
 	| Number of float
 	| Noexpr
 	| Id of svar_decl
-	| Binop of expr * op * expr
-	| Call of sfunc_decl * expr list
+	| Binop of expr_wrapper * op * expr_wrapper
+	| Call of sfunc_decl * expr_wrapper list
 
 
-type svar_decl = {
+and svar_decl = {
 	kind : sdata_type;
 	vname : string;
 }
 
-type sfunc_decl = {
+and sfunc_decl = {
 	fname : string;
 	returntype : sdata_type;
-	formals : var_decl list;
+	formals : svar_decl list;
 	body : sstmt list;
 }
 
-type sstmt =
+and sstmt =
 	| Block of sstmt list
 	(*| Expr of expr commented out because we are seeing if it is necessary *)
 	| Assign of svar_decl * expr_wrapper
@@ -48,3 +48,5 @@ type sstmt =
 	| Mandala of svar_decl
 	| Layer of svar_decl * expr_wrapper * expr_wrapper * expr_wrapper * expr_wrapper * expr_wrapper 
 	| FuncCall of expr_wrapper
+type sprogram =
+	sfunc_decl list
