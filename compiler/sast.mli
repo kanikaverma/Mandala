@@ -1,5 +1,6 @@
 open Ast
 
+
 type sdata_type =
 	Int
 	| Float
@@ -19,14 +20,16 @@ and sexpr =
 	| Float_Literal of float
 	| Number of float
 	| Noexpr
-	| Id of svar_decl
+	| Id of string
 	| Binop of expr_wrapper * op * expr_wrapper
 	| Call of sfunc_decl * expr_wrapper list
 
 
 and svar_decl = {
+
 	kind : sdata_type;
 	vname : string;
+	
 }
 
 and sfunc_decl = {
