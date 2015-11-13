@@ -27,16 +27,16 @@ let rec find_variable (scope: symbol_table) name=
 			Some(parent)-> find_variable parent name
 		| _ -> raise Not_found
 
-let rec expr (env:translation_enviornment):Sast.Id = function
+let rec expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sdata_type) = function
 
-Ast.Id(vname) ->
-	let vdecl = try
-		find_variable env.var_scope vname
-	with Not_found ->
-		raise (Error("undeclared identifier"^vname))
-	in 
-	let (typ,_) =vdecl in 
-	Sast.Id(vdecl, typ), typ
+	Ast.Id(vname) ->
+		let vdecl = try
+			find_variable env.var_scope vname
+		with Not_found ->
+			raise (Error("undeclared identifier"^vname))
+		in 
+		let (typ, name) =vdecl in 
+		Sast.Id(name), typ
 
 
 
