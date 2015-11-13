@@ -27,8 +27,8 @@ type sexpr =
 
 and svar_decl = {
 
-	kind : sdata_type;
-	vname : string;
+	skind : sdata_type;
+	svname : string;
 	
 }
 
