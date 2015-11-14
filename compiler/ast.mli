@@ -35,7 +35,6 @@ type stmt =
 	| Shape of var_decl * expr * expr * expr * expr
 	| Mandala of var_decl
 	| Layer of var_decl * expr * expr * expr * expr * expr 
-	| FuncCall of expr
 
 type func_decl = {
 	fname : string;

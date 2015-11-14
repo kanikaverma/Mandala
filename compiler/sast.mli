@@ -13,22 +13,22 @@ type sdata_type =
 	| Mandalat
 	| Arrayt
 
-type expr_wrapper =
-	Expr of sexpr * sdata_type
-and sexpr =
+(*type expr_wrapper =
+	Expr of sexpr * sdata_type*)
+type sexpr =
  	Literal of int
 	| Float_Literal of float
 	| Number of float
 	| Noexpr
 	| Id of string
-	| Binop of expr_wrapper * op * expr_wrapper
-	| Call of sfunc_decl * expr_wrapper list
+	| Binop of sexpr * op * sexpr
+	| Call of string * sexpr list
 
 
 and svar_decl = {
 
-	kind : sdata_type;
-	vname : string;
+	skind : sdata_type;
+	svname : string;
 	
 }
 
@@ -41,15 +41,14 @@ and sfunc_decl = {
 
 and sstmt =
 	| Block of sstmt list
-	(*| Expr of expr commented out because we are seeing if it is necessary *)
-	| Assign of svar_decl * expr_wrapper
-	| Return of expr_wrapper
-	| IF of expr_wrapper * sstmt * sstmt
-	| Foreach of expr_wrapper * expr_wrapper * sstmt
-	| While of expr_wrapper * sstmt
-	| Shape of svar_decl * expr_wrapper * expr_wrapper * expr_wrapper * expr_wrapper
+	| Assign of svar_decl * sexpr
+	| Return of sexpr
+	| IF of sexpr * sstmt * sstmt
+	| Foreach of sexpr * sexpr * sstmt
+	| While of sexpr * sstmt
+	| Shape of svar_decl * sexpr * sexpr * sexpr * sexpr
 	| Mandala of svar_decl
-	| Layer of svar_decl * expr_wrapper * expr_wrapper * expr_wrapper * expr_wrapper * expr_wrapper 
-	| FuncCall of expr_wrapper
+	| Layer of svar_decl * sexpr * sexpr * sexpr * sexpr * sexpr 
+	| FuncCall of sexpr
 type sprogram =
 	sfunc_decl list
