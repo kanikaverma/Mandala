@@ -47,6 +47,8 @@ let rec find_variable (scope: symbol_table) name=
 let rec find_function (scope: function_table) name=
 		List.find (fun (s, _, _, _) -> s = name) scope.functions
 	(*with Not_found -> raise Not_found*)
+let rec extract_type (scope: function_table) name = function
+	(sdata_type, string) -> (sdata_type)
 let get_formal_arg_types env = function
 	(sdata_type, string) -> (sdata_type, string)
 let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sdata_type) = function
@@ -64,15 +66,17 @@ let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sd
 		try (let (fname, fret, fargs, fbody) =
 			find_function env.fun_scope fid in
 			let actual_types = List.map (fun expr -> semantic_expr env expr) args in
-			let actual_type_names = 
-				List.find (fun (_,s) -> s) actual_types
+			let actual_type_names = List.iter extract_type actual_types
+			(*let actual_type_names = 
+				List.find (fun (_,s) -> s) actual_types*)
 
 			(*let (actual_arg_type, _) = actual_types in*)
 		in 
 			let formal_types =  List.map (fun farg -> let (arg_type, _) =
 				get_formal_arg_types env (farg.skind, farg.svname) in arg_type)
 			fargs in
-			if not (actual_type_names = formal_types) then
+			if not (actual_type_names = formal_types) 
+			then
 				raise (Error("Mismatching types in function call"))
 			else 
 				Sast.Call(fname, fargs), freturntype
