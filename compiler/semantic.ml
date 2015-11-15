@@ -89,7 +89,7 @@ let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sd
 
 		)
 		with Not_found ->
-			raise (Error("undeclared function "))
+			raise (Error("undeclared function ")) 
 	(* WORKING ONE Ast.Call(vname, func_args) ->
 		let func_call = try
 			find_function env.fun_scope vname 
@@ -100,17 +100,25 @@ let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sd
 		(* | Call of string * sexpr list *)
 	(* check type of right ahndside and recurse on that to check that it matches lefthand side*)
 	(*once it is confirmed, compare left type and righthand type and then add it to the symbol table *)
-	| _ -> raise (Error("invalid  assignment"))
+	| _ -> raise (Error("invalid  assignment")) 
 
 let rec semantic_stmt (env:translation_enviornment):(Ast.stmt -> Sast.sstmt * sdata_type) = function
-	Ast.Mandala(mandala_arg) ->
-		let stmt_decl = try
-			find_variable env.var_scope mandala_arg.vname
+	Ast.Mandala(mandala_arg) ->	
+
+		(*let stmt_decl =try
+				find_variable env.var_scope mandala_arg.vname
 		with Not_found ->
-			raise (Error("undeclared identifier"^mandala_arg.vname))
+			raise (Error ("undeclared"^mandala_arg.vname))
 		in 
 		let (typ, name) = stmt_decl in
+		Sast.Mandala({skind=typ; svname =name}), typ*)
+
+		let (_, name) = mandala_arg in
+		let typ= Sast.Mandalat in
+		(*let typ = mandala_arg.kind in
+		let name = mandala_arg.vname in *)
 		Sast.Mandala({skind = typ; svname = name}), typ
+
 	| Ast.Assign(lefthand, righthand) ->
 		let right_assign =
 			semantic_expr env righthand
