@@ -1,6 +1,5 @@
 open Ast
 
-
 type sdata_type =
 	Int
 	| Float
@@ -50,5 +49,6 @@ and sstmt =
 	| Mandala of svar_decl
 	| Layer of svar_decl * sexpr * sexpr * sexpr * sexpr * sexpr 
 	| FuncCall of sexpr
+
 type sprogram =
-	sfunc_decl list
+	sstmt list * sfunc_decl list
