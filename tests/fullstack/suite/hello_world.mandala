@@ -1,18 +1,1 @@
-# hello world program
-  
-Mandala m = create Mandala
-
-Shape s = create Shape:
-  figure Circle
-  size 5
-  rotation 0 
-
-Layer l = create Layer:
-  radius 10
-  Shape s 
-  count 1
-  offset 0 
-
-addTo: m, l 
-
-draw: m 
+5
