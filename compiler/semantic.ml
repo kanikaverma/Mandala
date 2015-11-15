@@ -19,7 +19,7 @@ type function_table={
 	body : stmt list;*)
 (*functions: (string * mndlt * var_decl list * stmt list) list*)
 (*envioronment*)
-type translation_enviornment ={
+type translation_environment ={
 	var_scope: symbol_table;
 	fun_scope: function_table;
 }
@@ -36,7 +36,7 @@ let rec find_function (scope: function_table) name=
 	try
 		List.find (fun (_,s,_) -> s = name) scope.functions
 	with Not_found -> raise Not_found
-let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sdata_type) = function
+let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * sdata_type) = function
 
 	Ast.Id(vname) ->
 		let vdecl = try
@@ -62,7 +62,7 @@ let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sd
 	
 	| _ -> raise (Error("invalid  assignment"))
 
-let rec semantic_stmt (env:translation_enviornment):(Ast.stmt -> Sast.sstmt * sdata_type) = function
+let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sdata_type) = function
 	Ast.Mandala(mandala_arg) ->
 		let stmt_decl = try
 			find_variable env.var_scope mandala_arg.vname
@@ -81,8 +81,9 @@ let rec semantic_stmt (env:translation_enviornment):(Ast.stmt -> Sast.sstmt * sd
 			 typ2 -> Sast.Assign(({skind = typ2; svname = name2}), assign_val), typ (* check strctural equality *)
 			(* | _ -> raise (Error("it didn't work")) *)
 		
-	(* | _ -> raise (Error("undeclared identifier")) *)
+
+let semantic_check x = x ;;
+	(* | _ -> raise (Error("undeclared identifier") *)
 (* for function call we can check if it's drwa then check input typ *)
 (* chekc if number of arguments are matching *)
 (* since draw is built in function *)
-
