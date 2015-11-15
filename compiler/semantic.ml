@@ -50,7 +50,8 @@ let rec find_function (scope: function_table) name=
 let rec extract_type (scope: function_table) name = function
 	(sdata_type, string) -> (sdata_type)
 let get_formal_arg_types env = function
-	(sdata_type, string) -> (sdata_type, string)
+	(sdata_type, string) -> (sdata_type)
+
 let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sdata_type) = function
 
 	Ast.Id(vname) ->
@@ -66,20 +67,24 @@ let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sd
 		try (let (fname, fret, fargs, fbody) =
 			find_function env.fun_scope fid in
 			let actual_types = List.map (fun expr -> semantic_expr env expr) args in
-			let actual_type_names = List.iter extract_type actual_types
+			(*let actual_type_names = List.iter extract_type actual_types*)
+			let actual_types_list = List.fold_left (fun a (_,typ) -> typ :: a) [] actual_types    (*get list of just types from list of (type, string) tuples, [] is an accumulator*)
+
+			
 			(*let actual_type_names = 
 				List.find (fun (_,s) -> s) actual_types*)
 
 			(*let (actual_arg_type, _) = actual_types in*)
 		in 
-			let formal_types =  List.map (fun farg -> let (arg_type, _) =
+			let formal_types =  List.map (fun farg -> let arg_type =
 				get_formal_arg_types env (farg.skind, farg.svname) in arg_type)
 			fargs in
-			if not (actual_type_names = formal_types) 
+			if not (actual_types_list=formal_types) 
 			then
 				raise (Error("Mismatching types in function call"))
 			else 
-				Sast.Call(fname, fargs), freturntype
+				let actual_expr_list = List.fold_left (fun a (expr,_) -> expr :: a) [] actual_types in
+				Sast.Call(fname, actual_expr_list), fret
 				(* Call of string * sexpr list*)
 
 		)
@@ -115,6 +120,10 @@ let rec semantic_stmt (env:translation_enviornment):(Ast.stmt -> Sast.sstmt * sd
 		in match typ with (*Assign of svar_decl * sexpr*)
 			 typ2 -> Sast.Assign(({skind = typ2; svname = name2}), assign_val), typ (* check strctural equality *)
 			(* | _ -> raise (Error("it didn't work")) *)
+
+	| Ast.Expr(expression) -> let newExpr = semantic_expr env expression 
+		in let (x, typ)= newExpr in 
+		Sast.Expr(x), typ
 		
 	(* | _ -> raise (Error("undeclared identifier")) *)
 (* for function call we can check if it's drwa then check input typ *)
