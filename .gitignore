@@ -5,3 +5,4 @@ parser.ml
 parser.mli
 *.proc
 *.cpp
+*.class
