@@ -41,6 +41,7 @@ and sfunc_decl = {
 and sstmt =
 	| Block of sstmt list
 	| Assign of svar_decl * sexpr
+	| Expr of sexpr
 	| Return of sexpr
 	| IF of sexpr * sstmt * sstmt
 	| Foreach of sexpr * sexpr * sstmt
