@@ -38,10 +38,9 @@ ast:
 
 .PHONY: clean
 clean:
-	find . -name '*.cmo' -delete
-	find . -name '*.cmi' -delete
-	find . -name '*.proc*' -delete
-	find . -name 'scanner.ml' -delete
-	find . -name 'parser.ml' -delete
-	find . -name 'parser.mli' -delete	
-	find . -name '*.class' -delete
+	rm -f *.cmo
+	rm -f *.cmi
+	rm -f *.proc
+	rm -f scanner.ml
+	rm -f parser.ml
+	rm -f parser.mli
