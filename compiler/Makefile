@@ -44,3 +44,4 @@ clean:
 	find . -name 'scanner.ml' -delete
 	find . -name 'parser.ml' -delete
 	find . -name 'parser.mli' -delete	
+	find . -name '*.class' -delete
