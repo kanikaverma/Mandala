@@ -119,6 +119,14 @@ let rec semantic_stmt (env:translation_enviornment):(Ast.stmt -> Sast.sstmt * sd
 		let name = mandala_arg.vname in *)
 		Sast.Mandala({skind = typ; svname = name}), typ
 
+	| Ast.Expr(expression) -> 
+		let newExpr = try
+			semantic_expr env expression 
+		with Not_found ->
+			raise (Error("undefined expression"))  			(*this error should be fixed to something more relevant*)
+		in let (x, typ)= newExpr in 
+		Sast.Expr(x), typ
+
 	| Ast.Assign(lefthand, righthand) ->
 		
 		let right_assign =
@@ -130,11 +138,9 @@ let rec semantic_stmt (env:translation_enviornment):(Ast.stmt -> Sast.sstmt * sd
 
 		in match typ with (*Assign of svar_decl * sexpr*)
 			 typ2 -> Sast.Assign(({skind = typ2; svname = name2}), assign_val), typ (* check strctural equality *)
-			(* | _ -> raise (Error("it didn't work")) *)
+			| _ -> raise (Error("Assignment could not be typechecked")) 
 
-	| Ast.Expr(expression) -> let newExpr = semantic_expr env expression 
-		in let (x, typ)= newExpr in 
-		Sast.Expr(x), typ
+		(*somehow it is not successfully leaving this | block, and is going to the next or block instead of returning*)
 		
 	(* | _ -> raise (Error("undeclared identifier")) *)
 (* for function call we can check if it's drwa then check input typ *)
