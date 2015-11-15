@@ -120,10 +120,13 @@ let rec semantic_stmt (env:translation_enviornment):(Ast.stmt -> Sast.sstmt * sd
 		Sast.Mandala({skind = typ; svname = name}), typ
 
 	| Ast.Assign(lefthand, righthand) ->
+		
 		let right_assign =
 			semantic_expr env righthand
 		in let (assign_val, typ) = right_assign in
-		let (typ2, name2) =(lefthand.kind, lefthand.vname) 
+		let (typ2, name2) = lefthand 
+		(*let lefthand {kind = typ2; vname = name2} = x *)
+		(*let (typ2, name2) =(lefthand.kind, lefthand.vname) *)
 
 		in match typ with (*Assign of svar_decl * sexpr*)
 			 typ2 -> Sast.Assign(({skind = typ2; svname = name2}), assign_val), typ (* check strctural equality *)
