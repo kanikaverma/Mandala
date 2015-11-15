@@ -35,7 +35,7 @@ processed_files=$(find suite -name *\.proc)
 
 for file in $processed_files
 do
-  echo "Processed: "$file
+  echo "Processed: "${file##*/}
 done
 
 echo ""
