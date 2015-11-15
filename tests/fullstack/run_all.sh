@@ -6,15 +6,15 @@ preprocessor="../../compiler/preprocessor.py"
 semantic="../../compiler/semantic.sh"
 bitch="../../compiler/run_bitch"
 dependency="Turtle.java"
+dependency_compiled="Turtle.class"
 
 echo ""
 echo "*****************************************"
-echo "****************CLEANING*****************"
+echo "****************BUILDING*****************"
 echo "*****************************************"
 echo ""
 
 cd ../../compiler
-make clean
 make
 cd ../tests/fullstack
 
@@ -40,7 +40,7 @@ done
 
 echo ""
 echo "*****************************************"
-echo "************JAVA GENERATION**************"
+echo "*************JAVA GENERATION*************"
 echo "*****************************************"
 echo ""
 
@@ -77,7 +77,9 @@ exec_files=$(find suite -name *\.class)
 
 for file in $exec_files
 do
-  echo "Compiled: "${file##*/}
+  if [ "${file##*/}" != "$dependency_compiled" ]; then
+    echo "Compiled: "${file##*/}
+  fi
 done
 
 echo ""
@@ -90,9 +92,24 @@ cd suite
 
 for file in $exec_files
 do
-  if [ "${file##*/}" != "Turtle.class" ]; then
+  if [ "${file##*/}" != "$dependency_compiled" ]; then
     file_base=${file##*/}
     exec_file=${file_base%.*}
     java $exec_file
   fi
 done
+
+echo ""
+echo "*****************************************"
+echo "****************CLEANING*****************"
+echo "*****************************************"
+echo ""
+
+rm -f *.class
+rm -f *.proc
+mv $dependency $dependency$".keep"
+rm -f *.java
+mv $dependency$".keep" $dependency
+
+cd ../../../compiler
+make clean
