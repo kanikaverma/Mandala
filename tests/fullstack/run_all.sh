@@ -4,18 +4,25 @@
 
 preprocessor="../../compiler/preprocessor.py"
 semantic="../../compiler/semantic.sh"
+bitch="../../compiler/run_bitch"
+dependency="Turtle.java"
 
+echo ""
 echo "*****************************************"
 echo "****************CLEANING*****************"
 echo "*****************************************"
+echo ""
 
-cd ../..
+cd ../../compiler
 make clean
-cd tests/fullstack
+make
+cd ../tests/fullstack
 
+echo ""
 echo "*****************************************"
 echo "**************PREPROCESSING**************"
 echo "*****************************************"
+echo "" 
 
 files=$(find suite -name *\.mandala)
 
@@ -24,37 +31,68 @@ do
   python $preprocessor $file 
 done
 
+processed_files=$(find suite -name *\.proc)
+
+for file in $processed_files
+do
+  echo "Processed: "${file##*/}
+done
+
+echo ""
 echo "*****************************************"
-echo "***********SEMANTIC CHECKING*************"
+echo "************JAVA GENERATION**************"
 echo "*****************************************"
+echo ""
 
 processed_files=$(find suite -name *\.proc)
 
 for file in $processed_files
 do
-  sh $semantic $file
+  cat $file | ./$bitch > "suite/Program.java"
 done
 
-echo "*****************************************"
-echo "*************COMPILING C++***************"
-echo "*****************************************"
+java_files=$(find suite -name *\.java)
 
-cplusplus_files=$(find suite -name *\.cpp)
-
-for file in $cplusplus_files
+for file in $java_files
 do
-  g++ $file -o ${file%.*}
+  echo "Generated: "${file##*/}
 done
 
+echo ""
+echo "*****************************************"
+echo "***************COMPILING*****************"
+echo "*****************************************"
+echo ""
+
+cd suite 
+
+for file in $java_files
+do
+  file_base=${file##*/}
+  javac $file_base $dependency
+done
+
+cd ..
+exec_files=$(find suite -name *\.class)
+
+for file in $exec_files
+do
+  echo "Compiled: "${file##*/}
+done
+
+echo ""
 echo "*****************************************"
 echo "***************EXECUTING*****************"
 echo "*****************************************"
+echo ""
 
-for file in $cplusplus_files
+cd suite
+
+for file in $exec_files
 do
-  executable=${file%.*}
-  echo $executable
-  output_file=${file%.*}$".txt"
-  echo $output_file
-  ./$executable > $output_file
+  if [ "${file##*/}" != "Turtle.class" ]; then
+    file_base=${file##*/}
+    exec_file=${file_base%.*}
+    java $exec_file
+  fi
 done
