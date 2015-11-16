@@ -38,8 +38,6 @@ let gen_java = function
 			List.map proc_stmt s; 
 
 			print_string "  }\n\n}";
-			let x_string = string_of_int x in
-			print_string x_string;
 
 		)	
 

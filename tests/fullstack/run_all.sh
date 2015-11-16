@@ -61,7 +61,7 @@ processed_files=$(find suite -name *\.proc)
 for file in $processed_files
 do
   # cat $file
-  ./$run "$(< $file)" > "suite/Program.java" &
+  ./$run < $file > "suite/Program.java" &
   # ./$run < $file > "suite/Program.java" &
   # echo $contents > output & ./$run output > "suite/Program.java" &
 done
