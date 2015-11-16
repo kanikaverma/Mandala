@@ -1,7 +1,7 @@
-default: run_bitch semantic
+default: run semantic
 
-run_bitch: scanner parser semantic gen_java
-	ocamlc -o run_bitch scanner.cmo parser.cmo semantic.cmo gen_java.cmo
+run: scanner parser semantic gen_java
+	ocamlc -o run scanner.cmo parser.cmo semantic.cmo gen_java.cmo
 
 #sast_jast: scanner parser semantic sast_to_jast
 	#ocamlc -o sast_to_jast scanner.cmo parser.cmo semantic_checker.cmo sast_to_jast.cmo 	

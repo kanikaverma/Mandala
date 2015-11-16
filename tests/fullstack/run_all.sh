@@ -4,7 +4,7 @@
 
 preprocessor="../../compiler/preprocessor.py"
 semantic="../../compiler/semantic.sh"
-bitch="../../compiler/run_bitch"
+bitch="../../compiler/run"
 dependency="Turtle.java"
 dependency_compiled="Turtle.class"
 warnings="../tests/fullstack/warnings.txt"
@@ -111,7 +111,7 @@ echo ""
 rm -f *.class
 rm -f *.proc
 mv $dependency $dependency$".keep"
-rm -f *.java
+#rm -f *.java
 mv $dependency$".keep" $dependency
 
 cd ../../../compiler
