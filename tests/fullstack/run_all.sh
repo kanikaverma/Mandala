@@ -7,6 +7,7 @@ semantic="../../compiler/semantic.sh"
 bitch="../../compiler/run_bitch"
 dependency="Turtle.java"
 dependency_compiled="Turtle.class"
+warnings="../tests/fullstack/warnings.txt"
 
 echo ""
 echo "*****************************************"
@@ -15,7 +16,7 @@ echo "*****************************************"
 echo ""
 
 cd ../../compiler
-make
+make 2> $warnings
 cd ../tests/fullstack
 
 echo ""
@@ -55,7 +56,9 @@ java_files=$(find suite -name *\.java)
 
 for file in $java_files
 do
-  echo "Generated: "${file##*/}
+  if [ "${file##*/}" != "$dependency" ]; then
+    echo "Generated: "${file##*/}
+  fi
 done
 
 echo ""
@@ -112,4 +115,5 @@ rm -f *.java
 mv $dependency$".keep" $dependency
 
 cd ../../../compiler
-make clean
+make clean 2>> $warnings
+echo "" 
