@@ -13,16 +13,17 @@ let sast =
 
 let proc_expr =function
 	Sast.Call(fname, actual_args)->
-		print_string "    t.dot();\n"
+		print_string "    Turtle t = new Turtle();\n";    (*should be in sast.mandala case*)
+		print_string "    t.hide();\n";     (*should be in sast.mandala case*)
+		print_string "    t.setPosition(0, 0);\n";      (*should be in sast.mandala case*)
+		print_string "    t.dot();\n"      (*should be in sast.mandala case*)
 
 
 let proc_stmt = function
-	Sast.Mandala(vname) ->
+	(*Sast.Mandala(vname) ->
 		(*print java code for mandala of this name*)
-		print_string "    Turtle t = new Turtle();\n";
-		print_string "    t.hide();\n";
-		print_string "    t.setPosition(0, 0);\n";
-	| Sast.Expr(expression)->
+		
+	|*) Sast.Expr(expression)->
 		proc_expr expression
 	| _ -> raise (Error("unsupported statement found")) 
 
