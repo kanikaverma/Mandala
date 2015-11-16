@@ -17,6 +17,8 @@ echo "*****************************************"
 echo ""
 
 cd ../../compiler
+echo "" > $warnings 
+echo "" > $expected
 make 2> $warnings
 cd ../tests/fullstack
 
@@ -50,7 +52,6 @@ processed_files=$(find suite -name *\.proc)
 
 for file in $processed_files
 do
-  # cat $file | ./$run > "suite/Program.java"
   ./$run "$(< $file)" > "suite/Program.java"
 done
 
@@ -132,8 +133,10 @@ echo ""
 rm -f *.class
 rm -f *.proc
 mv $dependency $dependency$".keep"
+mv $expected $expected$".keep"
 rm -f *.java
 mv $dependency$".keep" $dependency
+mv $expected$".keep" $expected
 
 cd ../../../compiler
 make clean 2>> $warnings
