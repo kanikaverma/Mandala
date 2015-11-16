@@ -12,12 +12,12 @@ let sast =
 let gen_java s =
 	if (1 > 0 ) then (
 	print_string "public class Program {\n\n";
- 	print_string "\tpublic static void main(String[] args) {\n\n";
-	print_string "\t\tTurtle t = new Turtle();\n";
-    print_string "\t\tt.hide();\n";
-    print_string "\t\tt.setPosition(0, 0);\n";
-    print_string "\t\tt.dot();\n";
-    print_string "\t}\n\n}"; )
+ 	print_string "  public static void main(String[] args) {\n\n";
+	print_string "    Turtle t = new Turtle();\n";
+  print_string "    t.hide();\n";
+  print_string "    t.setPosition(0, 0);\n";
+  print_string "    t.dot();\n";
+  print_string "  }\n\n}"; )
 
 	else print_string "EDO FOUND AN ARBITRARY ERROR"
 

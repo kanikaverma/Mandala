@@ -1,1 +1,3 @@
-5
+# hello world
+Mandala m = create Mandala
+draw: (m)

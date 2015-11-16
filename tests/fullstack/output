@@ -1,0 +1,1 @@
+Mandala m = create Mandala; draw: (m);
