@@ -113,7 +113,7 @@ let rec semantic_stmt (env:translation_enviornment):(Ast.stmt -> Sast.sstmt * sd
 		let (typ, name) = stmt_decl in
 		Sast.Mandala({skind=typ; svname =name}), typ*)
 
-		let (_, name) = mandala_arg in
+		let {vname=name} = mandala_arg in
 		let typ= Sast.Mandalat in
 		(*let typ = mandala_arg.kind in
 		let name = mandala_arg.vname in *)
@@ -132,7 +132,7 @@ let rec semantic_stmt (env:translation_enviornment):(Ast.stmt -> Sast.sstmt * sd
 		let right_assign =
 			semantic_expr env righthand
 		in let (assign_val, typ) = right_assign in
-		let (typ2, name2) = lefthand 
+		let {kind=typ2; vname=name2} = lefthand 
 		(*let lefthand {kind = typ2; vname = name2} = x *)
 		(*let (typ2, name2) =(lefthand.kind, lefthand.vname) *)
 
