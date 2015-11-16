@@ -12,23 +12,7 @@ type symbol_table={
 type function_table={
 	functions: (string * sdata_type * svar_decl list * sexpr list) list
 } 
-(* et (fname, fret, fargs, fbody)*)
-(* want to store the function name and the function arguments *)
-(*
-type func_decl = {
-	fname : string;
-	returntype : mndlt;
-	formals : var_decl list;
-	body : stmt list;
-}*)
-(*
-and sfunc_decl = {
-	fname : string;
-	returntype : sdata_type;
-	formals : svar_decl list;
-	body : sstmt list;
-}
-*)
+
 (*functions: (string * mndlt * var_decl list * stmt list) list*)
 (*envioronment*)
 type translation_enviornment ={
@@ -55,6 +39,10 @@ let get_formal_arg_types env = function
 let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sdata_type) = function
 
 	Ast.Id(vname) ->
+		if (vname = "m") then 
+			let v_typ = Sast.Mandalat in
+			Sast.Id(vname), v_typ
+		else 
 		let vdecl = try
 			find_variable env.var_scope vname
 		with Not_found ->
