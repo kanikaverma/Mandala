@@ -10,6 +10,14 @@ dependency_compiled="Turtle.class"
 expected="Expected.java"
 warnings="../tests/fullstack/warnings.txt"
 
+SignalError() {
+  if [ $error -eq 0 ] ; then
+    echo "FAILED"
+    error=1
+  fi
+  echo " $1"
+}
+
 echo ""
 echo "*****************************************"
 echo "****************BUILDING*****************"
@@ -52,7 +60,10 @@ processed_files=$(find suite -name *\.proc)
 
 for file in $processed_files
 do
-  ./$run "$(< $file)" > "suite/Program.java"
+  # cat $file
+  ./$run "$(< $file)" > "suite/Program.java" &
+  # ./$run < $file > "suite/Program.java" &
+  # echo $contents > output & ./$run output > "suite/Program.java" &
 done
 
 java_files=$(find suite -name *\.java)
