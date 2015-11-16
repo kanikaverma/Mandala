@@ -67,12 +67,14 @@ let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sd
 		
 			let actual_types = List.map (fun expr -> semantic_expr env expr) args in
 			(*let actual_type_names = List.iter extract_type actual_types*)
+		 let actual_len = List.length args in
 			let actual_types_list = List.fold_left (fun a (_,typ) -> typ :: a) [] actual_types in     (*get list of just types from list of (type, string) tuples, [] is an accumulator*)
 			if (fid = "draw")
 			then let actual_expr_list = List.fold_left (fun a (expr,_) -> expr :: a) [] actual_types in
-			if (List.length actual_expr_list = 1) 
+			let len = List.length actual_expr_list in
+			if (len == 1) 
 			then Sast.Call(fid, actual_expr_list), Sast.Void
-			else raise(Error("Draw function has incorrect parameters"))
+			else raise(Error("Draw function has incorrect parameters"^ string_of_int actual_len))
 			
 		else try (let (fname, fret, fargs, fbody) =
 			find_function env.fun_scope fid in
