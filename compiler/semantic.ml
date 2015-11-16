@@ -68,7 +68,10 @@ let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sd
 			let actual_types = List.map (fun expr -> semantic_expr env expr) args in
 			(*let actual_type_names = List.iter extract_type actual_types*)
 			let actual_types_list = List.fold_left (fun a (_,typ) -> typ :: a) [] actual_types in     (*get list of just types from list of (type, string) tuples, [] is an accumulator*)
-		try (let (fname, fret, fargs, fbody) =
+			if (fid == "draw")
+			then let actual_expr_list = List.fold_left (fun a (expr,_) -> expr :: a) [] actual_types in
+			Sast.Call(fid, actual_expr_list), Sast.Void
+		else try (let (fname, fret, fargs, fbody) =
 			find_function env.fun_scope fid in
 			
 			(*let actual_type_names = 
@@ -87,12 +90,7 @@ let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sd
 				(* Call of string * sexpr list*)
 
 		)
-		with Not_found ->
-			if (fid <> "draw")
-			then let actual_expr_list = List.fold_left (fun a (expr,_) -> expr :: a) [] actual_types in
-			Sast.Call(fid, actual_expr_list), Sast.Void
-
-			else raise (Error("undeclared function ")) 
+		with Not_found -> raise (Error("undeclared function ")) 
 	(* WORKING ONE Ast.Call(vname, func_args) ->
 		let func_call = try
 			find_function env.fun_scope vname 
