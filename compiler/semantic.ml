@@ -64,18 +64,17 @@ let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sd
 		Sast.Id(name), typ
 		(* AST Call of string * expr list*)
 	| Ast.Call(fid, args) ->
-		try (let (fname, fret, fargs, fbody) =
-			find_function env.fun_scope fid in
+		
 			let actual_types = List.map (fun expr -> semantic_expr env expr) args in
 			(*let actual_type_names = List.iter extract_type actual_types*)
-			let actual_types_list = List.fold_left (fun a (_,typ) -> typ :: a) [] actual_types    (*get list of just types from list of (type, string) tuples, [] is an accumulator*)
-
+			let actual_types_list = List.fold_left (fun a (_,typ) -> typ :: a) [] actual_types in     (*get list of just types from list of (type, string) tuples, [] is an accumulator*)
+		try (let (fname, fret, fargs, fbody) =
+			find_function env.fun_scope fid in
 			
 			(*let actual_type_names = 
 				List.find (fun (_,s) -> s) actual_types*)
 
 			(*let (actual_arg_type, _) = actual_types in*)
-		in 
 			let formal_types =  List.map (fun farg -> let arg_type =
 				get_formal_arg_types env (farg.skind, farg.svname) in arg_type)
 			fargs in
@@ -89,7 +88,11 @@ let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sd
 
 		)
 		with Not_found ->
-			raise (Error("undeclared function ")) 
+			if (fid <> "draw")
+			then let actual_expr_list = List.fold_left (fun a (expr,_) -> expr :: a) [] actual_types in
+			Sast.Call(fid, actual_expr_list), Sast.Void
+
+			else raise (Error("undeclared function ")) 
 	(* WORKING ONE Ast.Call(vname, func_args) ->
 		let func_call = try
 			find_function env.fun_scope vname 
