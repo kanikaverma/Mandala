@@ -138,7 +138,7 @@ expr:
   | expr GT expr                                             { Binop($1, Greater, $3) }
   | expr GEQ expr                                            { Binop($1, Geq, $3) }
   | LPAREN expr RPAREN                                       { $2 }
-  | ID COLON LPAREN actuals_opt RPAREN                       { Call($1, []) }
+  | ID COLON LPAREN actuals_opt RPAREN                       { Call($1, $4) }
 
 array_expr:
   any_id LBRACKET RBRACKET ID

@@ -12,23 +12,7 @@ type symbol_table={
 type function_table={
 	functions: (string * sdata_type * svar_decl list * sexpr list) list
 } 
-(* et (fname, fret, fargs, fbody)*)
-(* want to store the function name and the function arguments *)
-(*
-type func_decl = {
-	fname : string;
-	returntype : mndlt;
-	formals : var_decl list;
-	body : stmt list;
-}*)
-(*
-and sfunc_decl = {
-	fname : string;
-	returntype : sdata_type;
-	formals : svar_decl list;
-	body : sstmt list;
-}
-*)
+
 (*functions: (string * mndlt * var_decl list * stmt list) list*)
 (*envioronment*)
 type translation_enviornment ={
@@ -55,6 +39,10 @@ let get_formal_arg_types env = function
 let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sdata_type) = function
 
 	Ast.Id(vname) ->
+		if (vname = "m") then 
+			let v_typ = Sast.Mandalat in
+			Sast.Id(vname), v_typ
+		else 
 		let vdecl = try
 			find_variable env.var_scope vname
 		with Not_found ->
@@ -67,8 +55,16 @@ let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sd
 		
 			let actual_types = List.map (fun expr -> semantic_expr env expr) args in
 			(*let actual_type_names = List.iter extract_type actual_types*)
+		 let actual_len = List.length args in
 			let actual_types_list = List.fold_left (fun a (_,typ) -> typ :: a) [] actual_types in     (*get list of just types from list of (type, string) tuples, [] is an accumulator*)
-		try (let (fname, fret, fargs, fbody) =
+			if (fid = "draw")
+			then let actual_expr_list = List.fold_left (fun a (expr,_) -> expr :: a) [] actual_types in
+			let len = List.length actual_expr_list in
+			if (len == 1) 
+			then Sast.Call(fid, actual_expr_list), Sast.Void
+			else raise(Error("Draw function has incorrect parameters"^ string_of_int actual_len))
+			
+		else try (let (fname, fret, fargs, fbody) =
 			find_function env.fun_scope fid in
 			
 			(*let actual_type_names = 
@@ -87,12 +83,7 @@ let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sd
 				(* Call of string * sexpr list*)
 
 		)
-		with Not_found ->
-			if (fid <> "draw")
-			then let actual_expr_list = List.fold_left (fun a (expr,_) -> expr :: a) [] actual_types in
-			Sast.Call(fid, actual_expr_list), Sast.Void
-
-			else raise (Error("undeclared function ")) 
+		with Not_found -> raise (Error("undeclared function ")) 
 	(* WORKING ONE Ast.Call(vname, func_args) ->
 		let func_call = try
 			find_function env.fun_scope vname 
