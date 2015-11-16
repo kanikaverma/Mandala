@@ -32,10 +32,10 @@ and svar_decl = {
 }
 
 and sfunc_decl = {
-	fname : string;
-	returntype : sdata_type;
-	formals : svar_decl list;
-	body : sstmt list;
+	sfname : string;
+	sreturntype : sdata_type;
+	sformals : svar_decl list;
+	sbody : sstmt list;
 }
 
 and sstmt =
@@ -52,4 +52,4 @@ and sstmt =
 	| FuncCall of sexpr
 
 type sprogram =
-	sstmt list * sfunc_decl list
+	SProg of sstmt list (* need to add back * sfunc_decl list *)

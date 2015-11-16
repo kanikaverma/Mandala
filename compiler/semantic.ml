@@ -140,8 +140,22 @@ let rec semantic_stmt (env:translation_enviornment):(Ast.stmt -> Sast.sstmt * sd
 			 typ2 -> Sast.Assign(({skind = typ2; svname = name2}), assign_val), typ (* check strctural equality *)
 			| _ -> raise (Error("Assignment could not be typechecked")) 
 
+	let var_empty_table_init = {parent=None; variables=[];}
+	let fun_empty_table_init = { functions = [];}
+	let empty_environment = 
+	{
+		var_scope =  var_empty_table_init;
+		fun_scope = fun_empty_table_init;
+	}
+
 		(*somehow it is not successfully leaving this | block, and is going to the next or block instead of returning*)
-		
+	let rec semantic_check (check_program: Ast.program): (Sast.sprogram) =  
+		let (prog_stmts, prog_funcs) = check_program in 
+		let env = empty_environment in 
+		let result_tuples = List.map (fun stmt_part -> semantic_stmt env stmt_part) prog_stmts in
+		let result_stmts = List.fold_left (fun a (stmt,_) -> stmt :: a) [] result_tuples  
+		in Sast.SProg(result_stmts)
+		(* NEED TO ADD FUNCTION DECLARATION! *)
 	(* | _ -> raise (Error("undeclared identifier")) *)
 (* for function call we can check if it's drwa then check input typ *)
 (* chekc if number of arguments are matching *)
