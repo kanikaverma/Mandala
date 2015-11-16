@@ -1,12 +1,13 @@
-# automated regression testing on full programs
+# Automated regression testing on full programs
 
 #!/bin/bash
 
 preprocessor="../../compiler/preprocessor.py"
 semantic="../../compiler/semantic.sh"
-bitch="../../compiler/run"
+run="../../compiler/run"
 dependency="Turtle.java"
 dependency_compiled="Turtle.class"
+expected="Expected.java"
 warnings="../tests/fullstack/warnings.txt"
 
 echo ""
@@ -49,14 +50,15 @@ processed_files=$(find suite -name *\.proc)
 
 for file in $processed_files
 do
-  cat $file | ./$bitch > "suite/Program.java"
+  # cat $file | ./$run > "suite/Program.java"
+  ./$run "$(< $file)" > "suite/Program.java"
 done
 
 java_files=$(find suite -name *\.java)
 
 for file in $java_files
 do
-  if [ "${file##*/}" != "$dependency" ]; then
+  if [ "${file##*/}" != "$dependency" ] && [ "${file##*/}" != "$expected" ]; then
     echo "Generated: "${file##*/}
   fi
 done
@@ -71,8 +73,10 @@ cd suite
 
 for file in $java_files
 do
-  file_base=${file##*/}
-  javac $file_base $dependency
+  if [ "${file##*/}" != "$expected" ]; then
+    file_base=${file##*/}
+    javac $file_base $dependency
+  fi
 done
 
 cd ..
@@ -91,6 +95,8 @@ echo "***************EXECUTING*****************"
 echo "*****************************************"
 echo ""
 
+echo "HELLO WORLD"
+
 cd suite
 
 for file in $exec_files
@@ -104,6 +110,21 @@ done
 
 echo ""
 echo "*****************************************"
+echo "***************COMPARING*****************"
+echo "*****************************************"
+echo ""
+
+DIFF=$(diff -u Program.java $expected)
+
+if [ "$DIFF" != "" ]; then 
+  echo "Output Correct: [ ]"
+  echo $DIFF | tee "../log.txt"
+else
+  echo "Output Correct: [y]"
+fi
+
+echo ""
+echo "*****************************************"
 echo "****************CLEANING*****************"
 echo "*****************************************"
 echo ""
@@ -111,9 +132,9 @@ echo ""
 rm -f *.class
 rm -f *.proc
 mv $dependency $dependency$".keep"
-#rm -f *.java
+rm -f *.java
 mv $dependency$".keep" $dependency
 
 cd ../../../compiler
 make clean 2>> $warnings
-echo "" 
+echo ""
