@@ -3,20 +3,12 @@ default: run semantic
 run: scanner parser semantic gen_java
 	ocamlc -o run scanner.cmo parser.cmo semantic.cmo gen_java.cmo
 
-#sast_jast: scanner parser semantic sast_to_jast
-	#ocamlc -o sast_to_jast scanner.cmo parser.cmo semantic_checker.cmo sast_to_jast.cmo 	
-
-#pretty: scanner parser pretty_printer
-	#ocamlc -o pretty parser.cmo scanner.cmo pretty_printer.cmo
-
 gen_java: sast
 	ocamlc -c gen_java.ml
 
 semantic: scanner parser semantic
 	ocamlc -o semantic parser.cmo scanner.cmo semantic.cmo
 
-#sast_to_jast: jast
-	#ocamlc -c sast_to_jast.ml 
 
 semantic: sast scanner
 	ocamlc -c semantic.ml
@@ -27,8 +19,6 @@ scanner: parser
 parser: ast
 	ocamlyacc parser.mly; ocamlc -c parser.mli; ocamlc -c parser.ml
 
-#jast: sast ast
-#	ocamlc -c jast.mli
 
 sast: ast
 	ocamlc -c sast.mli
