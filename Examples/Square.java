@@ -1,27 +1,20 @@
 public class Square {
 
   public static void main(String[] args) {
-    Turtle t = new Turtle();
-    t.hide();
-    t.speed(0);
+    drawSquare(100, 0, 0, 0);
+  }
 
-  int size = 100; //logical units
-  int turn = 90; //in degree
+  public static void drawSquare(int length, int angularShift, int x, int y) {
+    Turtle t = new Turtle(); t.hide(); t.speed(0);
+    t.up(); t.setPosition(x - length / 2, y + length / 2); t.down(); 
+    
+    t.right(angularShift);
 
-  t.right(45);
-  //draw a square
-  t.forward( size );
-  t.right( turn );
-
-  t.forward( size );
-  t.right( turn );
-
-  t.forward( size );
-  t.right( turn );
-
-  t.forward( size );
-  t.right( turn );
-
+    for (int side = 0; side < 4; side++) {
+      t.forward(length);
+      t.right(90);
+    }
+    t.save("square.jpg");
   }
 
 }
