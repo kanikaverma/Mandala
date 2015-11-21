@@ -113,16 +113,7 @@ stmt:
     ANGULARSHIFT expr RBRACE SEMI                            { Layer($1, $8, $10, $12, $14, $16) }
   | assign_expr ASSIGN expr SEMI                             { Assign($1, $3) }
   | array_expr ASSIGN LBRACE actuals_opt RBRACE SEMI         { ArrAssign($1, $4) } 
-/*  | array_expr ASSIGN func_call SEMI                       { Assign($1, $3) }
-  | assign_expr ASSIGN func_call SEMI                        { Assign($1,$3) }
-  | func_call SEMI                                           { FuncCall($1) } */
 
-/* func_call:
-  ID COLON actuals_opt                                       { Call($1, $3) } */
-
-expr_opt:
-  /* nothing */                                              { Noexpr }
-  | expr                                                     { $1 }
 
 expr:
     LITERAL                                                  { Literal($1) }
