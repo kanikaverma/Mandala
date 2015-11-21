@@ -2,16 +2,16 @@ Makefile:22: warning: overriding commands for target `semantic'
 Makefile:16: warning: ignoring old commands for target `semantic'
 2 rules never reduced
 make: Circular semantic <- semantic dependency dropped.
-File "semantic.ml", line 55, characters 92-2120:
+File "semantic.ml", line 39, characters 92-2406:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Float_Literal _|Number _|Noexpr|Binop (_, _, _))
-File "semantic.ml", line 108, characters 92-1319:
+File "semantic.ml", line 99, characters 92-1319:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Block _|ArrAssign (_, _)|Return _|IF (_, _, _)|Foreach (_, _, _, _)|
 While (_, _)|Shape (_, _, _, _, _)|Layer (_, _, _, _, _, _))
-File "semantic.ml", line 144, characters 5-6:
+File "semantic.ml", line 135, characters 5-6:
 Warning 11: this match case is unused.
 Makefile:22: warning: overriding commands for target `semantic'
 Makefile:16: warning: ignoring old commands for target `semantic'

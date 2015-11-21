@@ -1,2 +1,2 @@
-Mandala m = create Mandala
+Mandala m = Create Mandala
 draw: (m)

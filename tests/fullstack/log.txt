@@ -1,1 +1,1 @@
-8a9 >
+--- Program.java 2015-11-16 01:04:23.000000000 -0500 +++ Expected.java 2015-11-15 23:09:07.000000000 -0500 @@ -0,0 +1,11 @@ +public class Program { + + public static void main(String[] args) { + + Turtle t = new Turtle(); + t.hide(); + t.setPosition(0, 0); + t.dot(); + } + +} \ No newline at end of file

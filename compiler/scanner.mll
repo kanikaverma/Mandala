@@ -15,7 +15,7 @@ rule token = parse
 (* literals and variables *)
 | '-'? digit+ as lit                       { LITERAL(int_of_string lit) }
 | number as lit                		    { FLOAT_LITERAL(float_of_string lit) }
-| alpha (alpha | digit)* as lxm        { ID(lxm) }
+| ['a'-'z']+ (alpha | digit)* as lxm        { ID(lxm) }
 
 (* comments *)
 | "/#"         { comment lexbuf }
@@ -39,12 +39,12 @@ rule token = parse
 | '='          { ASSIGN }   | ':'     { COLON }  
 
 (* conditional words *)
-| "if"         { IF }
-| "else"       { ELSE }
+| "Rf"         { IF }
+| "Else"       { ELSE }
 
 (* loop words *)
-| "break" { BREAK }			| "foreach"    { FOREACH }  
-| "to"    { TO }			| "continue"   { CONTINUE } 
+| "Break" { BREAK }			| "Foreach"    { FOREACH }  
+| "To"    { TO }			| "Continue"   { CONTINUE } 
 
 (* punctuation and delimiters *)
 | '('          { LPAREN }     | ')'       { RPAREN }
@@ -54,15 +54,15 @@ rule token = parse
 | ';' 		   { SEMI }
 
 (* built-in functions and constructors *)
-| "def"        { DEF }      | "return"  { RETURN }
+| "Def"        { DEF }      | "Return"  { RETURN }
 (*| "draw"       { DRAW }     | "addTo"   { ADDTO }*)    
-| "create"     { CREATE }
+| "Create"     { CREATE }
 
 (* language specific keywords *)
-| "radius"     { RADIUS }   | "count"   { COUNT }
-| "size"       { SIZE }     | "color"   { COLOR }
-| "rotation"   { ROTATION } | "offset"  { OFFSET }
-| "angularShift" { ANGULARSHIFT }
+| "Radius"     { RADIUS }   | "Count"   { COUNT }
+| "Size"       { SIZE }     | "Color"   { COLOR }
+| "Rotation"   { ROTATION } | "Offset"  { OFFSET }
+| "AngularShift" { ANGULARSHIFT }
 
 (* types *)
 | "Number"     { NUMBER }   (*| "String"     { STRING }*)
