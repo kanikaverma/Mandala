@@ -41,7 +41,7 @@ decls:
   | decls stmt                                               { ($2 :: fst $1), snd $1 }
 
 fdecl:
-    DEF any_id ID LPAREN formals_opt RPAREN COLON LBRACE stmt_list RBRACE
+  DEF any_id ID LPAREN formals_opt RPAREN COLON LBRACE stmt_list RBRACE
     {{ 
       fname = $3;         
       returntype = $2;    
@@ -94,17 +94,18 @@ stmt_list:
   | stmt_list stmt                                           { $2 :: $1 }
 
 stmt:
-    expr SEMI                                                { Expr($1) }
+   expr SEMI                                                { Expr($1) }
   | RETURN expr SEMI                                         { Return($2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE                  { IF($3, $5, Block([])) }
   | IF LPAREN expr RPAREN stmt ELSE stmt                     { IF($3, $5, $7) }
   | FOREACH ID ASSIGN LITERAL TO LITERAL COLON 
     LBRACE stmt_list RBRACE                                  { Foreach($2, $4, $6, $9) }
+  | assign_expr ASSIGN CREATE MANDALA SEMI                   { Mandala($1) }
   | assign_expr ASSIGN CREATE SHAPE COLON LBRACE GEO expr 
     SIZE expr 
     COLOR expr 
     ROTATION expr RBRACE SEMI                                { Shape($1, $8, $10, $12, $14) }
-  | assign_expr ASSIGN CREATE MANDALA SEMI                   { Mandala($1) }
+ 
   | assign_expr ASSIGN CREATE LAYER COLON LBRACE RADIUS expr
     SHAPE expr
     COUNT expr
