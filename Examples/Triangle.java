@@ -12,6 +12,7 @@ public class Triangle {
       t.forward(length);
       t.right(240);
     } 
+    t.save("triangle.jpg");
   }
 
 }

@@ -11,6 +11,7 @@ public class Circle {
       t.forward(radius * 2 * Math.PI / 360);
       t.right(1);
     }
+    t.save("circle.jpg");
   }
 
 }

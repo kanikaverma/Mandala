@@ -14,6 +14,7 @@ public class Square {
       t.forward(length);
       t.right(90);
     }
+    t.save("square.jpg");
   }
 
 }
