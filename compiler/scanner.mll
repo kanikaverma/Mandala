@@ -39,7 +39,7 @@ rule token = parse
 | '='          { ASSIGN }   | ':'     { COLON }  
 
 (* conditional words *)
-| "Rf"         { IF }
+| "If"         { IF }
 | "Else"       { ELSE }
 
 (* loop words *)
