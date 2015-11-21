@@ -126,6 +126,9 @@ echo "***************COMPARING*****************"
 echo "*****************************************"
 echo ""
 
+
+python compare.py output_HelloWorld.jpg ${file_base%.*}$".jpg"
+
 DIFF=$(diff -u Program.java $expected)
 
 if [ "$DIFF" != "" ]; then 

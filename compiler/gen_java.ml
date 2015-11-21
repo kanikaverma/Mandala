@@ -37,6 +37,7 @@ let gen_java = function
 
 			List.map proc_stmt s; 
 
+			print_string "	t.save(\"Program.jpg\");";
 			print_string "  }\n\n}";
 
 		)	
