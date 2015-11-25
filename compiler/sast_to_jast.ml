@@ -4,6 +4,7 @@ open Jast
 open Semantic
 
 type shape = {
+	name: string;
 	geo : string;
 	size : float;
 	color: string;
@@ -11,6 +12,7 @@ type shape = {
 }
 
 type layer = {
+	name: string;
 	radius : float;
 	shape : shape;
 	count : int;
@@ -19,16 +21,54 @@ type layer = {
 }
 
 type mandala={
+	name: string;
 	list_of_layers : layer list;
 	max_layer_radius : float; (* define the max layer radius as the maximum of the sum of the the layer radius + shape radius *)
 	is_draw: bool
+}
+
+type drawing={
+	mandala_list : mandala list
 }
 
 type java_shapes = {
 	shape_list : shape list
 }
 
+let sast =
+	let lexbuf = Lexing.from_channel stdin in
+	let ast = Parser.program Scanner.token lexbuf in
+	Semantic.semantic_check ast
 
+let proc_stmt=function
+	Sast.Mandala(vname) ->
+		(*print java code for mandala of this name*)
+		(*create new mandala object of name vname*)
+		
+
+	| Sast.Expr(expression)->
+		proc_expr expression
+	| _ -> raise (Error("unsupported statement found")) 
+
+let gen_java = function
+	Sast.SProg(s)-> 
+		let x = List.length s in
+		if (x>0) then (
+			
+			List.map proc_stmt s; 
+
+		)	
+
+		else print_string "No input provided"
+
+let empty_enviornment=
+	{
+		canvas={mandala_list=[];}
+	}
+
+let _ =	
+	let env = empty_enviornment in 
+	gen_java sast
 
 
 
