@@ -1,19 +1,38 @@
-import numpy as np
-import cv2
+# Manhattan norm - how much the image is off
+# Zero norm - how many pixels differ 
+
 import sys
+from scipy.misc import imread
+from scipy.linalg import norm
+from scipy import sum, average
 
 def main():
-	compare(sys.argv[1], sys.argv[2])
+  file1, file2 = sys.argv[1:1+2]
+  img1 = to_grayscale(imread(file1).astype(float))
+  img2 = to_grayscale(imread(file2).astype(float))
+  n_m, n_0 = compare_images(img1, img2)
+  # print "Manhattan:", n_m, "/ per pixel:", n_m/img1.size
+  # print "Zero:", n_0, "/ per pixel:", n_0*1.0/img1.size
+  print n_0 # Zero norm 
 
-def compare(filename_a, filename_b):
+def compare_images(img1, img2):
+  img1 = normalize(img1)
+  img2 = normalize(img2)
+  diff = img1 - img2 
+  m_norm = sum(abs(diff))
+  z_norm = norm(diff.ravel(), 0)
+  return (m_norm, z_norm)
 
-	imageA = cv2.imread(filename_a)
-	imageB = cv2.imread(filename_b)
+def to_grayscale(arr):
+  if len(arr.shape) == 3:
+    return average(arr, -1)
+  else:
+    return arr
 
-	err = np.sum((imageA.astype("float") - imageB.astype("float")) ** 2)
-	err /= float(imageA.shape[0] * imageA.shape[1])
+def normalize(arr):
+  rng = arr.max() - arr.min()
+  amin = arr.min()
+  return (arr - amin)*225/rng
 
-	print err == 0
-
-main()
-
+if __name__ == "__main__":
+  main()
