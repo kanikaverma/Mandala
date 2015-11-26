@@ -31,8 +31,16 @@ type drawing={
 	mandala_list : mandala list
 }
 
+type java_shape = {
+	type: shape;
+	x_coord: float;
+	y_coord: float;
+	rotation: float;
+	size: float;
+	color: string;
+}
 type java_shapes = {
-	shape_list : shape list
+	shape_list : java_shape list
 }
 
 let sast =
