@@ -31,7 +31,7 @@ and svar_decl = {
 	
 }
 
-and sfunc_decl = {
+and sfuncdecl = {
 	sfname : string;
 	sreturntype : sdata_type;
 	sformals : svar_decl list;
@@ -50,6 +50,7 @@ and sstmt =
 	| Mandala of svar_decl
 	| Layer of svar_decl * sexpr * sexpr * sexpr * sexpr * sexpr 
 	| FuncCall of sexpr
-
+type sfunc_decltype =
+	SFunc_Decl  of sfuncdecl * sdata_type
 type sprogram =
 	SProg of sstmt list (* need to add back * sfunc_decl list *)
