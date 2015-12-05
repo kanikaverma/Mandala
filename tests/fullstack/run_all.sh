@@ -9,6 +9,7 @@ dependency="Turtle.java"
 dependency_compiled="Turtle.class"
 expected="Expected.java"
 warnings="../tests/fullstack/warnings.txt"
+compare="compare.py"
 
 SignalError() {
   if [ $error -eq 0 ] ; then
@@ -126,13 +127,12 @@ echo "***************COMPARING*****************"
 echo "*****************************************"
 echo ""
 
-DIFF=$(diff -u Program.java $expected)
+diff=$(python $compare output_HelloWorld.jpg ${file_base%.*}$".jpg")
 
-if [ "$DIFF" != "" ]; then 
-  echo "Output Correct: [ ]"
-  echo $DIFF | tee "../log.txt"
-else
+if [[ $diff -eq 0 ]]; then
   echo "Output Correct: [y]"
+else
+  echo "Output Correct: [ ]"
 fi
 
 echo ""
@@ -145,7 +145,7 @@ rm -f *.class
 rm -f *.proc
 mv $dependency $dependency$".keep"
 mv $expected $expected$".keep"
-rm -f *.java
+#rm -f *.java
 mv $dependency$".keep" $dependency
 mv $expected$".keep" $expected
 
