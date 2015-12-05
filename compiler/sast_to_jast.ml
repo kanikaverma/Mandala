@@ -253,8 +253,8 @@ let gen_java (env:Jast.drawing):(Sast.sprogram -> Jast.javaprogram * Jast.drawin
 		)	
 
 		else raise (Error("INPUT IS 0 arguements!"))
-	| _ ->
-		raise (Error("gen_java didn't work! "))
+	(* | _ ->
+		raise (Error("gen_java didn't work! ")) *)
 
 (* create empty initial environment *)
 (* the environment keep track of the drawing we are creating *)
