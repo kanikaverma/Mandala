@@ -1,16 +1,16 @@
-default: run semantic java_semantic
+default: run semantic sast_to_jast
 
-run: scanner parser semantic java_semantic gen_java
-	ocamlc -o run scanner.cmo parser.cmo semantic.cmo java_semantic.cmo gen_java.cmo
+run: scanner parser semantic sast_to_jast gen_java
+	ocamlc -o run scanner.cmo parser.cmo semantic.cmo sast_to_jast.cmo gen_java.cmo
 
 gen_java: sast
 	ocamlc -c gen_java.ml
 
-java_semantic: scanner parser semantic java_semantic
-	ocamlc -o semantic java_semantic parser.cmo scanner.cmo semantic.cmo java_semantic.cmo
+sast_to_jast: scanner parser semantic sast_to_jast
+	ocamlc -o semantic sast_to_jast parser.cmo scanner.cmo semantic.cmo sast_to_jast.cmo
 
-java_semantic: jast sast
-	ocamlc -c java_semantic.ml
+sast_to_jast: jast sast
+	ocamlc -c sast_to_jast.ml
 
 semantic: scanner parser semantic
 	ocamlc -o semantic parser.cmo scanner.cmo semantic.cmo

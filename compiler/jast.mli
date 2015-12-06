@@ -14,6 +14,7 @@ type jdata_type =
 	| JLayert
 	| JMandalat
 	| JArrayt
+	
 type jPrimative =
 	| JBooleant of bool 
 	| JInt of int
@@ -54,7 +55,7 @@ type mandala={
 }
 
 type drawing={
-	mandala_list : mandala list
+	mandala_list : (string * mandala) list
 }
 
 type java_shapes = {
