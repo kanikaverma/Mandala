@@ -323,8 +323,10 @@ let rec actual_final_convert (check_program: Sast.sprogram): (Jast.javaprogram) 
 	(* ADD WAY TO ITERATE THROUGH LIST OF MANDALAS *)
 	let first_mandala = List.hd mandala_lists in 
 	(* let (prog_part_one, prog_part_two) = new_java_prog in*)
+	(* REPLACE WITH FIRST MANDLAA INSTEAD OF SAMPLE MANDALA *)
 	let mandaland_resulting_sample = process_mandala (new_draw_env, sample_mandala) in 
-    Jast.JavaProgram(new_java_class, mandaland_resulting_sample)
+	let prog_name = Jast.CreateClass("Program") in 
+    Jast.JavaProgram(prog_name, new_java_class, mandaland_resulting_sample)
 (*let get_shapes shape= List.map extract_attributes shape
 
 let get_layers layer = List.map get_shapes layer  *)

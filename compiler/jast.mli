@@ -110,6 +110,7 @@ parameters : parameter list;
 
 type javaClass = 
 	JavaClass of javaMethod (* string * string * javaMethod *)
+type javaClassName = CreateClass of string
 
 type javaprogram = 
-	JavaProgram of javaClass * jShape list
+	JavaProgram of javaClassName * javaClass * jShape list
