@@ -54,10 +54,18 @@ type jdata_type =
 	| JLayert
 	| JMandalat of mandala
 	| JArrayt
+type jShape = 
+	(*size, x, y*)
+	Circle of float * float * float
+		(*size, x, y, rotation*)
+	| Square of float * float * float * float
+		(*size, x, y, rotation*)
+	| Triangle of float * float * float * float
 
 type drawing={
 	mandala_list : (string * mandala) list;
-	variables: (string * jdata_type) list
+	variables: (string * jdata_type) list;
+	java_shapes_list: jShape list;
 }
 
 type java_shapes = {
@@ -67,7 +75,6 @@ type java_shapes = {
 type symbol_table = {
 	draw_stmts : drawing	
 }
-
 
 type jFuncID = 
 	JFunc of jdata_type * string
@@ -105,4 +112,4 @@ type javaClass =
 	JavaClass of javaMethod (* string * string * javaMethod *)
 
 type javaprogram = 
-	JavaProgram of javaClass list
+	JavaProgram of javaClass * jShape list
