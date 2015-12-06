@@ -9,54 +9,6 @@ open Semantic
 (* PARSE EXPRESSIONS AS PART OF STATEMENTS - check the types of variable names passed in to expression *)
 (* then convert SAST TO JAST *)
 
-
-
-(* type shape = {
-	name: string;
-	geo : string;
-	size : float;
-	color: string;
-	rotation: float
-}
-
-type layer = {
-	name: string;
-	radius : float;
-	shape : shape;
-	count : int;
-	offset : float;
-	angularshift : float
-}
-
-type mandala={
-	name: string;
-	list_of_layers : layer list;
-	max_layer_radius : float; *) (* define the max layer radius as the maximum of the sum of the the layer radius + shape radius *)
-	(* is_draw: bool
-}
-
-type drawing={
-	mandala_list : mandala list
-}
-
-type java_shapes = {
-	shape_list : shape list
-}
-
-type symbol_table = {
-	draw_stmts : drawing	
-} *)
-	(* let var_empty_table_init = {parent=None; variables=[];} *)
-
-(* type java_drawing= 
-{
-	java_mandala_list: mandala list 
-}
- type java_symbol_table = {
-	java_draw_stmts: java_drawing
-} *)
-(* let createMandala = *)
-(* list to hold all variable names and their types *)
 type basic_symbol_table = {
 	variables: (string * jdata_type) list
 }
@@ -67,45 +19,52 @@ let sast =
 	let ast = Parser.program Scanner.token lexbuf in
 	Semantic.semantic_check ast
 
-(* let rec parse_actual_args (env, args_list, update_list:Jast.drawing * Sast.sexpr list * Jast.jexpr list) = match args_list
-	with [] -> (update_list, env)
-	| [arg] -> let (new_j_expr, new_draw_env) = proc_expr env arg in (update_list@[new_j_expr], new_draw_env)
-	| arg :: other_args -> 
-		let (new_arg, typ, new_draw_env) = proc_expr env arg in *)
-			(* let (nm, tp) = List.hd new_env.var_scope.variables in *)
-			(* parse_actual_args (other_args, new_draw_env, update_list@[new_arg]) *)
-
-(* let (new_stmt, typ, new_env) = proc_stmt env stmt in (update_list@[new_stmt], new_env) *)
-(*let get_actual_arg_type env = function
-	(sdata_type, string) -> (string)*)
-
-let find_variable (scope: symbol_table) name=
+let find_variable (scope: Jast.drawing) name=
 	try
 		List.find (fun (s,_) -> s=name) scope.variables 
-	(* with Not_found -> try List.find (fun (s, _) -> s=name) scope.parent.variables*) 
 	with Not_found -> raise (Error ("THIS FAILED AGAIN!!! "^name))
 
-
-let rec find_mandala (scope: Jast.drawing) name = 
+(* let rec find_mandala (scope: Jast.drawing) *)
+(* let rec find_mandala (scope: Jast.drawing) name = 
 	try 
 		List.find ( fun (mandala_name, _) -> mandala_name = name) scope.mandala_list 
-	with Not_found -> raise (Error ("MANDALA WAS NOT FOUND!! "))
+	with Not_found -> raise (Error ("MANDALA WAS NOT FOUND!! ")) *)
 
-let rec parse_actual_args (env, args_list, update_list:Jast.drawing * Sast.sexpr list * Jast.jexpr list):(Jast.jexpr list * Jast.drawing) = match args_list
+let rec parse_actual_args (env, args_list, update_list:Jast.drawing * Sast.sexpr list * (Jast.jexpr * Jast.jdata_type) list):((Jast.jexpr * Jast.jdata_type) list * Jast.drawing) = match args_list
 	with [] -> (update_list, env)
-	| [arg] -> let (new_j_expr, new_draw_env) = proc_expr env arg in (update_list@[new_j_expr], new_draw_env)
+	| [arg] -> let (new_j_expr, new_draw_env, typ) = proc_expr env arg in (update_list@[(new_j_expr, typ)], new_draw_env)
 	| arg :: other_args -> 
-		let (new_arg, new_draw_env) = proc_expr env arg in
-			(* let (nm, tp) = List.hd new_env.var_scope.variables in *)
-			parse_actual_args (new_draw_env, other_args, update_list@[new_arg])
+		let (new_arg, new_draw_env, typ) = proc_expr env arg in
+			parse_actual_args (new_draw_env, other_args, update_list@[(new_arg, typ)])
 
 and proc_expr (env:Jast.drawing): (Sast.sexpr -> Jast.jexpr * Jast.drawing * Jast.jdata_type) = function
 	Sast.Id(vname) ->
 		(* Want to go from Sast.Id to Jast.jexpr or Jast.JId, and Jast.drawing *)
-		(* raise (Error("Id expression hit")) *)
-		let id_name = vname in 
-		let j_id = Jast.JId(id_name) in 
-		(j_id, env, )
+		(* let id_name = vname in 
+		let j_id = Jast.JId(id_name) in *) 
+		let var_info = try 
+			find_variable env vname 
+		with Not_found -> 
+			raise (Error("undeclared identifier: "^vname))
+
+
+
+		(*let vdecl = try
+			find_variable env.var_scope vname
+		with Not_found ->
+			raise (Error("undeclared identifier: "^vname)) *)
+			(* Want to add the symbol to our symbol table *)
+		(* in 
+		let (name, typ) =vdecl in 
+		(Sast.Id(name), typ, env) *)
+		in let (name, typ) = var_info in 
+		(Jast.JId(name), env, typ)
+
+
+
+
+
+		(*(j_id, env)*)
 	| Sast.Literal(number_var) ->
 		raise (Error("Hit number var"))
 
@@ -126,14 +85,69 @@ and proc_expr (env:Jast.drawing): (Sast.sexpr -> Jast.jexpr * Jast.drawing * Jas
 		(* want to be able to call draw: (m); *)
 
 		(* turn fid, the function name into something of type FuncCall, with the funs return type *)
-		(* let actual_args = List.map (fun arg -> proc_expr env arg) args in *)
+		(* let actual_args = List.map (fun arg -> proc_expr env arg) args in *) 
+		let args_list = [] in 
+			let result_args = parse_actual_args (env, args, args_list) in 
+			let (expr_and_typ_info, new_env) = result_args in
+			let args_info = List.fold_left (fun a (expr,_) -> expr :: a) [] expr_and_typ_info in
+			let test_call = Jast.JCall(fid, args_info) in 
+			let func_name = fid in 
+			(* Will throw error here if parameter is undefined *)
+			let actual_types = List.map (fun expr -> proc_expr env expr) args in
+
 		
 		if (fid ="draw")
 		then
-			let args_list = [] in 
+			(* check that arg passed in is a valid argument *)
+			(* CHECK FOR ARG PASSED IN *)
+
+
+			let actual_expr_list = List.fold_left (fun a (expr,_, ret_env) -> expr :: a) [] actual_types in
+			let len = List.length actual_expr_list in
+			if (len == 1) 
+				then (* only have one mandala that we are drawing *)
+					(* Update environment - includes changing bool for current mandala is_draw to true *)
+					(* WILL ADD MANDALAS MULTIPLE TIMES TO THE MANDALA LIST! WHEN PARSING IT, WILL BE FINE, WILL GET ALL CORRECT ONES *)
+					(* let curr_mandala = find_mandala new_env args in *)
+					let check_arg = List.hd actual_expr_list in 
+					let curr_name = match  check_arg
+						with Jast.JId(check_arg) -> let new_check_arg = check_arg in new_check_arg (*raise (Error("CHECK ARG IS A STRING!!! "^check_arg));*) (*check_arg*)
+						| _ -> raise (Error("This mandala has not been defined"));
+
+					in 
+					let drawn_mandalas = List.filter ( fun (m_name, m_typ) -> if (m_typ.is_draw = true) then true else false) env.mandala_list in 
+					let false_mandalas = List.filter (fun (man_name, man_typ) -> if (man_typ.is_draw = false) then true else false) env.mandala_list in 
+					let other_false_mandalas = List.filter (fun (x, mandala_info) -> if (x = curr_name) then false else true) false_mandalas in  
+
+
+					let updated_current_mandala = {
+						name = curr_name;
+						list_of_layers = [];(* mandala_object.list_of_layers; *)
+						max_layer_radius = 0.0; (*mandala_object.list_of_layers;*)
+						is_draw = true;
+					} in
+					(* list of all mandalas to draw *)
+					let updated_drawn_mandalas =  drawn_mandalas @ [curr_name, updated_current_mandala] in
+					let true_and_false_mandalas = updated_drawn_mandalas @ other_false_mandalas in 
+					let new_draw_env = {mandala_list = true_and_false_mandalas; variables = new_env.variables;} in 
+					let java_arg_list = [] in 
+					let updated_java_arg_list = java_arg_list @ [Jast.JId(curr_name)] in 
+					(Jast.JCall(func_name, updated_java_arg_list), new_draw_env, Jast.JVoid)
+				(* (Jast.JCall(fid, actual_expr_list), Sast.Void, env) *)
+				else raise(Error("Draw function has incorrect parameters"^ string_of_int len));
+			else 
+				(Jast.JCall(func_name, args_info), env, Jast.JVoid)
+
+			(* Want to set the bool is_draw to true for the list of mandalas *)
+			(* return Jast.jexpr * Jast.drawing * Jast.jdata_type *)
+
+
+			(*BEGINNING OF UPDATED COMMENT 
+
+			(*let args_list = [] in 
 			let result_args = parse_actual_args (env, args, args_list) in 
 			let (args_info, new_env) = result_args in 
-			let func_name = fid in 
+			let func_name = fid in *)
 			(* want to check if the variable you are calling draw on is m, and updated it's boolean is_draw to true *)
 			(* find the actual mandala passed in by args in the environment *)
 			let curr_mandala_name = List.hd args_info in 
@@ -141,7 +155,7 @@ and proc_expr (env:Jast.drawing): (Sast.sexpr -> Jast.jexpr * Jast.drawing * Jas
 			
 			(* now find the mandala with that name in the environment *)
 			(* let mandala_object = List.find ( fun (mandala_name, _) -> mandala_name = curr_mandala_name) env.mandala_list in  *)
-			let (test_string, newer_env) = proc_expr new_env (List.hd args) in 
+			let (test_string, newer_env, expr_typ) = proc_expr new_env (List.hd args) in 
 			let j_string = Jast.JId(test_string) in 
 			let mandala_object = find_mandala env j_string in 
 			(* do list.fold_left to add all mandalas that have is_draw =true to the new environment *)
@@ -173,12 +187,14 @@ and proc_expr (env:Jast.drawing): (Sast.sexpr -> Jast.jexpr * Jast.drawing * Jas
 		
 		else
 		(* now have all updated mandalas *)
-			let alt_args_list = [] in 
+			(* let alt_args_list = [] in 
 			let result_actual_args = parse_actual_args (env, args, alt_args_list) in 
 			let (result_args_info, result_new_env) = result_actual_args in 
-			let func_name = fid in 
-			(Jast.JCall(func_name, result_actual_args), result_new_env)
+			let func_name = fid in *)
+			(* IN FUTURE LOOK UP FUNCTION DECLARATION AND FIND DEFINITION *)
+			(Jast.JCall(func_name, args_info), new_env, Jast.JVoid)
 
+		END OF UPDATE COMMENT *)
 		(* NEED TO KEEP TRACK OF ALL MANDALAS THAT ARE NOT BEIGN DRAWN ALSO! *)
 
 
@@ -241,7 +257,8 @@ let proc_stmt (env:Jast.drawing):(Sast.sstmt -> Jast.jStmt * Jast.drawing) =func
 			is_draw= false;
 		} in 
 		let new_drawing = env.mandala_list @ [(name1, new_mandala)] in
-		let new_env = {mandala_list=new_drawing;} in
+		let new_vars = env.variables @ [(name1, Jast.JMandalat(new_mandala))] in 
+		let new_env = {mandala_list=new_drawing; variables = new_vars;} in
 		(* let updated_j_stmt = Jast.JStmt(Jast.Id())
 		Jast.JavaMain(Jast.JavaBlock()) *)
 		(Jast.JStmt(Jast.JMandala(name1, new_mandala)), new_env)
@@ -266,7 +283,8 @@ drawing={mandala_list=[];} *)
 		(* Want to add this expression to the mandala list *)
 		(* proc_expr returns a jexpr and an updated drawing *)
 		let updated_expr = proc_expr env expression in 
-		let (j_expr, new_env) = updated_expr in
+		(* Return type of proc_expr is Jast.jexpr * Jast.drawing * Jast.jdata_type *)
+		let (j_expr, new_env, j_typ) = updated_expr in
 		(* now want to return new environment and jstmt *)
 		let updated_java_stmt = Jast.JStmt(j_expr) in 
 		(* let updated_env = Jast.symbol_table(new_env) in *)
@@ -305,7 +323,7 @@ drawing={mandala_list=[];} *)
 
 (* check out each statement *)
 (* returns Jast.jStmt list * env *)
-let rec separate_statements (stmts, env, update_list:Sast.sstmt list * Jast.drawing * Jast.jStmt list -> Jast.jStmt list * Jast.drawing) = match stmts 
+let rec separate_statements (stmts, env, update_list:Sast.sstmt list * Jast.drawing * Jast.jStmt list) = match stmts 
 	with [] -> ((update_list@[Jast.JStmt(Jast.JId("hello"))]), env)
 	| [stmt] -> let (new_stmt, new_env) = proc_stmt env stmt in (update_list@[new_stmt], new_env)
 	| stmt :: other_stmts ->
@@ -380,11 +398,9 @@ let gen_java (env:Jast.drawing):(Sast.sprogram -> Jast.javaprogram * Jast.drawin
 let empty_drawing_env=
 {
 	mandala_list = [];
+	variables = [];
 }
-(* {
-	drawing= {mandala_list=[];}
-} *)
-(* Go from Sast to Jast *)
+
 let _ =	
 	(* Initialize an empty drawing *)
 	let env = empty_drawing_env in 

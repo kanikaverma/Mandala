@@ -3,18 +3,8 @@ open Sast
 type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq
 
 
-type jdata_type =
-	JInt
-	| JFloat
-	| JVoid
-	| JNumbert
-	| JBooleant
-	| JShapet
-	| JGeot
-	| JLayert
-	| JMandalat
-	| JArrayt
-	
+
+
 type jPrimative =
 	| JBooleant of bool 
 	| JInt of int
@@ -53,9 +43,21 @@ type mandala={
 	max_layer_radius : float; (* define the max layer radius as the maximum of the sum of the the layer radius + shape radius *)
 	is_draw: bool
 }
+type jdata_type =
+	JInt
+	| JFloat
+	| JVoid
+	| JNumbert
+	| JBooleant
+	| JShapet
+	| JGeot
+	| JLayert
+	| JMandalat of mandala
+	| JArrayt
 
 type drawing={
-	mandala_list : (string * mandala) list
+	mandala_list : (string * mandala) list;
+	variables: (string * jdata_type) list
 }
 
 type java_shapes = {
@@ -65,6 +67,8 @@ type java_shapes = {
 type symbol_table = {
 	draw_stmts : drawing	
 }
+
+
 type jFuncID = 
 	JFunc of jdata_type * string
 type jexpr =
