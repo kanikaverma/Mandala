@@ -6,7 +6,7 @@ exception Error of string
 (*symbol table *)
 type symbol_table={
 	parent : symbol_table option;
-	variables: (string * sdata_type) list 
+	variables: (string * sdata_type) list
 }
 
 type function_table={
@@ -124,34 +124,51 @@ let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sd
 		(* AST Call of string * expr list*)
 	| Ast.Call(fid, args) ->
 		
-			let actual_types = List.map (fun expr -> semantic_expr env expr) args in
-			(*let actual_type_names = List.iter extract_type actual_types*)
-		 let actual_len = List.length args in
-			let actual_types_list = List.fold_left (fun a (_,typ, ret_env) -> typ :: a) [] actual_types in     (*get list of just types from list of (type, string) tuples, [] is an accumulator*)
-			if (fid = "draw")
-			then let actual_expr_list = List.fold_left (fun a (expr,_, ret_env) -> expr :: a) [] actual_types in
-			let len = List.length actual_expr_list in
+		let actual_types = List.map (fun expr -> semantic_expr env expr) args in
+		(*let actual_type_names = List.iter extract_type actual_types*)
+		let actual_len = List.length args in
+		let actual_types_list = List.fold_left (fun a (_,typ, ret_env) -> typ :: a) [] actual_types in     (*get list of just types from list of (type, string) tuples, [] is an accumulator*)
+		let actual_expr_list = List.fold_left (fun a (expr,_, ret_env) -> expr :: a) [] actual_types in
+		let len = List.length actual_expr_list in
+		if (fid = "draw")
+		then 
+			
 			if (len == 1) 
 			then (Sast.Call(fid, actual_expr_list), Sast.Void, env)
 			else raise(Error("Draw function has incorrect parameters"^ string_of_int actual_len)) 	
-		else
-		 try (let (fname, fret, fargs, fbody) =
-			find_function env.fun_scope fid in
-			
-			(*let actual_type_names = 
-				List.find (fun (_,s) -> s) actual_types*)
+		else 
+			if (fid ="addTo")
+			then (* Check that length is greater than 1, or at least two args *)
+				if (len > 1)
+				then 
+					(Sast.Call(fid, actual_expr_list), Sast.Mandalat, env)
+				else raise(Error("addTo function has incorrect parameters"^ string_of_int actual_len))
+					(* The first argument should be the mandala that you are adding the layer to *)
+					(* let update_mandala = List.hd actual_expr_list in 
+					let update_mandala_name = match update_mandala 
+						with Ast.Id(update_mandala) -> let m_name = update_mandala in m_name 
+						| _ -> raise (Error("This name is not a string! "^update_mandala_name));
+					(* we know that this mandala has been declared, 
+					because above when the args are mapped, they are each checked with find_variable *)
+					in *)
+			else
+				try (let (fname, fret, fargs, fbody) =
+				find_function env.fun_scope fid in
+				
+				(*let actual_type_names = 
+					List.find (fun (_,s) -> s) actual_types*)
 
-			(*let (actual_arg_type, _) = actual_types in*)
-			let formal_types =  List.map (fun farg -> let arg_type =
-				get_formal_arg_types env (farg.skind, farg.svname) in arg_type)
-			fargs in
-			if not (actual_types_list=formal_types) 
-			then
-				raise (Error("Mismatching types in function call"))
-			else 
-				let actual_expr_list = List.fold_left (fun a (expr,_, ret_env) -> expr :: a) [] actual_types in
-				(Sast.Call(fname, actual_expr_list), fret, env)
-				(* Call of string * sexpr list*)
+				(*let (actual_arg_type, _) = actual_types in*)
+				let formal_types =  List.map (fun farg -> let arg_type =
+					get_formal_arg_types env (farg.skind, farg.svname) in arg_type)
+				fargs in
+				if not (actual_types_list=formal_types) 
+				then
+					raise (Error("Mismatching types in function call"))
+				else 
+					let actual_expr_list = List.fold_left (fun a (expr,_, ret_env) -> expr :: a) [] actual_types in
+					(Sast.Call(fname, actual_expr_list), fret, env)
+					(* Call of string * sexpr list*)
 
 		)
 		with Not_found -> raise (Error("undeclared function ")) 
@@ -189,6 +206,34 @@ let rec semantic_stmt (env:translation_enviornment):(Ast.stmt -> Sast.sstmt * sd
 		 raise (Error("HELLO "^a)); *)
 
 		(Sast.Mandala({skind = typ; svname = name}), typ, new_env)
+	| Ast.Layer(v_name, v_radius, v_shape, v_count, v_offset, v_angular_shift) ->
+		(* raise (Error ("ADD CODE FOR LAYER CREATION!")) *)
+		(* semantic_expr returns Sast.sexpr * sdata_type * translation_enviornment *)
+		let {vname=name} = v_name in 
+		let typ = Sast.Layert in 
+		let (s_radius, s_r_typ, env) = semantic_expr env v_radius in 
+		let (s_shape, s_s_typ, env) = semantic_expr env v_shape in 
+		let (s_count, s_c_typ, env) = semantic_expr env v_count in 
+		let (s_offset, s_o_typ, env) = semantic_expr env v_offset in 
+		let (s_angular_shift, s_a_typ, env) = semantic_expr env v_angular_shift in 
+		let new_env = add_to_var_table env name typ in 
+		(Sast.Layer({skind = typ; svname = name;}, s_radius, s_shape, s_count, s_offset, s_angular_shift), typ, new_env)
+
+	(* IN AST Layer of var_decl * expr * expr * expr * expr * expr  *)
+		(* IN SASST: | Shape of svar_decl * sexpr * sexpr * sexpr * sexpr *)
+
+	| Ast.Shape(v_name, v_geo, v_size, v_color, v_rotation) ->
+		(* raise (Error ("ADD CODE FOR SHAPE CREATION!")) *)
+		let {vname=name} = v_name in 
+		let typ = Sast.Shapet in 
+		let (s_geo, s_g_typ, env) = semantic_expr env v_geo in 
+		let (s_size, s_s_typ, env) = semantic_expr env v_size in 
+		let (s_color, s_c_typ, env) = semantic_expr env v_color in 
+		let (s_rotation, s_r_typ, env) = semantic_expr env v_rotation in 
+		let new_env = add_to_var_table env name typ in 
+		(Sast.Shape({skind = typ; svname=name;}, s_geo, s_size, s_color, s_rotation), typ, new_env)
+	(* IN AST Shape of var_decl * expr * expr * expr * expr *)
+	(* IN SAST: | Layer of svar_decl * sexpr * sexpr * sexpr * sexpr * sexpr  *)
 
 	| Ast.Expr(expression) -> 
 		let newExpr = try
@@ -237,7 +282,7 @@ let rec semantic_stmt (env:translation_enviornment):(Ast.stmt -> Sast.sstmt * sd
 		semantic_stmt env stmt)) new_env func_declaration.body in 
 		final_env *)
 
-	let var_empty_table_init = {parent=None; variables=[];}
+	let var_empty_table_init = {parent=None; variables=[]}
 	let fun_empty_table_init = { functions = [];}
 	let empty_environment = 
 	{
@@ -265,7 +310,7 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 		check_statements other_stmts env *)
 	
 	let rec separate_statements (stmts, env, update_list:Ast.stmt list * translation_enviornment * Sast.sstmt list) = match stmts 
-		with [] -> raise (Error("IT IS EMPTY! Nothing is ehre!!")); (update_list @[Sast.Expr(Sast.Id("hello"))], env)
+		with [] -> (update_list @[Sast.Expr(Sast.Id("hello"))], env)
 		| [stmt] -> let (new_stmt, typ, new_env) = semantic_stmt env stmt in (update_list@[new_stmt], new_env)
 		| stmt :: other_stmts ->
 			let (new_stmt, typ, new_env) = semantic_stmt env stmt in
