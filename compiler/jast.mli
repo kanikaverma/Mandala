@@ -51,7 +51,7 @@ type jdata_type =
 	| JBooleant
 	| JShapet
 	| JGeot
-	| JLayert
+	| JLayert of layer
 	| JMandalat of mandala
 	| JArrayt
 type jShape = 
@@ -76,7 +76,7 @@ type symbol_table = {
 	draw_stmts : drawing	
 }
 
-type jFuncID = 
+(* type jFuncID = 
 	JFunc of jdata_type * string
 type jexpr =
 	JLiteral of int
@@ -93,14 +93,14 @@ and jStmt =
 and javaBlock =
 	JavaBlock of jStmt list
 and javaFuncCall =
-	JFuncCall of jdata_type * string
+	JFuncCall of jdata_type * string *)
 
 (* type javaFunctionHeader =
 	JavaFunctionHeader of javaFunctionType *string *)
-type javaMethod =
+(* type javaMethod =
 	JavaMain of javaBlock
 	| JavaDefaultConstructor of string * javaBlock
-	| JavaFunction of javaFuncCall * javaBlock
+	| JavaFunction of javaFuncCall * javaBlock *)
 	(* JavaFunction of Ast.functionHeader * javaBlock *)
 	(* type functionHeader = {
 returnType : platoFunctionType;
@@ -108,9 +108,9 @@ functionName : string;
 parameters : parameter list;
 }) *)
 
-type javaClass = 
-	JavaClass of javaMethod (* string * string * javaMethod *)
-type javaClassName = CreateClass of string
+type javaClass = CreateClass of string
+	(*JavaClass of javaMethod (* string * string * javaMethod *)
+	 type javaClassName =*) 
 
 type javaprogram = 
-	JavaProgram of javaClassName * javaClass * jShape list
+	JavaProgram of javaClass * jShape list

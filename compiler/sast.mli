@@ -9,9 +9,36 @@ type sdata_type =
 	| Shapet
 	| Geot
 	| Layert
-	| Mandalat
+	| Mandalat 
 	| Arrayt
 
+(* Adding in types for mandala, layer and shapes *)
+(* type sshape = SShape of string * string * float * string * float *)
+(* {
+	sname: string;
+	sgeo : string;
+	ssize : float;
+	scolor: string;
+	srotation: float
+} *)
+
+(* type slayer = SLayer of string * float * sshape * int * float * float *) 
+(*{
+	sname: string;
+	sradius : float;
+	sshape : sshape;
+	scount : int;
+	soffset : float;
+	sangularshift : float
+}*)
+
+(* type smandala= SMandala of string * slayer list * float * bool *)
+(* {
+	sname: string;
+	slist_of_layers : slayer list;
+	smax_layer_radius : float; (* define the max layer radius as the maximum of the sum of the the layer radius + shape radius *)
+	sis_draw: bool
+} *)
 (*type expr_wrapper =
 	Expr of sexpr * sdata_type*)
 type sexpr =

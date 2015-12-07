@@ -1,4 +1,3 @@
-(* Code generation*)
 open Ast
 open Sast
 open Sast_to_jast
@@ -14,23 +13,18 @@ let jast =
 	let sast = Semantic.semantic_check ast in
 	Sast_to_jast.actual_final_convert sast
 
-(*
-let proc_expr =function
+(*let proc_expr =function
 	Sast.Call(fname, actual_args)->
-		
 		print_string "    t.setPosition(0, 0);\n";      (*should be in sast.mandala case*)
 		print_string "    t.dot();\n"      (*should be in sast.mandala case*)
-
-
 let proc_stmt = function
 	Sast.Mandala(vname) ->
 		(*print java code for mandala of this name*)
 		print_string "    Turtle t = new Turtle();\n";    (*should be in sast.mandala case*)
-		print_string "    t.hide();\n";     (*should be in sast.mandala case*)
+		print_string "    t.hide();\n"   (*should be in sast.mandala case*)
 	| Sast.Expr(expression)->
 		proc_expr expression
 	| _ -> raise (Error("unsupported statement found")) 
-
 let gen_java = function
 	Sast.SProg(s)-> 
 		let x = List.length s in
@@ -38,17 +32,12 @@ let gen_java = function
 			print_string "public class Program {\n\n";
  			print_string "  public static void main(String[] args) {\n\n";
 		
-
 			List.map proc_stmt s; 
-
 			print_string "	t.save(\"Program.jpg\");";
-			print_string "  }\n\n}";
-
+			print_string "  }\n\n}"
 		)	
+		else print_string "No input provided" *)
 
-		else print_string "No input provided"
-
-	*)
 let draw_circle = function
 	(radius, x, y) -> 
 		print_string "    drawCircle(t,";
@@ -82,7 +71,7 @@ let proc_shape = function
 let define_methods = function
 	x -> if (x> 0) then (
 			print_string "public static void drawCircle(Turtle t, double radius, double x, double y) {\n";
-			print_string "   t.up(); t.setPosition(x, y + radius); t.down();\n";
+			print_string "   t.up(); t.setPosition(x , y + radius); t.down();\n";
 	    	print_string "		for (int i = 0; i < 360; i++) {\n";
 	      	print_string "			t.forward(radius * 2 * Math.PI / 360);\n";
 	      	print_string "			t.right(1);\n" ;
@@ -90,10 +79,16 @@ let define_methods = function
 
 	    	print_string "public static void drawSquare(Turtle t, double size, double x, double y, double rotation) {\n";
 	    	print_string "	  t.up();\n";
-	    	print_string "    t.setPosition(x, y);\n";
+	    	print_string "    t.setPosition(x - size/2, y + size/2);\n";
+	    	print_string "    double radius = Math.sqrt(2) * size / 2;\n";
+	    	print_string "    if (rotation > 0 ) t.left(45);\n";
+	        print_string "	  for (int i = 0; i < rotation; i++) {\n";
+	      	print_string "			t.forward(radius * 2 * Math.PI / 360);\n";
+	      	print_string "			t.right(1);\n" ;
+	    	print_string "       }\n";
 	    	print_string "	  t.down();\n";
-	    	print_string "    int turn = 90;\n";
 	    	print_string "    t.right( rotation );\n";
+	    	print_string "    int turn = 90;\n";
 			print_string "    t.forward( size );\n";
 			print_string "    t.right( turn );\n";
 			print_string "    t.forward( size );\n";
@@ -103,6 +98,7 @@ let define_methods = function
 			print_string "    t.forward( size );\n";
 			print_string "    t.right( turn );\n";
 			print_string "    t.left( rotation );\n";
+			print_string "    if (rotation > 0) t.left( rotation - 45);\n";
 			print_string "}\n"
 		)
 
@@ -113,7 +109,7 @@ let get_string_of_classname = function
 	Jast.CreateClass(string_of_classname) -> string_of_classname
 
 let gen_java_modified = function
-	Jast.JavaProgram(classname, method_info, shapes) ->
+	Jast.JavaProgram(classname, shapes) ->
 		let string_of_classname = get_string_of_classname classname in
 			print_string "public class ";
 			print_string string_of_classname; (*Print the string of class name for class header *)
