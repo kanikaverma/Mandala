@@ -83,20 +83,18 @@ let add_to_var_table env name t =
 (*ALSO DEFINE SFUNC_DECL in your thing!!! *)
 (* let get_return_datatype env  *)
 (* let get_type_from_datatype *)
-(* let add_to_func_table env sfunc_decl =
+ let add_to_func_table env sfunc_decl =
 	let func_table = env.fun_scope in 
 	let old_functions = func_table.functions in 
-	match sfunc_decl with
-		SFunc_Decl(sfuncdecl, sdatatype) ->
-			let func_name = sfuncdecl.sfname in 
-			let func_type = sfuncdecl.sreturntype in (may need to call function on sreturntypes to get the type )
-			let func_formals = sfuncdecl.sformals in 
-			let func_body = sfuncdecl.sbody in 
+			let func_name = sfunc_decl.sfname in 
+			let func_type = sfunc_decl.sreturntype in (*may need to call function on sreturntypes to get the type *)
+			let func_formals = sfunc_decl.sformals in 
+			let func_body = sfunc_decl.sbody in 
 			let new_functions = (func_name, func_type, func_formals, func_body)::old_functions
 		in 
 			let new_fun_scope = {functions = new_functions} in
 			let final_env = {env with fun_scope = new_fun_scope} in 
-			final_env *)
+			final_env 
 
 let rec find_function (scope: function_table) name=
 		List.find (fun (s, _, _, _) -> s = name) scope.functions
@@ -183,6 +181,35 @@ let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sd
 	(* check type of right ahndside and recurse on that to check that it matches lefthand side*)
 	(*once it is confirmed, compare left type and righthand type and then add it to the symbol table *)
 	| _ -> raise (Error("invalid  assignment")) 
+
+let proc_type = function
+  	Ast.Numbert -> Sast.Float
+  	| Ast.Booleant -> Sast.Booleant
+  	| Ast.Shapet -> Sast.Shapet
+	| Ast.Geot -> Sast.Geot
+	| Ast.Layert -> Sast.Layert
+	| Ast.Mandalat -> Sast.Mandalat
+	| Ast.Arrayt -> Sast.Arrayt
+
+let proc_var_decl = function 
+	(var_decl, env) -> 
+		let k = var_decl.kind in
+		let v = var_decl.vname in
+ 		let 
+		new_svar_decl = {
+			skind = proc_type k;
+			svname  = v;
+		} in 
+		let new_env = add_to_var_table env  new_svar_decl.svname new_svar_decl.skind in 
+	(new_svar_decl, new_env)
+
+let rec proc_formals (var_decl_list, env, update_var_decl_list: Ast.var_decl list * translation_enviornment * Sast.svar_decl list) = match var_decl_list
+	with [] -> (update_var_decl_list, env)
+	| [var_decl] -> let (new_var_decl, new_env) = proc_var_decl(var_decl, env) in (update_var_decl_list@[new_var_decl], new_env)
+	| var_decl :: other_var_decls ->
+		let (new_var_decl, new_env) = proc_var_decl(var_decl, env) in
+		proc_formals (other_var_decls, new_env, update_var_decl_list@[new_var_decl])
+
 
 let rec semantic_stmt (env:translation_enviornment):(Ast.stmt -> Sast.sstmt * sdata_type * translation_enviornment) = function
 	Ast.Mandala(mandala_arg) ->
@@ -310,12 +337,46 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 		check_statements other_stmts env *)
 	
 	let rec separate_statements (stmts, env, update_list:Ast.stmt list * translation_enviornment * Sast.sstmt list) = match stmts 
-		with [] -> (update_list @[Sast.Expr(Sast.Id("hello"))], env)
+		with [] -> (update_list, env)
 		| [stmt] -> let (new_stmt, typ, new_env) = semantic_stmt env stmt in (update_list@[new_stmt], new_env)
 		| stmt :: other_stmts ->
 			let (new_stmt, typ, new_env) = semantic_stmt env stmt in
 			(* let (nm, tp) = List.hd new_env.var_scope.variables in *)
 			separate_statements (other_stmts, new_env, update_list@[new_stmt])
+
+
+	(*NEED TO CREATE NEW ENVIRONMENT*)
+	let rec semantic_func (env: translation_enviornment): (Ast.func_decl -> Sast.sfuncdecl * translation_enviornment) = function
+		my_func ->
+		let fname = my_func.fname in
+		let returntype = my_func.returntype in 
+		let formals = my_func.formals in 
+		let body = my_func.body in
+
+		let empty_list = [] in
+		let new_returntype = proc_type returntype in
+		let (new_formals, env) = proc_formals (formals, env, empty_list) in
+		let (new_stmts, env) = separate_statements(body, env, empty_list) in
+
+		let sfuncdecl = {
+			sfname = fname;
+			sreturntype = new_returntype;
+			sformals = new_formals;
+			sbody = new_stmts;
+		} in
+
+		let env = add_to_func_table env sfuncdecl in
+
+		(sfuncdecl, env)
+
+	let rec separate_functions (functions, env, update_list: Ast.func_decl list * translation_enviornment * Sast.sfuncdecl list) = match functions 
+		with [] -> (update_list, env)
+		(*Create an empty environment and save the new one??*)
+		| [func] -> let (new_func, new_env) = semantic_func empty_environment func in (update_list@[new_func], new_env)
+		| func :: other_funcs ->
+			let (new_func, new_env) = semantic_func env func in
+			(* let (nm, tp) = List.hd new_env.var_scope.variables in *)
+			separate_functions (other_funcs, new_env, update_list@[new_func])
 
 	(* let do_this = function
 		(stmt, typ, env) -> semantic_stmt env stmt in *)
@@ -330,9 +391,10 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 		(* let (new_stmt, typ, env) = List.map (fun stmt_part -> semantic_stmt env stmt_part) in *) 
 		(* ERROR OF GOING FROM AST TO SASST *)
 		let update_list = []  in 
-		let reversse_prog_stmts = List.rev prog_stmts in 
-		 let resulting_statments = separate_statements (reversse_prog_stmts, env, update_list) in  (* List.map( fun stmt_part -> separate_statements prog_stmts env ) in *)
-		let (statements, env) = resulting_statments 
+		let (resulting_functions, func_env) = separate_functions (prog_funcs, env, update_list) in
+		let reverse_prog_stmts = List.rev prog_stmts in 
+		let resulting_statements = separate_statements (reverse_prog_stmts, env, update_list) in  (* List.map( fun stmt_part -> separate_statements prog_stmts env ) in *)
+		let (statements, env) = resulting_statements
 
 		(* let test_results = check_statements prog_stmts env in *)
 		 (*let result_tuples = List.fold_left ( fun stmt_part -> semantic_stmt env stmt_part) prog_stmts in  *)
@@ -343,7 +405,7 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 		in Sast.SProg(result_stmts) *)
 		(* let testing = List.fold_left (do_this env) prog_stmts *)
 
-		in Sast.SProg(statements)
+		in Sast.SProg(statements, resulting_functions)
 		(* NEED TO ADD FUNCTION DECLARATION! *)
 	(* | _ -> raise (Error("undeclared identifier")) *)
 (* for function call we can check if it's drwa then check input typ *)
