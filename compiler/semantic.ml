@@ -345,6 +345,9 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 			separate_statements (other_stmts, new_env, update_list@[new_stmt])
 
 
+
+
+
 	(*NEED TO CREATE NEW ENVIRONMENT*)
 	let rec semantic_func (env: translation_enviornment): (Ast.func_decl -> Sast.sfuncdecl * translation_enviornment) = function
 		my_func ->
@@ -369,10 +372,17 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 
 		(sfuncdecl, env)
 
+
 	let rec separate_functions (functions, env, update_list: Ast.func_decl list * translation_enviornment * Sast.sfuncdecl list) = match functions 
 		with [] -> (update_list, env)
 		(*Create an empty environment and save the new one??*)
-		| [func] -> let (new_func, new_env) = semantic_func empty_environment func in (update_list@[new_func], new_env)
+		| [func] -> 
+		(* Change in some way to handle scope*)
+			let scoped_environment = {
+				var_scope = {parent = None; variables=[]};
+				fun_scope = fun_empty_table_init;
+			} in 
+			let (new_func, new_env) = semantic_func scoped_environment func in (update_list@[new_func], new_env)
 		| func :: other_funcs ->
 			let (new_func, new_env) = semantic_func env func in
 			(* let (nm, tp) = List.hd new_env.var_scope.variables in *)
@@ -391,10 +401,11 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 		(* let (new_stmt, typ, env) = List.map (fun stmt_part -> semantic_stmt env stmt_part) in *) 
 		(* ERROR OF GOING FROM AST TO SASST *)
 		let update_list = []  in 
-		let (resulting_functions, func_env) = separate_functions (prog_funcs, env, update_list) in
 		let reverse_prog_stmts = List.rev prog_stmts in 
 		let resulting_statements = separate_statements (reverse_prog_stmts, env, update_list) in  (* List.map( fun stmt_part -> separate_statements prog_stmts env ) in *)
-		let (statements, env) = resulting_statements
+		let (statements, env) = resulting_statements in
+		(*Using the scope of the env returning from statements..?*)
+		let (resulting_functions, func_env) = separate_functions (prog_funcs, env, update_list) in
 
 		(* let test_results = check_statements prog_stmts env in *)
 		 (*let result_tuples = List.fold_left ( fun stmt_part -> semantic_stmt env stmt_part) prog_stmts in  *)
@@ -405,7 +416,7 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 		in Sast.SProg(result_stmts) *)
 		(* let testing = List.fold_left (do_this env) prog_stmts *)
 
-		in Sast.SProg(statements, resulting_functions)
+		Sast.SProg(statements, resulting_functions)
 		(* NEED TO ADD FUNCTION DECLARATION! *)
 	(* | _ -> raise (Error("undeclared identifier")) *)
 (* for function call we can check if it's drwa then check input typ *)
