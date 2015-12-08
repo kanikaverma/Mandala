@@ -100,7 +100,7 @@ let sast =
 let find_variable (scope: Jast.drawing) name=
 	try
 		List.find (fun (s,_) -> s=name) scope.variables 
-	with Not_found -> raise (Error ("THIS FAILED AGAIN!!! "^name))
+	with Not_found -> raise (Error ("Didn't find variable in Sast_to_jast! "^name))
 let find_mandala (scope: Jast.drawing) mandala_name = 
 	try List.find ( fun (str, mndla) -> str = mandala_name) scope.mandala_list
 	with Not_found -> raise (Error ("MANDALA WAS NOT FOUND IN MANDALA LIST! "^mandala_name))
@@ -379,7 +379,7 @@ let rec separate_statements (stmts, env:Sast.sstmt list * Jast.drawing) = match 
 
 (* TODO: Can change so gen_java doesn't return javaprogram, can just return javaclass list *)
 let gen_java (env:Jast.drawing):(Sast.sprogram -> Jast.drawing)= function 
-	Sast.SProg(s)-> 
+	Sast.SProg(s,f)-> 
 		(* Check if the program has at least one statement *)
 		let x = List.length s in
 		if (x>0) then (

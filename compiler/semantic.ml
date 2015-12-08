@@ -29,7 +29,7 @@ let find_variable (scope: symbol_table) name=
 	try
 		List.find (fun (s,_) -> s=name) scope.variables 
 	(* with Not_found -> try List.find (fun (s, _) -> s=name) scope.parent.variables*) 
-	with Not_found -> raise (Error ("THIS FAILED AGAIN!!! "^name))
+	with Not_found -> raise (Error ("Semantic not finding variable in lookup table"^name))
 		(*	Some(parent)-> find_variable parent name
 		| _ -> raise (Error("THIS IS NOT FOUND "^name)) *)
 
