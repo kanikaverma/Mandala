@@ -81,4 +81,4 @@ and sstmt =
 type sfunc_decltype =
 	SFunc_Decl  of sfuncdecl * sdata_type
 type sprogram =
-	SProg of sstmt list (* need to add back * sfunc_decl list *)
+	SProg of sstmt list  * sfuncdecl list(* need to add back * sfunc_decl list *)

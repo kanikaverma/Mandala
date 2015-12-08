@@ -100,7 +100,7 @@ let sast =
 let find_variable (scope: Jast.drawing) name=
 	try
 		List.find (fun (s,_) -> s=name) scope.variables 
-	with Not_found -> raise (Error ("THIS FAILED AGAIN!!! "^name))
+	with Not_found -> raise (Error ("Didn't find variable in Sast_to_jast! "^name))
 let find_mandala (scope: Jast.drawing) mandala_name = 
 	try List.find ( fun (str, mandala) -> str = mandala_name) scope.mandala_list
 	with Not_found -> raise (Error ("MANDALA WAS NOT FOUND IN MANDALA LIST! "^mandala_name))
@@ -498,7 +498,7 @@ let rec separate_statements (stmts, env:Sast.sstmt list * Jast.drawing) = match 
 
 (* TODO: Can change so gen_java doesn't return javaprogram, can just return javaclass list *)
 let gen_java (env:Jast.drawing):(Sast.sprogram -> Jast.drawing)= function 
-	Sast.SProg(s)-> 
+	Sast.SProg(s,f)-> 
 		(* Check if the program has at least one statement *)
 		let x = List.length s in
 		if (x>0) then (
@@ -555,8 +555,9 @@ let rec extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer -> Jas
 		else if (count >= 1 && listed_shape.geo = "circle")
 		then 
 			let rec loop = function
-			(new_list, k) -> 
-			 let my_angle = my_layer.offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count) in 
+			(new_list, k) ->
+			 let rad_offset = my_layer.offset *. pi /. 180.0 in 
+ 			 let my_angle = -1.0 *. (rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count)) in 
 			 let x_pos = cos (my_angle) *. my_layer.radius in
 			 let y_pos = sin (my_angle) *. my_layer.radius in
 			 let new_shape = Jast.Circle(listed_shape.size, x_pos, y_pos) in 
