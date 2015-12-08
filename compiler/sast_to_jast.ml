@@ -17,7 +17,7 @@ let sample_square = {
 	geo = "Square";
 	size = 30.0;
 	color = "Red";
-	rotation = 30.0;
+	rotation = 0.0;
 }
 
 let sample_square2 = {
@@ -25,7 +25,7 @@ let sample_square2 = {
 	geo = "Square";
 	size = 30.0;
 	color = "Red";
-	rotation = 0.0;
+	rotation = 45.0;
 }
 
 let sample_square3 = {
@@ -74,7 +74,7 @@ let sample_layer4 = {
 
 let sample_mandala = {
 	name = "m";
-	list_of_layers = [sample_layer1; sample_layer2; sample_layer3; sample_layer4];
+	list_of_layers = [sample_layer1; sample_layer2; sample_layer3];
 	max_layer_radius = 250.0;
 	is_draw = true;
 }
@@ -538,7 +538,8 @@ let rec extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer -> Jas
 		then 
 			let rec loop = function
 			(new_list, k) -> 
-			 let my_angle = my_layer.offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count) in 
+			 let rad_offset = my_layer.offset *. pi /. 180.0 in 
+			 let my_angle = -1.0 *. (rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count)) in 
 			 let x_pos = cos (my_angle) *. my_layer.radius in
 			 let y_pos = sin (my_angle) *. my_layer.radius in
 			 let new_shape = Jast.Square(listed_shape.size, x_pos, y_pos, listed_shape.rotation) in 
