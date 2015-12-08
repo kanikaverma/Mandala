@@ -61,12 +61,26 @@ let draw_square = function
 		print_float rotation;
 		print_string ");\n"
 
+let draw_triangle = function
+	(side, x, y, rotation) ->
+		print_string "    drawTriangle(t,";
+		print_float side
+		print_string ",";
+		print_float x;
+		print_string ",";
+		print_float y;
+		print_string ","
+		print_float rotation;
+		print_string ");\n"
+
 let proc_shape = function
 	Jast.Circle(radius,x,y) ->
 		draw_circle(radius,x,y)
-	| Jast.Square(radius,x,y,rotation) ->
-		draw_square(radius,x,y,rotation)
-	|  _ -> raise (Error("triangle and any other shapes unsupported"))
+	| Jast.Square(side,x,y,rotation) ->
+		draw_square(side,x,y,rotation)
+	| Jast.Triangle(side,x,y,rotation) ->
+		draw_triangle(side,x,y,rotation)
+	|  _ -> raise (Error("other shapes unsupported -> only square, circle, and triangle"))
 
 let define_methods = function
 	x -> if (x> 0) then (
@@ -89,14 +103,25 @@ let define_methods = function
 	    	print_string "	  t.down();\n";
 	    	print_string "    t.right( rotation );\n";
 	    	print_string "    int turn = 90;\n";
-			print_string "    t.forward( size );\n";
-			print_string "    t.right( turn );\n";
-			print_string "    t.forward( size );\n";
-			print_string "    t.right( turn );\n";
-			print_string "    t.forward( size );\n";
-			print_string "    t.right( turn );\n";
-			print_string "    t.forward( size );\n";
-			print_string "    t.right( turn );\n";
+			print_string "    t.forward( size ); t.right( turn );\n";
+			print_string "    t.forward( size ); t.right( turn );\n";
+			print_string "    t.forward( size ); t.right( turn );\n";
+			print_string "    t.forward( size ); t.right( turn );\n";
+			print_string "    t.left( rotation );\n";
+			print_string "    if (rotation > 0) t.left( rotation - 45);\n";
+			print_string "}\n"
+
+			print_string "public static void drawTriangle(Turtle t, double size, double x, double y, double rotation) {\n";
+			print_string "	  t.up(); t.setPosition(x - size/2, y - size/2);\n";
+			print_string "    double radius = Math.sqrt(2) * size / 2;\n";
+			print_string "    if (rotation > 0) t.left(45);\n";
+			print_string "    for (int i = 0; i < rotation; i++) {\n";
+			print_string "      t.forward(radius*2*Math.PI / 360); t.right(1);\n";
+			print_string "    }\n";
+			print_string "    t.down(); t.right(rotation); int turn = 240;\n";
+			print_string "    t.forward(size); t.right(turn);\n";
+			print_string "    t.forward(size); t.right(turn);\n";
+			print_string "    t.forward(size); t.right(turn);\n";
 			print_string "    t.left( rotation );\n";
 			print_string "    if (rotation > 0) t.left( rotation - 45);\n";
 			print_string "}\n"
