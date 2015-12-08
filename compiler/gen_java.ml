@@ -126,11 +126,13 @@ let gen_java_modified = function
 			let l = List.length shapes in 
 			if (l > 0) then 
 				(List.map proc_shape shapes)
+			else if (l == 0) then
+				(*(List.map proc_shape shapes);*)
+				(*Just draw a dot if we have no shapes*)
+				(print_string "    t.setPosition(0,0);\n    t.dot();\n";
+				List.map proc_shape shapes)
 			else 
 				(List.map proc_shape shapes);
-				(*Just draw a dot if we have no shapes*)
-					(*print_string "    t.setPosition(0,0)\n";
-					print_string "    t.dot();\n"*)
 				
 
 			print_string "  t.save(\"";

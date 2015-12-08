@@ -583,7 +583,6 @@ let process_mandala = function
 	mandala ->
 	let list_of_layers = get_layers mandala in
 		let num_layers = List.length list_of_layers in
-		(* raise (Error("layer size"^string_of_int num_layers)); *)
 		List.fold_left extract_shapes_from_layer [] list_of_layers
 
 (* create empty initial environment *)
@@ -593,23 +592,23 @@ let empty_drawing_env=
 	mandala_list = [];
 	variables = [];
 	java_shapes_list = [];
+
 }
+
+
+let rec process_mandalas (mandalas, shapes:Jast.mandala list * Jast.jShape list) = match mandalas 
+	with [] -> shapes
+	| [mandala] -> (shapes @ process_mandala mandala) (*let new_env = proc_stmt env stmt in new_env*)
+	| mandala :: other_mandalas ->
+		let new_shapes = process_mandala mandala in
+		(* let (nm, tp) = List.hd new_env.var_scope.variables in *)
+		process_mandalas (other_mandalas, (shapes @ new_shapes))
 
 let rec actual_final_convert (check_program: Sast.sprogram): (Jast.javaprogram) = 
 	let env = empty_drawing_env in 
 	let new_draw_env = gen_java env sast in 
 	let mandala_lists = new_draw_env.mandala_list in
-	let get_list_size = List.length mandala_lists in 
-	(* raise (Error ("GET SIZE!!! "^string_of_int get_list_size)); *)
-	(* ADD WAY TO ITERATE THROUGH LIST OF MANDALAS *)
-	let (mandala_name, first_mandala) = List.hd mandala_lists in 
-	let first_lists = List.length first_mandala.list_of_layers in 
-	let first_layer = List.hd first_mandala.list_of_layers in
-	let first_shape = first_layer.shape in
-	(*raise (Error ("My shape!" ^ first_shape.geo));*)
-	(*raise (Error("GET THE SIZE OF LAYERS! "^ string_of_int first_lists));*)
-	(* let (prog_part_one, prog_part_two) = new_java_prog in*)
-	(* REPLACE WITH FIRST MANDLAA INSTEAD OF SAMPLE MANDALA *)
-	let mandala_resulting_sample = process_mandala first_mandala in 
+	let all_mandalas = List.fold_left (fun a (_, mandala) -> mandala :: a) [] mandala_lists in
+	let all_shapes = process_mandalas (all_mandalas, []) in
 	let prog_name = Jast.CreateClass("Program") in 
-    Jast.JavaProgram(prog_name, mandala_resulting_sample)
+    Jast.JavaProgram(prog_name, all_shapes)
