@@ -247,7 +247,7 @@ and proc_expr (env:Jast.drawing): (Sast.sexpr -> Jast.drawing * Jast.jdata_type)
 						is_draw = true;
 					} in
 					let test_layer_size = List.length actual_mandala.list_of_layers in 
-					raise (Error("THIS IS SIZE OF LAYERS in draw func " ^ string_of_int test_layer_size));
+					(*raise (Error("THIS IS SIZE OF LAYERS in draw func " ^ string_of_int test_layer_size));*)
 					(* list of all mandalas to draw *)
 					(* let updated_drawn_mandalas =  drawn_mandalas @ [curr_name, updated_current_mandala] in
 					let true_and_false_mandalas = updated_drawn_mandalas @ other_false_mandalas in 
