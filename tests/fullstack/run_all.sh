@@ -58,11 +58,14 @@ echo "*****************************************"
 echo ""
 
 echo "Mandala m = Create Mandala;
-Shape circle1 = Create Shape: {Geo circle Size 30.0 Color yellow Rotation 0.0};
+Shape circle1 = Create Shape: {Geo circle Size 25.0 Color yellow Rotation 0.0};
 Shape square1 = Create Shape: {Geo square Size 50.0 Color yellow Rotation 0.0};
-Layer layer1 = Create Layer: {Radius 100.0 Shape circle1 Count 4 Offset 1.0 AngularShift 0};
+Shape square2 = Create Shape: {Geo square Size 50.0 Color yellow Rotation 45.0};
+Layer layer1 = Create Layer: {Radius 100.0 Shape circle1 Count 8 Offset 0.0 AngularShift 0};
 Layer layer2 = Create Layer: {Radius 100.0 Shape square1 Count 4 Offset 0.0 AngularShift 0};
-addTo: (m, layer1, layer2);
+Layer layer3 = Create Layer: {Radius 100.0 Shape square2 Count 4 Offset 0.0 AngularShift 0};
+addTo: (m, layer1, layer2, layer3);
+draw: (m);
 " | ./$run > "suite/Program.java"
 
 processed_files=$(find suite -name *\.proc)
