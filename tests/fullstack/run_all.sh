@@ -64,7 +64,7 @@ Shape square2 = Create Shape: {Geo square Size 50.0 Color yellsow Rotation 45.0}
 Layer layer1 = Create Layer: {Radius 100.0 Shape circle1 Count 8 Offset 0.0 AngularShift 0};
 Layer layer2 = Create Layer: {Radius 100.0 Shape square1 Count 4 Offset 0.0 AngularShift 0};
 Layer layer3 = Create Layer: {Radius 100.0 Shape square2 Count 4 Offset 0.0 AngularShift 0};
-Layer layer4 = Create Layer: {Radius 175.0 Shape circle1 Count 8 Offset 0.0 AngularShift 0};
+Layer layer4 = Create Layer: {Radius 175.0 Shape circle1 Count 8 Offset 22.5 AngularShift 0};
 addTo: (m, layer1, layer2, layer3, layer4);
 draw: (m);
 " | ./$run > "suite/Program.java"

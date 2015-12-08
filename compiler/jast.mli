@@ -2,9 +2,6 @@ open Sast
 
 type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq
 
-
-
-
 type jPrimative =
 	| JBooleant of bool 
 	| JInt of int
