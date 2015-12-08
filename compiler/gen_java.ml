@@ -80,6 +80,7 @@ let define_methods = function
 	    	print_string "public static void drawSquare(Turtle t, double size, double x, double y, double rotation) {\n";
 	    	print_string "	  t.up();\n";
 	    	print_string "    t.setPosition(x - size/2, y + size/2);\n";
+	    	print_string "    rotation = rotation % 90;\n";
 	    	print_string "    double radius = Math.sqrt(2) * size / 2;\n";
 	    	print_string "    if (rotation > 0 ) t.left(45);\n";
 	        print_string "	  for (int i = 0; i < rotation; i++) {\n";
@@ -87,7 +88,7 @@ let define_methods = function
 	      	print_string "			t.right(1);\n" ;
 	    	print_string "       }\n";
 	    	print_string "	  t.down();\n";
-	    	print_string "    t.right( rotation );\n";
+	    	print_string "    if (rotation > 0) t.right(45);\n";
 	    	print_string "    int turn = 90;\n";
 			print_string "    t.forward( size );\n";
 			print_string "    t.right( turn );\n";
@@ -98,7 +99,6 @@ let define_methods = function
 			print_string "    t.forward( size );\n";
 			print_string "    t.right( turn );\n";
 			print_string "    t.left( rotation );\n";
-			print_string "    if (rotation > 0) t.left( rotation - 45);\n";
 			print_string "}\n"
 		)
 
