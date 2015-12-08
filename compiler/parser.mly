@@ -88,6 +88,7 @@ basic_types:
     NUMBER                                                   { Numbert }
   | BOOLEAN                                                  { Booleant }
   | GEO                                                      { Geot }
+  | COLOR                                                    { Colort }
 
 stmt_list:
   /* nothing */                                              { [] }
