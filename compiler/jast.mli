@@ -28,32 +28,32 @@ type shape = {
 	rotation: float
 }
 
-type layer = {
+and layer = {
 	name: string;
 	radius : float;
 	shape : shape;
 	count : int;
 	offset : float;
-	angularshift : float
+	angularshift : int
 }
 
-type mandala={
+and mandala={
 	name: string;
 	list_of_layers : layer list;
 	max_layer_radius : float; (* define the max layer radius as the maximum of the sum of the the layer radius + shape radius *)
 	is_draw: bool
 }
-type jdata_type =
-	JInt
-	| JFloat
+and jdata_type =
+	JInt of int 
 	| JVoid
-	| JNumbert
-	| JBooleant
-	| JShapet
-	| JGeot
+	| JNumbert of float
+	| JBooleant of int 
+	| JShapet of shape 
+	| JGeot of string 
 	| JLayert of layer
 	| JMandalat of mandala
 	| JArrayt
+	| JColort of string
 type jShape = 
 	(*size, x, y*)
 	Circle of float * float * float

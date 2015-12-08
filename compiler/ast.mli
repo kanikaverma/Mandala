@@ -8,11 +8,11 @@ type mndlt =
 	| Layert
 	| Mandalat
 	| Arrayt
+	| Colort
 
 type expr =
 	 Literal of int
 	| Float_Literal of float
-	| Number of float
 	| Noexpr
 	| Id of string
 	| Binop of expr * op * expr
