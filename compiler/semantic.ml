@@ -202,10 +202,8 @@ let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sd
 	| _ -> raise (Error("invalid  assignment")) 
 
 let proc_type = function
-  	Ast.Numbert -> Sast.Float
-  	| Ast.Booleant -> Sast.Booleant
+  	 Ast.Booleant -> Sast.Booleant
   	| Ast.Shapet -> Sast.Shapet
-	| Ast.Geot -> Sast.Geot
 	| Ast.Layert -> Sast.Layert
 	| Ast.Mandalat -> Sast.Mandalat
 	| Ast.Arrayt -> Sast.Arrayt
@@ -213,10 +211,19 @@ let proc_type = function
 let proc_var_decl = function 
 	(var_decl, env) -> 
 		let k = var_decl.kind in
-		let v = var_decl.vname in
- 		let 
-		new_svar_decl = {
-			skind = proc_type k;
+		let v = var_decl.vname in 
+		let sskind = 
+ 		if (k = Ast.Numbert) then
+ 			Sast.Float
+ 		else if (k = Ast.Geot) then
+ 			Sast.Geot(v)
+ 		else if (k = Ast.Colort) then
+ 			Sast.Colort(v)
+ 		else
+ 			proc_type k in
+
+		let new_svar_decl = {
+			skind = sskind;
 			svname  = v;
 		} in 
 		let new_env = add_to_var_table env  new_svar_decl.svname new_svar_decl.skind in 

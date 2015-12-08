@@ -555,8 +555,9 @@ let rec extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer -> Jas
 		else if (count >= 1 && listed_shape.geo = "circle")
 		then 
 			let rec loop = function
-			(new_list, k) -> 
-			 let my_angle = my_layer.offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count) in 
+			(new_list, k) ->
+			 let rad_offset = my_layer.offset *. pi /. 180.0 in 
+ 			 let my_angle = -1.0 *. (rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count)) in 
 			 let x_pos = cos (my_angle) *. my_layer.radius in
 			 let y_pos = sin (my_angle) *. my_layer.radius in
 			 let new_shape = Jast.Circle(listed_shape.size, x_pos, y_pos) in 
