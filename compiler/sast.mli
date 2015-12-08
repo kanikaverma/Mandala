@@ -2,15 +2,17 @@ open Ast
 
 type sdata_type =
 	Int
+	| Literalt
 	| Float
 	| Void
-	| Numbert
+	| Numbert of float 
 	| Booleant
 	| Shapet
-	| Geot
+	| Geot of string 
 	| Layert
 	| Mandalat 
 	| Arrayt
+	| Colort of string
 
 (* Adding in types for mandala, layer and shapes *)
 (* type sshape = SShape of string * string * float * string * float *)
@@ -44,7 +46,6 @@ type sdata_type =
 type sexpr =
  	Literal of int
 	| Float_Literal of float
-	| Number of float
 	| Noexpr
 	| Id of string
 	| Binop of sexpr * op * sexpr
@@ -73,7 +74,7 @@ and sstmt =
 	| IF of sexpr * sstmt * sstmt
 	| Foreach of sexpr * sexpr * sstmt
 	| While of sexpr * sstmt
-	| Shape of svar_decl * sexpr * sexpr * sexpr * sexpr
+	| Shape of svar_decl * sdata_type * sdata_type * sdata_type * sdata_type
 	| Mandala of svar_decl
 	| Layer of svar_decl * sexpr * sexpr * sexpr * sexpr * sexpr 
 	| FuncCall of sexpr

@@ -122,6 +122,25 @@ let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sd
 		let (name, typ) =vdecl in 
 		(Sast.Id(name), typ, env)
 		(* AST Call of string * expr list*)
+	| Ast.Float_Literal(num) ->
+		(Sast.Float_Literal(num), Sast.Numbert(num), env)
+	| Ast.Literal(num) ->
+		(Sast.Literal(num), Sast.Literalt, env)
+
+
+
+(*
+	 Literal of int
+	| Float_Literal of float
+	| Number of float
+	| Noexpr
+	| Id of string
+	| Binop of expr * op * expr
+	| Call of string * expr list
+
+*)
+
+
 	| Ast.Call(fid, args) ->
 		
 		let actual_types = List.map (fun expr -> semantic_expr env expr) args in
@@ -212,6 +231,7 @@ let rec semantic_stmt (env:translation_enviornment):(Ast.stmt -> Sast.sstmt * sd
 		let {vname=name} = v_name in 
 		let typ = Sast.Layert in 
 		let (s_radius, s_r_typ, env) = semantic_expr env v_radius in 
+		(* ADD IN CHECKS like if s_r_typ is float continue, else WRONG TYPE! *)
 		let (s_shape, s_s_typ, env) = semantic_expr env v_shape in 
 		let (s_count, s_c_typ, env) = semantic_expr env v_count in 
 		let (s_offset, s_o_typ, env) = semantic_expr env v_offset in 
@@ -226,12 +246,23 @@ let rec semantic_stmt (env:translation_enviornment):(Ast.stmt -> Sast.sstmt * sd
 		(* raise (Error ("ADD CODE FOR SHAPE CREATION!")) *)
 		let {vname=name} = v_name in 
 		let typ = Sast.Shapet in 
-		let (s_geo, s_g_typ, env) = semantic_expr env v_geo in 
+		let s_geo = match v_geo with 
+			Ast.Id(v_geo) -> let new_geo = v_geo in new_geo (* semantic_expr env v_geo in *)
+			| _ -> raise (Error("WRONG FORMAT FOR GEO IN SHAPE!"))
+		in 
+		let updated_s_geo = Sast.Geot(s_geo) in 
 		let (s_size, s_s_typ, env) = semantic_expr env v_size in 
-		let (s_color, s_c_typ, env) = semantic_expr env v_color in 
+		(* let (s_color, s_c_typ, env) = semantic_expr env v_color in *)
+		let s_color = match v_color with 
+			Ast.Id(v_color) -> let new_color = v_color in new_color
+			| _ -> raise (Error("WRONG FORMAT FOR COLOR IN SHAPE!"))
+		in 
+		let updated_s_color = Sast.Colort(s_color) in 
+
 		let (s_rotation, s_r_typ, env) = semantic_expr env v_rotation in 
 		let new_env = add_to_var_table env name typ in 
-		(Sast.Shape({skind = typ; svname=name;}, s_geo, s_size, s_color, s_rotation), typ, new_env)
+		(* 	| Shape of svar_decl * sdata_type * sdata_type * sexpr * sdata_type *)
+		(Sast.Shape({skind = typ; svname=name;}, updated_s_geo, s_s_typ, updated_s_color, s_r_typ), typ, new_env)
 	(* IN AST Shape of var_decl * expr * expr * expr * expr *)
 	(* IN SAST: | Layer of svar_decl * sexpr * sexpr * sexpr * sexpr * sexpr  *)
 
@@ -310,7 +341,7 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 		check_statements other_stmts env *)
 	
 	let rec separate_statements (stmts, env, update_list:Ast.stmt list * translation_enviornment * Sast.sstmt list) = match stmts 
-		with [] -> (update_list @[Sast.Expr(Sast.Id("hello"))], env)
+		with [] -> (update_list, env)
 		| [stmt] -> let (new_stmt, typ, new_env) = semantic_stmt env stmt in (update_list@[new_stmt], new_env)
 		| stmt :: other_stmts ->
 			let (new_stmt, typ, new_env) = semantic_stmt env stmt in
