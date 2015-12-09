@@ -548,7 +548,8 @@ let rec extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer -> Jas
 			 		0.0
 			 in
 			 let rotat = listed_shape.rotation +. extra_rotation in
-			 let new_shape = Jast.Square(listed_shape.size, x_pos, y_pos, rotat) in 
+			 let color = listed_shape.color in 
+			 let new_shape = Jast.Square(listed_shape.size, x_pos, y_pos, rotat, color) in 
 				 if (k > 0) then 
 				 let updated_k = k - 1 in 
 				 	loop (new_list@[new_shape], updated_k)
@@ -565,7 +566,8 @@ let rec extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer -> Jas
  			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count) in 
 			 let x_pos = cos (my_angle) *. my_layer.radius in
 			 let y_pos = sin (my_angle) *. my_layer.radius in
-			 let new_shape = Jast.Circle(listed_shape.size, x_pos, y_pos) in 
+			 let color = listed_shape.color in 
+			 let new_shape = Jast.Circle(listed_shape.size, x_pos, y_pos, color) in 
 				 if (k > 0) then 
 				 let updated_k = k - 1 in 
 				 	loop (new_list@[new_shape], updated_k)
@@ -590,7 +592,8 @@ let rec extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer -> Jas
 			 		0.0
 			 in
 			 let rotat = listed_shape.rotation +. extra_rotation in
-			 let new_shape = Jast.Triangle(listed_shape.size, x_pos, y_pos, rotat) in 
+			 let color = listed_shape.color in 
+			 let new_shape = Jast.Triangle(listed_shape.size, x_pos, y_pos, rotat, color) in 
 				 if (k > 0) then 
 				 let updated_k = k - 1 in 
 				 	loop (new_list@[new_shape], updated_k)

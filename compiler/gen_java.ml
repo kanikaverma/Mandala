@@ -39,17 +39,21 @@ let gen_java = function
 		else print_string "No input provided" *)
 
 let draw_circle = function
-	(radius, x, y) -> 
+	(radius, x, y, color) -> 
 		print_string "    drawCircle(t,";
 		print_float radius;
 		print_string ",";
 		print_float x;
 		print_string ",";
 		print_float y;
+    print_string ",";
+    print_string "\"";
+    print_string color;
+    print_string "\"";
 		print_string ");\n"
 
 let draw_square = function
-	(side, x, y, rotation) ->
+	(side, x, y, rotation, color) ->
 		print_string "    drawSquare(t,";
 		print_float side;
 		print_string ",";
@@ -58,10 +62,14 @@ let draw_square = function
 		print_float y;
 		print_string ",";
 		print_float rotation;
+    print_string ",";
+    print_string "\"";
+    print_string color;
+    print_string "\"";
 		print_string ");\n"
 
 let draw_triangle = function
-  (side, x, y, rotation) ->
+  (side, x, y, rotation, color) ->
     print_string "    drawTriangle(t,";
     print_float side;
     print_string ",";
@@ -70,30 +78,36 @@ let draw_triangle = function
     print_float y;
     print_string ",";
     print_float rotation;
+    print_string ",";
+    print_string "\"";
+    print_string color;
+    print_string "\"";
     print_string ");\n"
 
 let proc_shape = function
-	Jast.Circle(radius,x,y) ->
-		draw_circle(radius,x,y)
-	| Jast.Square(side,x,y,rotation) ->
-		draw_square(side,x,y,rotation)
-  | Jast.Triangle(side,x,y,rotation) ->
-    draw_triangle(side,x,y,rotation)
+	Jast.Circle(radius,x,y,color) ->
+		draw_circle(radius,x,y,color)
+	| Jast.Square(side,x,y,rotation,color) ->
+		draw_square(side,x,y,rotation,color)
+  | Jast.Triangle(side,x,y,rotation,color) ->
+    draw_triangle(side,x,y,rotation,color)
 	|  _ -> raise (Error("other shapes unsupported"))
 
 let define_methods = function
 	x -> if (x> 0) then (
 			(* CIRCLES *)
-			print_string "public static void drawCircle(Turtle t, double radius, double x, double y) {\n";
-			print_string "   t.up(); t.setPosition(x , y + radius); t.down();\n";
+			print_string "public static void drawCircle(Turtle t, double radius, double x, double y, String color) {\n";
+      print_string "   t.penColor(color);\n";
+      print_string "   t.up(); t.setPosition(x , y + radius); t.down();\n";
     	print_string "		for (int i = 0; i < 360; i++) {\n";
     	print_string "			t.forward(radius * 2 * Math.PI / 360);\n";
     	print_string "			t.right(1);\n" ;
     	print_string "       }\n}\n";
 
     	(* SQUARES *)
-    	print_string "public static void drawSquare(Turtle t, double size, double x, double y, double rotation) {\n";
-    	print_string "	  t.up();\n";
+    	print_string "public static void drawSquare(Turtle t, double size, double x, double y, double rotation, String color) {\n";
+    	print_string "    t.penColor(color);\n";
+      print_string "	  t.up();\n";
     	print_string "    t.setPosition(x - size/2, y + size/2);\n";
     	print_string "    rotation = rotation % 90;\n";
     	print_string "    double radius = Math.sqrt(2) * size / 2;\n";
@@ -113,7 +127,8 @@ let define_methods = function
 			print_string "}\n";
 
 			(* TRIANGLES *)
-			print_string "public static void drawTriangle(Turtle t, double size, double x, double y, double rotation) {\n";
+			print_string "public static void drawTriangle(Turtle t, double size, double x, double y, double rotation, String color) {\n";
+      print_string "    t.penColor(color);\n";
       print_string "    t.up(); t.setPosition(x - size/2, y + Math.sqrt(3)*size/6);\n";
       print_string "    rotation = rotation % 120;\n";      
       print_string "    double radius = size / Math.sqrt(3);\n";
