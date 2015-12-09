@@ -52,12 +52,12 @@ and jdata_type =
 	| JArrayt
 	| JColort of string
 type jShape = 
-	(*size, x, y*)
-	Circle of float * float * float
-		(*size, x, y, rotation*)
-	| Square of float * float * float * float
-		(*size, x, y, rotation*)
-	| Triangle of float * float * float * float
+	(*size, x, y, color*)
+	Circle of float * float * float * string
+		(*size, x, y, rotation, color*)
+	| Square of float * float * float * float * string
+		(*size, x, y, rotation, color*)
+	| Triangle of float * float * float * float * string
 
 type drawing={
 	mandala_list : (string * mandala) list;

@@ -57,11 +57,11 @@ File "sast_to_jast.ml", line 455, characters 6-16:
 Warning 26: unused variable layer_size.
 File "sast_to_jast.ml", line 507, characters 7-18:
 Warning 26: unused variable update_list.
-File "sast_to_jast.ml", line 600, characters 6-16:
+File "sast_to_jast.ml", line 619, characters 6-16:
 Warning 26: unused variable num_layers.
-File "gen_java.ml", line 155, characters 4-32:
+File "gen_java.ml", line 170, characters 4-32:
 Warning 10: this expression should have type unit.
-File "gen_java.ml", line 82, characters 4-5:
+File "gen_java.ml", line 94, characters 4-5:
 Warning 11: this match case is unused.
 Makefile:13: warning: overriding commands for target `sast_to_jast'
 Makefile:10: warning: ignoring old commands for target `sast_to_jast'
