@@ -537,24 +537,32 @@ let rec extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer -> Jas
 			let rec loop = function
 			(new_list, k) -> 
 			 let rad_offset = my_layer.offset *. pi /. 180.0 in 
-			 let my_angle = -1.0 *. (rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count)) in 
+			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count) in 
 			 let x_pos = cos (my_angle) *. my_layer.radius in
 			 let y_pos = sin (my_angle) *. my_layer.radius in
-			 let new_shape = Jast.Square(listed_shape.size, x_pos, y_pos, listed_shape.rotation) in 
+			 let extra_rotation = 
+			 	if (my_layer.angularshift = 1)
+			 	then
+			 		(pi/.2.0 -. my_angle) *. 180.0 /. pi 
+			 	else
+			 		0.0
+			 in
+			 let rotat = listed_shape.rotation +. extra_rotation in
+			 let new_shape = Jast.Square(listed_shape.size, x_pos, y_pos, rotat) in 
 				 if (k > 0) then 
 				 let updated_k = k - 1 in 
 				 	loop (new_list@[new_shape], updated_k)
 				 else
 					new_list@[new_shape]
 			in 
-			loop(new_list, count)
+			loop(new_list, count-1)
 
 		else if (count >= 1 && listed_shape.geo = "circle")
 		then 
 			let rec loop = function
 			(new_list, k) ->
 			 let rad_offset = my_layer.offset *. pi /. 180.0 in 
- 			 let my_angle = -1.0 *. (rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count)) in 
+ 			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count) in 
 			 let x_pos = cos (my_angle) *. my_layer.radius in
 			 let y_pos = sin (my_angle) *. my_layer.radius in
 			 let new_shape = Jast.Circle(listed_shape.size, x_pos, y_pos) in 
@@ -564,24 +572,32 @@ let rec extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer -> Jas
 				 else
 					new_list@[new_shape] 
 			in 
-			loop(new_list, count)
+			loop(new_list, count-1)
 
 		else if (count >= 1 && listed_shape.geo = "triangle")
 		then 
 			let rec loop = function
 			(new_list, k) -> 
 			 let rad_offset = my_layer.offset *. pi /. 180.0 in 
-			 let my_angle = -1.0 *. (rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count)) in 
+			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count) in 
 			 let x_pos = cos (my_angle) *. my_layer.radius in
 			 let y_pos = sin (my_angle) *. my_layer.radius in
-			 let new_shape = Jast.Triangle(listed_shape.size, x_pos, y_pos, listed_shape.rotation) in 
+			 let extra_rotation = 
+			 	if (my_layer.angularshift = 1)
+			 	then
+			 		(pi/.2.0 -. my_angle) *. 180.0 /. pi 
+			 	else
+			 		0.0
+			 in
+			 let rotat = listed_shape.rotation +. extra_rotation in
+			 let new_shape = Jast.Triangle(listed_shape.size, x_pos, y_pos, rotat) in 
 				 if (k > 0) then 
 				 let updated_k = k - 1 in 
 				 	loop (new_list@[new_shape], updated_k)
 				 else
 					new_list@[new_shape]
 			in 
-			loop(new_list, count)
+			loop(new_list, count-1)
 
 	else 
 		(*let new_shape = Jast.Circle(100.0, 0.0, 0.0) in
