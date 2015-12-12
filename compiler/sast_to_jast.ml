@@ -173,6 +173,52 @@ and proc_expr (env:Jast.drawing): (Sast.sexpr -> Jast.drawing * Jast.jdata_type)
 			| _ -> raise (Error("Incorrect float value"))
 		in *)
 		(env, Jast.JNumbert(number_var))
+	| Sast.Binop(term1, operator, term2) ->
+		(* (Sast.Binop(eval_term1, operator, eval_term2), typ1, env) *)
+		let (new_env, eval_term1) = proc_expr env term1 in 
+		let (new_env, eval_term2) = proc_expr env term2 in 
+		(* Check the values of eval_term1 and eval_term2 *)
+		(* let val_term1 = match eval_term1 
+		with Jast.JInt() *)
+		let (tester) = eval_term1 in 
+		let my_test = match tester 
+	with Jast.JInt(tester) -> raise (Error("HELLOOO FAIL INT JAST "^ string_of_int tester))
+	| Jast.JNumbert(tester) -> raise (Error("NUMBER T FLOAT FAIL!!!! "^ string_of_float tester))
+	| _ -> raise (Error("FAILURE!!!"))
+in (env, Jast.JInt(5))
+
+		(* 
+
+		and jdata_type =
+	JInt of int 
+	| JVoid
+	| JNumbert of float
+	| JBooleant of int 
+	| JShapet of shape 
+	| JGeot of string 
+	| JLayert of layer
+	| JMandalat of mandala
+	| JArrayt
+	| JColort of string
+		*)
+
+		(* WANT TO TERM JInt ot JBooleant or JNumbert *)
+			(* Check what the operator is *)
+			(* let opertaor_typ = match operator 
+				with Add -> eval_math typ1 typ2 
+				| Sub -> eval_math typ1 typ2 
+				| Mult -> eval_math typ1 typ2 
+				| Div -> eval_math typ1 typ2
+				| Equal -> eval_conditionals typ1 typ2
+				| Neq -> eval_conditionals typ1 typ2 
+				| Less -> eval_conditionals typ1 typ2 
+				| Leq -> eval_conditionals typ1 typ2 
+				| Greater -> eval_conditionals typ1 typ2
+				| Geq -> eval_conditionals typ1 typ2  *)
+			(* Jast.drawing * Jast.jdata_type *)
+			(* so instead of using jexpr can just store in drawing table *)
+			(* Can make Float of float adn Litearl of Int, then when you get it back, can just look up value in the table *)
+
 	|Sast.Call(fid, args) ->
 		(* run proc_expr on the actual arguments for the function *)
 		(* let (new_env, actual_types) = List.map (fun expr -> proc_expr env expr) args in *)
@@ -253,7 +299,7 @@ and proc_expr (env:Jast.drawing): (Sast.sexpr -> Jast.drawing * Jast.jdata_type)
 					(* let updated_drawn_mandalas =  drawn_mandalas @ [curr_name, updated_current_mandala] in
 					let true_and_false_mandalas = updated_drawn_mandalas @ other_false_mandalas in 
 					*)
-					let test_single_mandala_list = []@[(curr_name, updated_current_mandala)] in 
+					let test_single_mandala_list = new_env.mandala_list@[(curr_name, updated_current_mandala)] in 
 					let updated_vars = new_env.variables @ [(curr_name, Jast.JMandalat(updated_current_mandala))] in 
 					let new_draw_env = {mandala_list = test_single_mandala_list; variables = updated_vars; java_shapes_list = new_env.java_shapes_list;} in 
 					(* let java_arg_list = [] in 
@@ -314,7 +360,7 @@ and proc_expr (env:Jast.drawing): (Sast.sexpr -> Jast.drawing * Jast.jdata_type)
 						(* get a list of all mandalas except the one that has just been updated, then add that mandala *)
 						(* ADD BACK!! let other_unchanged_mandalas = List.filter (fun (x, mandala_info) -> if (x = update_mandala_name) then false else true) env.mandala_list in  
 						let updated_drawn_mandalas =  other_unchanged_mandalas @ [update_mandala_name, updated_current_mandala] in *)
-						let test_updated_mandalas = []@[(update_mandala_name, updated_current_mandala)] in 
+						let test_updated_mandalas = new_env.mandala_list@[(update_mandala_name, updated_current_mandala)] in 
 						let new_draw_env = {mandala_list = test_updated_mandalas; variables = new_env.variables; java_shapes_list = new_env.java_shapes_list;} in 
 
 						(* (Jast.JCall(func_name, actual_expr_list), new_draw_env, Jast.JMandalat(updated_current_mandala)) *)
@@ -483,7 +529,41 @@ in new_env
 
 		let new_env = {mandala_list=new_drawing;} in
 		(new_drawing, new_env) *)
+	 | Sast.Assign(vardecl, assign_expr) ->
+		let (new_env, eval_expr) = proc_expr env assign_expr in 
+		(* now get the variable *)
+		let {skind = typ; svname = name;} = vardecl in 
+		
+		(* Now add the name and assignemnt to the symbol table *)
+		(*  variables: (string * jdata_type) list; *)
+		(* now check the type of the variable *)
+		(* update the variable list and add it to the list of vars *)
+		(* Jast.drawing * Jast.jdata_type *)
+		(* 
+			type sdata_type =
+			Int
+			| Literalt
+			| Float
+			| Void
+			| Numbert of float 
+			| Booleant
+			| Shapet
+			| Geot of string 
+			| Layert
+			| Mandalat 
+			| Arrayt
+			| Colort of string
 
+
+		*)
+
+		let check_env = match typ
+		with Sast.Numbert(eval_expr) -> let updated_vars = new_env.variables @[(name, Jast.JNumbert(eval_expr))] in 
+			let updated_env = {mandala_list= new_env.mandala_list; variables = updated_vars; java_shapes_list= new_env.java_shapes_list;} 
+			in updated_env
+		| _ -> raise (Error("ASsignemnt type doesn't match variable type"))
+	in check_env
+		(* let updated_vars = env.variables @ [(name, typ)] *)
 
 	| _ -> raise (Error("unsupported statement found")) 
 

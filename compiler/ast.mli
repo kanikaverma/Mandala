@@ -17,6 +17,9 @@ type expr =
 	| Id of string
 	| Binop of expr * op * expr
 	| Call of string * expr list
+	| Color of string
+	| Number of float
+	| Geo of string 
 
 type var_decl = {
 	kind : mndlt;

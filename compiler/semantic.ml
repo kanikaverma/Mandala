@@ -6,14 +6,13 @@ exception Error of string
 (*symbol table *)
 type symbol_table={
 	parent : symbol_table option;
-	variables: (string * sdata_type) list
+	variables: (string * smndlt * sdata_type) list (* adding the name, type and value *)
 }
 
 type function_table={
 	functions: (string * sdata_type * svar_decl list * sstmt list) list
 } 
 
-(*functions: (string * mndlt * var_decl list * stmt list) list*)
 (*envioronment*)
 type translation_enviornment ={
 	(* return_type: datatype; fnctions return type 
@@ -25,6 +24,7 @@ type translation_enviornment ={
 }
 (* scope is env.var_scope *)
 (* scope.variabkles is a list of (string * sdata_type) *)
+(* returns the name, type and value *)
 let find_variable (scope: symbol_table) name=
 	try
 		List.find (fun (s,_) -> s=name) scope.variables 
@@ -68,21 +68,13 @@ in new_envf
 (* CURRENTLY CANNOT UPDATE VARIABLES, CAN ONLY DECLARE THEM *)
 
 
-let add_to_var_table env name t =
-	let new_vars = (name, t)::env.var_scope.variables in
+let add_to_var_table env name typ val  =
+	let new_vars = (name, typ, val)::env.var_scope.variables in
 	let new_sym_table = {parent = env.var_scope.parent; 
 		variables = new_vars;} in
-	(*let test_name = "heeyy" in
-	 let tester = try 
-		raise (Error("FAIL "^name))
-	with Not_found ->
-		raise (Error("VAR NEVER ADDED "^name)) 
-	in *)
 	let new_env = { env with var_scope = new_sym_table} in
 	new_env
-(*ALSO DEFINE SFUNC_DECL in your thing!!! *)
-(* let get_return_datatype env  *)
-(* let get_type_from_datatype *)
+
  let add_to_func_table env sfunc_decl =
 	let func_table = env.fun_scope in 
 	let old_functions = func_table.functions in 
@@ -103,27 +95,53 @@ let rec extract_type (scope: function_table) name = function
 	(sdata_type, string) -> (sdata_type)
 let get_formal_arg_types env = function
 	(sdata_type, string) -> (sdata_type)
+(* let eval_math
+let eval_conditionals *)
+(* SBinop ( sexpr , binop , sexp r2 , datatype) −> Binop ( gen_tb_expr
+sexp r , binop , gen_tv_expr sexpr2 )*)
 
-let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sdata_type * translation_enviornment) = function
+let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * smndlt * sdata_type * translation_enviornment) = function
 
 	Ast.Id(vname) ->
-		(* if (vname = "m") then 
-			let v_typ = Sast.Mandalat in
-			(Sast.Id(vname), v_typ, env)
-		else *)
 		let vdecl = try
 			find_variable env.var_scope vname
 		with Not_found ->
 			raise (Error("undeclared identifier: "^vname))
 			(* Want to add the symbol to our symbol table *)
 		in 
-		let (name, typ) =vdecl in 
-		(Sast.Id(name), typ, env)
+		let (name, typ, val) =vdecl in 
+		(Sast.Id(name), typ, val, env)
 		(* AST Call of string * expr list*)
 	| Ast.Float_Literal(num) ->
-		(Sast.Float_Literal(num), Sast.Numbert(num), env)
+		(Sast.SFloat_Literal(num), Sast.Numbert, Sast.SNumber(num), env)
 	| Ast.Literal(num) ->
-		(Sast.Literal(num), Sast.Literalt, env)
+		(Sast.SLiteral(num), Sast.Literalt, env)
+	| Ast.Binop(term1, operator, term2) ->
+		(* convert to Sast.Binop *)
+		(* raise (Error("Tried to use binary operator here!")) *)
+		(* evaluate term1 and evaluate term 2 *)
+		(* and use the opertaor *)
+		(* this will also check if the term, if it is a variable has been defined *)
+		let (eval_term1, typ1, new_env) = semantic_expr env term1 in 
+		let (eval_term2, typ2, new_env) = semantic_expr env term2 in 
+		(* now translate Ast.operator to Sast.operator *)
+		if not (typ1 = typ2)
+		then raise (Error("Mismatched types, invalid operation"))
+		else 
+			(Sast.Binop(eval_term1, operator, eval_term2), typ1, env)
+
+			(* Check what the operator is *)
+			(* let opertaor_typ = match operator 
+				with Add -> eval_math typ1 typ2 
+				| Sub -> eval_math typ1 typ2 
+				| Mult -> eval_math typ1 typ2 
+				| Div -> eval_math typ1 typ2
+				| Equal -> eval_conditionals typ1 typ2
+				| Neq -> eval_conditionals typ1 typ2 
+				| Less -> eval_conditionals typ1 typ2 
+				| Leq -> eval_conditionals typ1 typ2 
+				| Greater -> eval_conditionals typ1 typ2
+				| Geq -> eval_conditionals typ1 typ2  *)
 
 
 
@@ -137,7 +155,6 @@ let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * sd
 	| Call of string * expr list
 
 *)
-
 
 	| Ast.Call(fid, args) ->
 		
@@ -312,13 +329,15 @@ let rec semantic_stmt (env:translation_enviornment):(Ast.stmt -> Sast.sstmt * sd
 		
 		let right_assign =
 			semantic_expr env righthand
+		(* semantic_expr returns Sast.sexpr * sdata_type * translation_enviornment *)
 		in let (assign_val, typ, ret_env) = right_assign in
 		let {kind=typ2; vname=name2} = lefthand 
 		(*let lefthand {kind = typ2; vname = name2} = x *)
 		(*let (typ2, name2) =(lefthand.kind, lefthand.vname) *)
 
 		in match typ with (*Assign of svar_decl * sexpr*)
-			 typ2 -> let new_env = add_to_var_table env name2 typ2 in (Sast.Assign(({skind = typ2; svname = name2}), assign_val), typ, new_env) (* check strctural equality *)
+			 typ2 -> let new_env = add_to_var_table env name2 typ2 
+				in (Sast.Assign(({skind = typ2; svname = name2}), assign_val), typ, new_env) (* check strctural equality *)
 			| _ -> raise (Error("Assignment could not be typechecked")) 
 	(* 
 	let rec extract_type (scope: function_table) name = function
@@ -379,12 +398,7 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 		| [stmt] -> let (new_stmt, typ, new_env) = semantic_stmt env stmt in (update_list@[new_stmt], new_env)
 		| stmt :: other_stmts ->
 			let (new_stmt, typ, new_env) = semantic_stmt env stmt in
-			(* let (nm, tp) = List.hd new_env.var_scope.variables in *)
 			separate_statements (other_stmts, new_env, update_list@[new_stmt])
-
-
-
-
 
 	(*NEED TO CREATE NEW ENVIRONMENT*)
 	let rec semantic_func (env: translation_enviornment): (Ast.func_decl -> Sast.sfuncdecl * translation_enviornment) = function
@@ -426,18 +440,11 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 			(* let (nm, tp) = List.hd new_env.var_scope.variables in *)
 			separate_functions (other_funcs, new_env, update_list@[new_func])
 
-	(* let do_this = function
-		(stmt, typ, env) -> semantic_stmt env stmt in *)
-
 		(*somehow it is not successfully leaving this | block, and is going to the next or block instead of returning*)
 	let rec semantic_check (check_program: Ast.program): (Sast.sprogram) =  
 		let (prog_stmts, prog_funcs) = check_program in 
 		let env = empty_environment in 
 		(* need to update the environment here I think *)
-		(* let (typed_tuples, new_env) = initialize_functions env prog_funcs in *)
-		(* let (new_env) = initialize_functions env prog_funcs in  *)
-		(* let (new_stmt, typ, env) = List.map (fun stmt_part -> semantic_stmt env stmt_part) in *) 
-		(* ERROR OF GOING FROM AST TO SASST *)
 		let update_list = []  in 
 		let reverse_prog_stmts = List.rev prog_stmts in 
 		let resulting_statements = separate_statements (reverse_prog_stmts, env, update_list) in  (* List.map( fun stmt_part -> separate_statements prog_stmts env ) in *)
@@ -445,18 +452,5 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 		(*Using the scope of the env returning from statements..?*)
 		let (resulting_functions, func_env) = separate_functions (prog_funcs, env, update_list) in
 
-		(* let test_results = check_statements prog_stmts env in *)
-		 (*let result_tuples = List.fold_left ( fun stmt_part -> semantic_stmt env stmt_part) prog_stmts in  *)
-		(* let result_tuples = prog_stmts in *)
-		(* let result_stmts = *) 
-		(* WORKING CODE! let result_tuples = List.map (fun stmt_part -> semantic_stmt env stmt_part) prog_stmts in 
-		 let result_stmts = List.fold_left (fun a (stmt,_, ret_env) -> stmt :: a) [] result_tuples 
-		in Sast.SProg(result_stmts) *)
-		(* let testing = List.fold_left (do_this env) prog_stmts *)
-
 		Sast.SProg(statements, resulting_functions)
 		(* NEED TO ADD FUNCTION DECLARATION! *)
-	(* | _ -> raise (Error("undeclared identifier")) *)
-(* for function call we can check if it's drwa then check input typ *)
-(* chekc if number of arguments are matching *)
-(* since draw is built in function *)

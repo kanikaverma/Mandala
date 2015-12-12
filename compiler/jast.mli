@@ -1,6 +1,15 @@
 open Sast
 
 type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq
+type jmndlt =
+	| Numbert
+	| Booleant
+	| Shapet
+	| Geot
+	| Layert
+	| Mandalat
+	| Arrayt
+	| Colort
 
 type jPrimative =
 	| JBooleant of bool 
@@ -8,14 +17,6 @@ type jPrimative =
 
 type jValue =
 	JValue of jPrimative
-	(*| JMap of string * string list * string list *) 
-(*java function call of func return type and id *)
-(* type java_mandala={
-	name: string;
-	list_of_layers : layer list;
-	max_layer_radius : float; (* define the max layer radius as the maximum of the sum of the the layer radius + shape radius *)
-	is_draw: bool
-} *)
 
 type shape = {
 	name: string;
@@ -40,6 +41,7 @@ and mandala={
 	max_layer_radius : float; (* define the max layer radius as the maximum of the sum of the the layer radius + shape radius *)
 	is_draw: bool
 }
+
 and jdata_type =
 	JInt of int 
 	| JVoid
