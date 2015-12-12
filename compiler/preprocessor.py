@@ -60,7 +60,7 @@ def process(input_file):
 
           else:
             while wcount < stack[-1]:
-              clean_line = "}" + clean_line
+              clean_line = "};\n" + clean_line
               stack.pop()
             if wcount != stack[-1]:
               sys.exit("Indentation error on line {}".format(i))
@@ -83,8 +83,33 @@ def process(input_file):
     output.write("}")
     stack.pop()
 
+  output = StringIO(remove_semis(output))
+
   return output 
 
+def remove_semis(text_io):
+  text = text_io.getvalue()
+  in_braces = False 
+  output_text = ""
+  queue = []
+
+  for line in text.splitlines():
+    if '{' in line:
+      in_braces = True
+    if in_braces:
+      if '}' in line:
+        in_braces = False
+    if in_braces:
+      if ':' in line:
+        line += '{'
+      output_text += line[:-1] 
+      output_text += "\n"
+    else:
+      output_text += line
+      output_text += "\n"
+ 
+  return output_text
+  
 # removes comments from the line 
 def sanitize(line):
   if blockcomment[0] not in line and blockcomment[1] not in line and comment_symbol in line:

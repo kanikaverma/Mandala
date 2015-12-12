@@ -25,6 +25,6 @@ done
 printf "****************************\n"
 printf "All tests passed.\n"
 
-rm -f suite/*.mandala.proc
+# rm -f suite/*.mandala.proc
 
 exit
