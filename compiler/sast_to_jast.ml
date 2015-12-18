@@ -303,10 +303,21 @@ and proc_expr (env:Jast.drawing): (Sast.sexpr -> Jast.drawing * Jast.jdata_type)
 						let lay_len = List.length actual_layer_list in 
 						(* raise (Error("layer size"^string_of_int lay_len)); *)
 
+						let updated_layer_list = (curr_layer_list @ actual_layer_list) in
+
+						let rec find_max l = match l with
+							| [] -> 0.0
+							| h :: t -> max h (find_max t) in
+
+						let get_max_layer_radius = function
+							updated_layer_list -> 
+							let layer_radius_list = List.fold_left (fun a layer -> layer.radius :: a) [] updated_layer_list in
+							find_max layer_radius_list in 
+
 						let updated_current_mandala = {
 							name = update_mandala_name;
-							list_of_layers = actual_layer_list;(* (actual_mandala.list_of_layers :: actual_layer_list); *) (*@ actual_layer_list; *)(* mandala_object.list_of_layers; *)
-							max_layer_radius = actual_mandala.max_layer_radius; (*mandala_object.list_of_layers;*)
+							list_of_layers = updated_layer_list;(* (actual_mandala.list_of_layers :: actual_layer_list); *) (*@ actual_layer_list; *)(* mandala_object.list_of_layers; *)
+							max_layer_radius = get_max_layer_radius updated_layer_list; (*mandala_object.list_of_layers;*)
 							is_draw = actual_mandala.is_draw;
 						} in
 						(* JCall of string * jexpr list *)
