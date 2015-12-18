@@ -16,7 +16,7 @@ type sdata_type =
 	| SFloat
 	| SVoid
 	| SNumber of float 
-	| SBoolean
+	| SBoolean of int 
 	| SShape
 	| SGeo of string 
 	| SLayer

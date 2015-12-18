@@ -282,6 +282,8 @@ in (env, Jast.JInt(5))
 					in 
 					let (mandala_name, actual_mandala) = find_mandala env curr_name in 
 					(* TODO: add this and find_mandala func and change updated_current_manda let mandala_info = find_mandala new_env curr_name in *)
+					(* NOTE: Below is a series of list.Filters that are intended to do the same thing as removing an element from a list, updating 
+					that element and then adding it back to the list *)
 					let drawn_mandalas = List.filter ( fun (m_name, m_typ) -> if (m_typ.is_draw = true) then true else false) env.mandala_list in 
 					let false_mandalas = List.filter (fun (man_name, man_typ) -> if (man_typ.is_draw = false) then true else false) env.mandala_list in 
 					let other_false_mandalas = List.filter (fun (x, mandala_info) -> if (x = curr_name) then false else true) false_mandalas in  

@@ -3,6 +3,22 @@ open Sast
 
 exception Error of string
 
+(* In semantic just want to check that statments have the correct types *)
+(* In our symbol table just want to store the type of the variable, the variable name and the value if it is a float, int or geo of string, 
+otherwise it is just an sdata_type like Sast.SMandala for the value *)
+(* The value itself of that variable is passed along in our statement list and handled in sast_to_jast *)
+(* For example, when we are doing Number n = 5; we want to check that 5 is of type Number *)
+(* We only care about checking the types here and the actual value of 5 is passed along in the list of Sast.sstmt's *)
+(* When we define a Mandala, we want to store the type of Mandala, we can just store it as name_of_mandala, Sast.Mandalat, Sast.SMandala *)
+(* When declaring variables they have to be done in the form Number n = 5; cannot just declare a variable and you cannot just assign a value
+to a variable *)
+(* When reassigning a value to a variable, you must also write the type fo the variable, like Number n = 7; *)
+(* When you encounter an assignment, check if that variable has already been declared in the symbol table, if yes, just update the value in
+the table, otherwise add the variable to the symbol table *)
+(* When updating the symbol table, look for the triplet, and match on the variable name, if it exists, modify it to include that new value
+and then add it back in, if it is new just add it *)
+(* To modify the element you can search using List.filter *)
+
 (*symbol table *)
 type symbol_table={
 	parent : symbol_table option;
@@ -14,7 +30,7 @@ type function_table={
 } 
 
 (*envioronment*)
-type translation_enviornment ={
+type translation_environment ={
 	(* return_type: datatype; fnctions return type 
 		return_seen: bool does the function have a  return statemtn
 	location: string;  using for global or local checking 
@@ -27,7 +43,7 @@ type translation_enviornment ={
 (* returns the name, type and value *)
 let find_variable (scope: symbol_table) name=
 	try
-		List.find (fun (s,_) -> s=name) scope.variables 
+		List.find (fun (s,_,_) -> s=name) scope.variables 
 	(* with Not_found -> try List.find (fun (s, _) -> s=name) scope.parent.variables*) 
 	with Not_found -> raise (Error ("Semantic not finding variable in lookup table"^name))
 		(*	Some(parent)-> find_variable parent name
@@ -68,9 +84,10 @@ in new_envf
 *)
 (* CURRENTLY CANNOT UPDATE VARIABLES, CAN ONLY DECLARE THEM *)
 
-
-let add_to_var_table env name typ val  =
-	let new_vars = (name, typ, val)::env.var_scope.variables in
+(* TODO: types  *)
+let add_to_var_table (env, name, typ)  =
+	let styp = Sast.SMandala in 
+	let new_vars = (name, typ, styp)::env.var_scope.variables in
 	let new_sym_table = {parent = env.var_scope.parent; 
 		variables = new_vars;} in
 	let new_env = { env with var_scope = new_sym_table} in
@@ -101,7 +118,7 @@ let eval_conditionals *)
 (* SBinop ( sexpr , binop , sexp r2 , datatype) −> Binop ( gen_tb_expr
 sexp r , binop , gen_tv_expr sexpr2 )*)
 
-let rec semantic_expr (env:translation_enviornment):(Ast.expr -> Sast.sexpr * smndlt * sdata_type * translation_enviornment) = function
+let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * smndlt * sdata_type * translation_environment) = function
 
 	Ast.Id(vname) ->
 		let vdecl = try
@@ -244,10 +261,10 @@ let proc_var_decl = function
 			skind = sskind;
 			svname  = v;
 		} in 
-		let new_env = add_to_var_table env  new_svar_decl.svname new_svar_decl.skind in 
+		let new_env = add_to_var_table env new_svar_decl.svname new_svar_decl.skind in 
 	(new_svar_decl, new_env)
 
-let rec proc_formals (var_decl_list, env, update_var_decl_list: Ast.var_decl list * translation_enviornment * Sast.svar_decl list) = match var_decl_list
+let rec proc_formals (var_decl_list, env, update_var_decl_list: Ast.var_decl list * translation_environment * Sast.svar_decl list) = match var_decl_list
 	with [] -> (update_var_decl_list, env)
 	| [var_decl] -> let (new_var_decl, new_env) = proc_var_decl(var_decl, env) in (update_var_decl_list@[new_var_decl], new_env)
 	| var_decl :: other_var_decls ->
@@ -255,7 +272,7 @@ let rec proc_formals (var_decl_list, env, update_var_decl_list: Ast.var_decl lis
 		proc_formals (other_var_decls, new_env, update_var_decl_list@[new_var_decl])
 
 
-let rec semantic_stmt (env:translation_enviornment):(Ast.stmt -> Sast.sstmt * sdata_type * translation_enviornment) = function
+let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sdata_type * translation_environment) = function
 	Ast.Mandala(mandala_arg) ->
 
 		(*let stmt_decl =try
@@ -394,7 +411,7 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 		let (new_stmt, typ, env) = semantic_stmt env stmt in 
 		check_statements other_stmts env *)
 	
-	let rec separate_statements (stmts, env, update_list:Ast.stmt list * translation_enviornment * Sast.sstmt list) = match stmts 
+	let rec separate_statements (stmts, env, update_list:Ast.stmt list * translation_environment * Sast.sstmt list) = match stmts 
 		with [] -> (update_list, env)
 		| [stmt] -> let (new_stmt, typ, new_env) = semantic_stmt env stmt in (update_list@[new_stmt], new_env)
 		| stmt :: other_stmts ->
@@ -402,7 +419,7 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 			separate_statements (other_stmts, new_env, update_list@[new_stmt])
 
 	(*NEED TO CREATE NEW ENVIRONMENT*)
-	let rec semantic_func (env: translation_enviornment): (Ast.func_decl -> Sast.sfuncdecl * translation_enviornment) = function
+	let rec semantic_func (env: translation_environment): (Ast.func_decl -> Sast.sfuncdecl * translation_environment) = function
 		my_func ->
 		let fname = my_func.fname in
 		let returntype = my_func.returntype in 
@@ -426,7 +443,7 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 		(sfuncdecl, env)
 
 
-	let rec separate_functions (functions, env, update_list: Ast.func_decl list * translation_enviornment * Sast.sfuncdecl list) = match functions 
+	let rec separate_functions (functions, env, update_list: Ast.func_decl list * translation_environment * Sast.sfuncdecl list) = match functions 
 		with [] -> (update_list, env)
 		(*Create an empty environment and save the new one??*)
 		| [func] -> 
