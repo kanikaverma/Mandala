@@ -57,37 +57,37 @@ echo "*************JAVA GENERATION*************"
 echo "*****************************************"
 echo ""
 
-echo "Mandala m = Create Mandala;
-Shape circle1 = Create Shape: {Geo circle Size 25.0 Color yellow Rotation 0.0};
-Shape square1 = Create Shape: {Geo square Size 50.0 Color red Rotation 0.0};
-Shape square2 = Create Shape: {Geo square Size 50.0 Color blue Rotation 45.0};
-Shape square3 = Create Shape: {Geo square Size 50.0 Color yellow Rotation 30.0};
-Shape square4 = Create Shape: {Geo square Size 50.0 Color yellow Rotation 60.0};
-Shape triangle1 = Create Shape: {Geo triangle Size 35.0 Color green Rotation 0.0};
-Shape triangle2 = Create Shape: {Geo triangle Size 35.0 Color yellow Rotation 180.0};
-Layer layer0 = Create Layer: {Radius 0.0 Shape circle1 Count 1 Offset 0.0 AngularShift 0};
-Layer layer1 = Create Layer: {Radius 100.0 Shape circle1 Count 8 Offset 0.0 AngularShift 0};
-Layer layer2 = Create Layer: {Radius 100.0 Shape square1 Count 8 Offset 0.0 AngularShift 1};
-Layer layer3 = Create Layer: {Radius 100.0 Shape square2 Count 4 Offset 0.0 AngularShift 0};
-Layer layer4 = Create Layer: {Radius 175.0 Shape circle1 Count 8 Offset 22.5 AngularShift 0};
-Layer layer5 = Create Layer: {Radius 100.0 Shape square3 Count 4 Offset 0.0 AngularShift 0};
-Layer layer6 = Create Layer: {Radius 100.0 Shape square4 Count 4 Offset 0.0 AngularShift 0};
-Layer layer7 = Create Layer: {Radius 175.0 Shape triangle1 Count 8 Offset 0.0 AngularShift 1};
-Layer layer8 = Create Layer: {Radius 175.0 Shape triangle2 Count 8 Offset 0.0 AngularShift 0};
-addTo: (m, layer0, layer2, layer3, layer7);
-draw: (m);
-" | ./$run > "suite/Program.java"
+# echo "Mandala m = Create Mandala;
+# Shape circle1 = Create Shape: {Geo circle Size 25.0 Color yellow Rotation 0.0};
+# Shape square1 = Create Shape: {Geo square Size 50.0 Color red Rotation 0.0};
+# Shape square2 = Create Shape: {Geo square Size 50.0 Color blue Rotation 45.0};
+# Shape square3 = Create Shape: {Geo square Size 50.0 Color yellow Rotation 30.0};
+# Shape square4 = Create Shape: {Geo square Size 50.0 Color yellow Rotation 60.0};
+# Shape triangle1 = Create Shape: {Geo triangle Size 35.0 Color green Rotation 0.0};
+# Shape triangle2 = Create Shape: {Geo triangle Size 35.0 Color yellow Rotation 180.0};
+# Layer layer0 = Create Layer: {Radius 0.0 Shape circle1 Count 1 Offset 0.0 AngularShift 0};
+# Layer layer1 = Create Layer: {Radius 100.0 Shape circle1 Count 8 Offset 0.0 AngularShift 0};
+# Layer layer2 = Create Layer: {Radius 100.0 Shape square1 Count 8 Offset 0.0 AngularShift 1};
+# Layer layer3 = Create Layer: {Radius 100.0 Shape square2 Count 4 Offset 0.0 AngularShift 0};
+# Layer layer4 = Create Layer: {Radius 175.0 Shape circle1 Count 8 Offset 22.5 AngularShift 0};
+# Layer layer5 = Create Layer: {Radius 100.0 Shape square3 Count 4 Offset 0.0 AngularShift 0};
+# Layer layer6 = Create Layer: {Radius 100.0 Shape square4 Count 4 Offset 0.0 AngularShift 0};
+# Layer layer7 = Create Layer: {Radius 175.0 Shape triangle1 Count 8 Offset 0.0 AngularShift 1};
+# Layer layer8 = Create Layer: {Radius 175.0 Shape triangle2 Count 8 Offset 0.0 AngularShift 0};
+# addTo: (m, layer0, layer2, layer3, layer7);
+# draw: (m);
+# " | ./$run > "suite/Program.java"
 
 processed_files=$(find suite -name *\.proc)
 
 for file in $processed_files
 do
   # cat $file
-  #./$run < $file > "suite/Program.java" &
-  # ./$run < $file > "suite/Program.java" &
+  echo "$file"
+  ./$run < $file > "suite/Program.java" &
   # echo $contents > output & ./$run output > "suite/Program.java" &
-  echo "hi"
-done
+  echo "done"
+  done
 
 java_files=$(find suite -name *\.java)
 
