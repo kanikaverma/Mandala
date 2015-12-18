@@ -39,6 +39,7 @@ let rec find_function (scope: function_table) name =
 	with Not_found ->
 		raise (Error("adding function to func_table FAILED! "^name))
 (* PROBABLY WON'T USE
+Part of comment
 update variables 
 let update_var env (name, datatype) = 
 	let ((_,_), location ) =
