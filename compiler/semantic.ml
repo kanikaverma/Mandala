@@ -22,11 +22,11 @@ and then add it back in, if it is new just add it *)
 (*symbol table *)
 type symbol_table={
 	parent : symbol_table option;
-	variables: (string * smndlt * sdata_type) list (* adding the name, type and value *)
+	variables: (string * smndlt (** sdata_type*) ) list (* adding the name, type *)
 }
 
 type function_table={
-	functions: (string * sdata_type * svar_decl list * sstmt list) list
+	functions: (string * smndlt * svar_decl list * sstmt list) list
 } 
 
 (*envioronment*)
@@ -43,7 +43,7 @@ type translation_environment ={
 (* returns the name, type and value *)
 let find_variable (scope: symbol_table) name=
 	try
-		List.find (fun (s,_,_) -> s=name) scope.variables 
+		List.find (fun (s,_) -> s=name) scope.variables 
 	(* with Not_found -> try List.find (fun (s, _) -> s=name) scope.parent.variables*) 
 	with Not_found -> raise (Error ("Semantic not finding variable in lookup table"^name))
 		(*	Some(parent)-> find_variable parent name
@@ -86,13 +86,14 @@ in new_envf
 
 (* TODO: types  *)
 let add_to_var_table (env, name, typ)  =
-	let styp = Sast.SMandala in 
-	let new_vars = (name, typ, styp)::env.var_scope.variables in
+ 
+	let new_vars = (name, typ)::env.var_scope.variables in
 	let new_sym_table = {parent = env.var_scope.parent; 
 		variables = new_vars;} in
 	let new_env = { env with var_scope = new_sym_table} in
 	new_env
 
+(* TODO: see why functions are using sdata_type, maybe they shouldn't be using it? are they using it wrong. sdata_type should be a value *)
  let add_to_func_table env sfunc_decl =
 	let func_table = env.fun_scope in 
 	let old_functions = func_table.functions in 
@@ -110,15 +111,15 @@ let rec find_function (scope: function_table) name=
 		List.find (fun (s, _, _, _) -> s = name) scope.functions
 	(*with Not_found -> raise Not_found*)
 let rec extract_type (scope: function_table) name = function
-	(sdata_type, string) -> (sdata_type)
+	(smndlt, string) -> (smndlt)
 let get_formal_arg_types env = function
-	(sdata_type, string) -> (sdata_type)
+	(smndlt, string) -> (smndlt)
 (* let eval_math
 let eval_conditionals *)
 (* SBinop ( sexpr , binop , sexp r2 , datatype) −> Binop ( gen_tb_expr
 sexp r , binop , gen_tv_expr sexpr2 )*)
 
-let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * smndlt * sdata_type * translation_environment) = function
+let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * smndlt  * translation_environment) = function
 
 	Ast.Id(vname) ->
 		let vdecl = try
@@ -127,13 +128,13 @@ let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * sm
 			raise (Error("undeclared identifier: "^vname))
 			(* Want to add the symbol to our symbol table *)
 		in 
-		let (name, typ, val) =vdecl in 
-		(Sast.Id(name), typ, val, env)
+		let (name, typ (*, val*)) =vdecl in 
+		(Sast.Id(name), typ, (*val,*) env)
 		(* AST Call of string * expr list*)
 	| Ast.Float_Literal(num) ->
-		(Sast.SFloat_Literal(num), Sast.Numbert, Sast.SNumber(num), env)
+		(Sast.Float_Literal(num), Sast.Numbert, (*Sast.SNumber(num),*) env)
 	| Ast.Literal(num) ->
-		(Sast.SLiteral(num), Sast.Literalt, env)
+		(Sast.Literal(num), Sast.Integert, env)
 	| Ast.Binop(term1, operator, term2) ->
 		(* convert to Sast.Binop *)
 		(* raise (Error("Tried to use binary operator here!")) *)
@@ -186,7 +187,7 @@ let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * sm
 		then 
 			
 			if (len == 1) 
-			then (Sast.Call(fid, actual_expr_list), Sast.Void, env)
+			then (Sast.Call(fid, actual_expr_list), Sast.Voidt, env)
 			else raise(Error("Draw function has incorrect parameters"^ string_of_int actual_len)) 	
 		else 
 			if (fid ="addTo")
@@ -249,11 +250,11 @@ let proc_var_decl = function
 		let v = var_decl.vname in 
 		let sskind = 
  		if (k = Ast.Numbert) then
- 			Sast.Float
+ 			Sast.Numbert
  		else if (k = Ast.Geot) then
- 			Sast.Geot(v)
+ 			Sast.Geot
  		else if (k = Ast.Colort) then
- 			Sast.Colort(v)
+ 			Sast.Colort
  		else
  			proc_type k in
 
@@ -261,7 +262,7 @@ let proc_var_decl = function
 			skind = sskind;
 			svname  = v;
 		} in 
-		let new_env = add_to_var_table env new_svar_decl.svname new_svar_decl.skind in 
+		let new_env = add_to_var_table (env, new_svar_decl.svname, new_svar_decl.skind) in 
 	(new_svar_decl, new_env)
 
 let rec proc_formals (var_decl_list, env, update_var_decl_list: Ast.var_decl list * translation_environment * Sast.svar_decl list) = match var_decl_list
@@ -272,7 +273,7 @@ let rec proc_formals (var_decl_list, env, update_var_decl_list: Ast.var_decl lis
 		proc_formals (other_var_decls, new_env, update_var_decl_list@[new_var_decl])
 
 
-let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sdata_type * translation_environment) = function
+let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * smndlt * translation_environment) = function
 	Ast.Mandala(mandala_arg) ->
 
 		(*let stmt_decl =try
@@ -288,7 +289,7 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sd
 		(*let typ = mandala_arg.kind in
 		let name = mandala_arg.vname in *)
 		(* add to current env *)
-		let new_env = add_to_var_table env name typ in
+		let new_env = add_to_var_table (env, name, typ) in
 		(* let head_var = List.hd new_env.var_scope.variables in
 		let (a, b) = head_var in
 		 raise (Error("HELLO "^a)); *)
@@ -305,7 +306,7 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sd
 		let (s_count, s_c_typ, env) = semantic_expr env v_count in 
 		let (s_offset, s_o_typ, env) = semantic_expr env v_offset in 
 		let (s_angular_shift, s_a_typ, env) = semantic_expr env v_angular_shift in 
-		let new_env = add_to_var_table env name typ in 
+		let new_env = add_to_var_table (env, name, typ) in 
 		(Sast.Layer({skind = typ; svname = name;}, s_radius, s_shape, s_count, s_offset, s_angular_shift), typ, new_env)
 
 	(* IN AST Layer of var_decl * expr * expr * expr * expr * expr  *)
@@ -316,6 +317,7 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sd
 		let {vname=name} = v_name in 
 		let typ = Sast.Shapet in 
 		let s_geo = match v_geo with 
+			(*TODO add check for ast.id, circle triangle and square can be built in ids *)
 			Ast.Id(v_geo) -> let new_geo = v_geo in new_geo (* semantic_expr env v_geo in *)
 			| _ -> raise (Error("WRONG FORMAT FOR GEO IN SHAPE!"))
 		in 
@@ -329,7 +331,7 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sd
 		let updated_s_color = Sast.Colort(s_color) in 
 
 		let (s_rotation, s_r_typ, env) = semantic_expr env v_rotation in 
-		let new_env = add_to_var_table env name typ in 
+		let new_env = add_to_var_table (env, name, typ) in 
 		(* 	| Shape of svar_decl * sdata_type * sdata_type * sexpr * sdata_type *)
 		(Sast.Shape({skind = typ; svname=name;}, updated_s_geo, s_s_typ, updated_s_color, s_r_typ), typ, new_env)
 	(* IN AST Shape of var_decl * expr * expr * expr * expr *)
@@ -343,18 +345,19 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sd
 		in let (x, typ, ret_env)= newExpr in 
 		(Sast.Expr(x), typ, env)
 
+	(*Assign is of form var_decl*expr  *)
 	| Ast.Assign(lefthand, righthand) ->
-		
+		(* TODO *)
 		let right_assign =
 			semantic_expr env righthand
-		(* semantic_expr returns Sast.sexpr * sdata_type * translation_enviornment *)
+		(* semantic_expr returns Sast.sexpr * smndlt * sdata_type * translation_enviornment *)
 		in let (assign_val, typ, ret_env) = right_assign in
 		let {kind=typ2; vname=name2} = lefthand 
 		(*let lefthand {kind = typ2; vname = name2} = x *)
 		(*let (typ2, name2) =(lefthand.kind, lefthand.vname) *)
 
 		in match typ with (*Assign of svar_decl * sexpr*)
-			 typ2 -> let new_env = add_to_var_table env name2 typ2 
+			 typ2 -> let new_env = add_to_var_table (env, name2, typ2) 
 				in (Sast.Assign(({skind = typ2; svname = name2}), assign_val), typ, new_env) (* check strctural equality *)
 			| _ -> raise (Error("Assignment could not be typechecked")) 
 	(* 

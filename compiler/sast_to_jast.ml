@@ -174,12 +174,14 @@ and proc_expr (env:Jast.drawing): (Sast.sexpr -> Jast.drawing * Jast.jdata_type)
 		in *)
 		(env, Jast.JNumbert(number_var))
 	| Sast.Binop(term1, operator, term2) ->
+		(* TODO: Finish this!!*)
 		(* (Sast.Binop(eval_term1, operator, eval_term2), typ1, env) *)
 		let (new_env, eval_term1) = proc_expr env term1 in 
 		let (new_env, eval_term2) = proc_expr env term2 in 
 		(* Check the values of eval_term1 and eval_term2 *)
 		(* let val_term1 = match eval_term1 
 		with Jast.JInt() *)
+		(* TODO: after figuring out what type the terms are, do the appropriate operation and return the value*)
 		let (tester) = eval_term1 in 
 		let my_test = match tester 
 	with Jast.JInt(tester) -> raise (Error("HELLOOO FAIL INT JAST "^ string_of_int tester))
@@ -532,6 +534,7 @@ in new_env
 		let new_env = {mandala_list=new_drawing;} in
 		(new_drawing, new_env) *)
 	 | Sast.Assign(vardecl, assign_expr) ->
+	 	(* TODO: Finish this*)
 		let (new_env, eval_expr) = proc_expr env assign_expr in 
 		(* now get the variable *)
 		let {skind = typ; svname = name;} = vardecl in 

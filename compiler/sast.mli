@@ -9,6 +9,9 @@ type smndlt =
 	| Mandalat
 	| Arrayt
 	| Colort
+	| Integert
+	| Voidt
+
 (* RENAME SDATA_TYPE to svalue because it is really the VALUES!!!!! *)
 type sdata_type =
 	SInt
@@ -37,7 +40,7 @@ and svar_decl = {
 
 	skind : smndlt;
 	svname : string;
-	svalue : sdata_type;
+	(*svalue : sdata_type;*)
 	
 }
 
@@ -61,6 +64,6 @@ and sstmt =
 	| Layer of svar_decl * sexpr * sexpr * sexpr * sexpr * sexpr 
 	| FuncCall of sexpr
 type sfunc_decltype =
-	SFunc_Decl  of sfuncdecl * sdata_type
+	SFunc_Decl  of sfuncdecl * smndlt(** sdata_type*)
 type sprogram =
 	SProg of sstmt list  * sfuncdecl list(* need to add back * sfunc_decl list *)
