@@ -416,8 +416,8 @@ in (env, Jast.JNumbert(result))
 
 						let updated_current_mandala = {
 							name = update_mandala_name;
-							list_of_layers = actual_layer_list;(* (actual_mandala.list_of_layers :: actual_layer_list); *) (*@ actual_layer_list; *)(* mandala_object.list_of_layers; *)
-							max_layer_radius = actual_mandala.max_layer_radius; (*mandala_object.list_of_layers;*)
+							list_of_layers = updated_layer_list;(* (actual_mandala.list_of_layers :: actual_layer_list); *) (*@ actual_layer_list; *)(* mandala_object.list_of_layers; *)
+							max_layer_radius = get_max_layer_radius updated_layer_list; (*mandala_object.list_of_layers;*)
 							(*is_draw = actual_mandala.is_draw;*)
 							is_draw = false;
 
@@ -737,8 +737,8 @@ let rec extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer * floa
 		let multiple_mandala_offset = 
 			if (big_radius > 0.0) 
 			then 
-				(raise (Error ("Big radius is "^string_of_float big_radius));)
-				big_radius +. listed_shape.size +. 100.0
+				(*(raise (Error ("Big radius is "^string_of_float big_radius));)*)
+				big_radius +. listed_shape.size +. 200.0
 			else
 				big_radius
 			in
@@ -855,12 +855,26 @@ let rec process_mandalas (mandalas, shapes, total:Jast.mandala list * Jast.jShap
 	with [] -> shapes
 	| [mandala] -> 
 		let x = mandala.max_layer_radius in 
-		mandala.max_layer_radius = total; 
+		let new_mandala = {
+			name = mandala.name;
+			list_of_layers = mandala.list_of_layers;
+			max_layer_radius = total;
+			is_draw = mandala.is_draw
+		} in
+		(*if (new_mandala.max_layer_radius = 0.0) then
+ 			raise (Error ("max radius of "^ string_of_float new_mandala.max_layer_radius));*)
 		total = total +. x;
-		(shapes @ process_mandala mandala) (*let new_env = proc_stmt env stmt in new_env*)
+		(shapes @ process_mandala new_mandala) (*let new_env = proc_stmt env stmt in new_env*)
 	| mandala :: other_mandalas -> 
 		let x = mandala.max_layer_radius in 
-		mandala.max_layer_radius = total; 
+		let new_mandala = {
+			name = mandala.name;
+			list_of_layers = mandala.list_of_layers;
+			max_layer_radius = total;
+			is_draw = mandala.is_draw
+		} in
+		(*if (new_mandala.max_layer_radius = 0.0) then
+ 			raise (Error ("max radius of "^ string_of_float new_mandala.max_layer_radius));*)
 		total = total +. x;
 		(let new_shapes = process_mandala mandala in
 		process_mandalas (other_mandalas, (shapes @ new_shapes),total))
@@ -869,7 +883,7 @@ let rec actual_final_convert (check_program: Sast.sprogram): (Jast.javaprogram) 
 	let env = empty_drawing_env in 
 	let new_draw_env = gen_java env sast in 
 	let mandala_lists = new_draw_env.mandala_list in
-	let all_mandalas = List.fold_left (fun a (_, mandala) -> mandala :: a) [] mandala_lists in
+	let all_mandalas = List.rev (List.fold_left (fun a (_, mandala) -> mandala :: a) [] mandala_lists) in
 	let total_radius = 0.0  in
 	let all_shapes = process_mandalas (all_mandalas, [], total_radius) in
 	let prog_name = Jast.CreateClass("Program") in 
