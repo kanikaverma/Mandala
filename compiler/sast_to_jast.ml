@@ -539,15 +539,29 @@ let proc_stmt (env:Jast.drawing):(Sast.sstmt -> Jast.drawing) =function
 		(* 	| Shape of svar_decl * sdata_type  Sast.Geot * sdata_type * sdata_type * sdata_type *)
 		let {skind = typ; svname = name;} = v_name in 
 		let Sast.SGeo(s_geo) = v_geo in 
-		let Sast.SNumber(s_size) = v_size in 
+
+		let actual_size = match v_size with
+		Sast.Float_Literal(s_size) ->  s_size
+		| Sast.Id(var_name) -> let (name, value) = find_variable env var_name in
+			let Jast.JNumbert(real_val) = value in real_val in
+
+		(*let Sast.SNumber(s_size) = v_size in *)
 		let Sast.SColor(s_color) = v_color in 
-		let Sast.SNumber(s_rotation) = v_rotation in 
+		(*let Sast.SNumber(s_rotation) = v_rotation in *)
+
+
+		let actual_rotation = match v_rotation with
+		Sast.Float_Literal(s_rotation) ->  s_rotation
+		| Sast.Id(var_name) -> let (name, value) = find_variable env var_name in
+			let Jast.JNumbert(real_val) = value in real_val in
+
+
 		let new_shape = {
 			name = name;
 			geo = s_geo;
-			size = s_size;
+			size = actual_size;
 			color = s_color;
-			rotation=  s_rotation;
+			rotation=  actual_rotation;
 		}
 	in 
 	let new_variables = env.variables @ [(name, Jast.JShapet(new_shape))] in 

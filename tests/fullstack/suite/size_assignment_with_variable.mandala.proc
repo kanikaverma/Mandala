@@ -1,0 +1,39 @@
+Mandala m = Create Mandala;
+Mandala m1 = Create Mandala;
+Mandala m2 = Create Mandala;
+Mandala m3 = Create Mandala;
+Number x = 50.0 + 10.0;
+Number y = x;
+
+Def Number myFunc (Number x, Number y): {Number x = 5.0;}
+
+Shape circle1 = Create Shape:{
+  Geo circle
+  Size y
+  Color black
+  Rotation 0.0
+};
+Shape square2 = Create Shape:{
+  Geo square
+  Size 50.0
+  Color black
+  Rotation 45.0
+};
+Layer layer0 = Create Layer:{
+  Radius 50.0
+  Shape circle1
+  Count 4
+  Offset 0.0
+  AngularShift 0
+};
+Layer layer1 = Create Layer:{
+  Radius 0.0
+  Shape square2
+  Count 1
+  Offset 0.0
+  AngularShift 0
+};
+
+addTo: (m1, layer1, layer0);
+
+draw: (m1);
