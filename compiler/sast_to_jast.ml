@@ -211,9 +211,10 @@ and proc_expr (env:Jast.drawing): (Sast.sexpr -> Jast.drawing * Jast.jdata_type)
 		let result = match operator 
 				with Add -> float_term_one +. float_term_two 
 				| Sub -> float_term_one -. float_term_two 
-				(* | Mult -> eval_math typ1 typ2 
-				| Div -> eval_math typ1 typ2
-				| Equal -> eval_conditionals typ1 typ2
+				| Mult -> float_term_one *. float_term_two 
+				| Div -> float_term_one /. float_term_two
+				(* 
+				| Equal -> float_term_one -. float_term_two 
 				| Neq -> eval_conditionals typ1 typ2 
 				| Less -> eval_conditionals typ1 typ2 
 				| Leq -> eval_conditionals typ1 typ2 
@@ -307,9 +308,6 @@ in (env, Jast.JNumbert(result))
 			(* check that arg passed in is a valid argument *)
 			(* CHECK FOR ARG PASSED IN *)
 
-
-			(* let actual_expr_list = List.fold_left (fun a (expr,_, ret_env) -> expr :: a) [] actual_types in *)
-			(* let len = List.length args in *)
 			if (len == 1) 
 				then (* only have one mandala that we are drawing *)
 					(* Update environment - includes changing bool for current mandala is_draw to true *)
@@ -327,14 +325,13 @@ in (env, Jast.JNumbert(result))
 					(* NOTE: Below is a series of list.Filters that are intended to do the same thing as removing an element from a list, updating 
 					that element and then adding it back to the list *)
 					let drawn_mandalas = List.filter ( fun (m_name, m_typ) -> if (m_typ.is_draw = true) then true else false) env.mandala_list in 
-					let false_mandalas = List.filter (fun (man_name, man_typ) -> if (man_typ.is_draw = false) then true else false) env.mandala_list in 
-					let other_false_mandalas = List.filter (fun (x, mandala_info) -> if (x = curr_name) then false else true) false_mandalas in  
-
+					let false_mandalas = List.filter (fun (m_name, m_typ) -> if (m_typ.is_draw = false) then true else false) env.mandala_list in 
+					let other_false_mandalas = List.filter (fun (x, mandala_info) -> if (x = curr_name) then false else true) false_mandalas in 
 
 					let updated_current_mandala = {
 						name = curr_name;
-						list_of_layers = actual_mandala.list_of_layers;(* mandala_object.list_of_layers; *)
-						max_layer_radius = actual_mandala.max_layer_radius; (*mandala_object.list_of_layers;*)
+						list_of_layers = actual_mandala.list_of_layers;
+						max_layer_radius = actual_mandala.max_layer_radius;
 						is_draw = true;
 					} in
 					let test_layer_size = List.length actual_mandala.list_of_layers in 
@@ -343,9 +340,12 @@ in (env, Jast.JNumbert(result))
 					(* let updated_drawn_mandalas =  drawn_mandalas @ [curr_name, updated_current_mandala] in
 					let true_and_false_mandalas = updated_drawn_mandalas @ other_false_mandalas in 
 					*)
-					let test_single_mandala_list = new_env.mandala_list@[(curr_name, updated_current_mandala)] in 
+					let mandalas_to_be_drawn = new_env.mandala_list@[(curr_name, updated_current_mandala)] in 
+					let l = List.length mandalas_to_be_drawn in
+					(*if ( l > 1) then
+					raise(Error("Size of mandalas to be drawn is " ^string_of_int l));*)
 					let updated_vars = new_env.variables @ [(curr_name, Jast.JMandalat(updated_current_mandala))] in 
-					let new_draw_env = {mandala_list = test_single_mandala_list; variables = updated_vars; java_shapes_list = new_env.java_shapes_list;} in 
+					let new_draw_env = {mandala_list = mandalas_to_be_drawn; variables = updated_vars; java_shapes_list = new_env.java_shapes_list;} in 
 					(* let java_arg_list = [] in 
 					let updated_java_arg_list = java_arg_list @ [Jast.JId(curr_name)] in *)
 					(* (Jast.JCall(func_name, updated_java_arg_list), new_draw_env, Jast.JVoid) *)
@@ -397,7 +397,8 @@ in (env, Jast.JNumbert(result))
 							name = update_mandala_name;
 							list_of_layers = actual_layer_list;(* (actual_mandala.list_of_layers :: actual_layer_list); *) (*@ actual_layer_list; *)(* mandala_object.list_of_layers; *)
 							max_layer_radius = actual_mandala.max_layer_radius; (*mandala_object.list_of_layers;*)
-							is_draw = actual_mandala.is_draw;
+							(*is_draw = actual_mandala.is_draw;*)
+							is_draw = false;
 						} in
 						(* JCall of string * jexpr list *)
 						(* return type for proc_expr is Jast.jexpr * Jast.drawing * Jast.jdata_type *)
@@ -780,9 +781,14 @@ let get_layers  = function
 
 let process_mandala = function
 	mandala ->
+	if (mandala.is_draw) then (
+	(*raise (Error("Some truth exists!"));*)
 	let list_of_layers = get_layers mandala in
 		let num_layers = List.length list_of_layers in
-		List.fold_left extract_shapes_from_layer [] list_of_layers
+		List.fold_left extract_shapes_from_layer [] list_of_layers)
+	else
+	(*TEST: Remove eventually*)
+	[Jast.Triangle(50.0, 0.0, 0.0, 0.0, "red")]
 
 (* create empty initial environment *)
 (* the environment keep track of the drawing we are creating *)
