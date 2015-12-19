@@ -259,6 +259,7 @@ let proc_type = function
 	| Ast.Layert -> Sast.Layert
 	| Ast.Mandalat -> Sast.Mandalat
 	| Ast.Arrayt -> Sast.Arrayt
+	| Ast.Numbert -> Sast.Numbert
 
 let proc_var_decl = function 
 	(var_decl, env) -> 
@@ -393,6 +394,17 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sm
 			 typ2 -> let new_env = add_to_var_table (env, name2, typ2) 
 				in (Sast.Assign(({skind = typ2; svname = name2}), assign_val), typ, new_env) (* check strctural equality *)
 			| _ -> raise (Error("Assignment could not be typechecked")) 
+
+
+(*NEED TO IMPLEMENT RETURN*)
+	(*| Ast.Return(x) -> 
+		let newExpr = try
+				semantic_expr env expression 
+			with Not_found ->
+				raise (Error("Return is failing yo"))  			(*this error should be fixed to something more relevant*)
+			in let (x, typ, ret_env)= newExpr in 
+			(Sast.Expr(x), typ, env)*)
+
 	(* 
 	let rec extract_type (scope: function_table) name = function
 		(sdata_type, string) -> (sdata_type)
@@ -485,7 +497,7 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 		| [func] -> 
 		(* Change in some way to handle scope*)
 			let scoped_environment = {
-				var_scope = {parent = None; variables=[]};
+				var_scope = {parent = env.var_scope.parent; variables=[]};
 				fun_scope = fun_empty_table_init;
 			} in 
 			let (new_func, new_env) = semantic_func scoped_environment func in (update_list@[new_func], new_env)
