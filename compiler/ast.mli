@@ -17,11 +17,21 @@ type expr =
 	| Id of string
 	| Binop of expr * op * expr
 	| Call of string * expr list
+	| Color of string
+	| Number of float
+	| Geo of string 
+
+
+ type value =
+	ExprVal of expr 
+	| ArrVal of expr list 
 
 type var_decl = {
 	kind : mndlt;
 	vname : string;
 }
+ (* type var_decl_assign = 
+	VarDeclAssign of var_decl * value  *)
 
 type stmt =
 	| Block of stmt list
