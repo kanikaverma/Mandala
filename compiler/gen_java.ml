@@ -176,7 +176,11 @@ let gen_java_modified = function
 			else 
 				(List.map proc_shape shapes);
 				
-
+		    print_string "try {\n";
+		    print_string "  Thread.sleep(3000);\n";            
+		    print_string "} catch(InterruptedException ex) {\n";
+		    print_string " Thread.currentThread().interrupt();\n";
+		    print_string "}\n";
 			print_string "  t.save(\"";
 			print_string string_of_classname; (*Print the string of class name for jpg file*)
 			print_string ".jpg\");\n";

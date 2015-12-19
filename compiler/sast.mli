@@ -59,7 +59,7 @@ and sstmt =
 	| IF of sexpr * sstmt * sstmt
 	| Foreach of sexpr * sexpr * sstmt
 	| While of sexpr * sstmt
-	| Shape of svar_decl * sdata_type * sdata_type * sdata_type * sdata_type
+	| Shape of svar_decl * sdata_type * sexpr * sdata_type * sexpr
 	| Mandala of svar_decl
 	| Layer of svar_decl * sexpr * sexpr * sexpr * sexpr * sexpr 
 	| FuncCall of sexpr

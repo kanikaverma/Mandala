@@ -343,11 +343,19 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sm
 		(* 
 			Sast.sexpr * smndlt  * translation_environment
 		*)
-		let (size_stmt, s_s_typ, env) = semantic_expr env v_size in 
+		let (size_stmt, typ, env) = semantic_expr env v_size in 
 		(* Checking that the shape's size is a float and returning a sexpr *)
-		let check_size = match size_stmt with
+
+		let size_value = match typ with
+			Sast.Numbert -> size_stmt
+			| _ -> raise (Error ("Size wasn't a numbert!"))
+
+		(*let check_size = match size_stmt with
 			Sast.Float_Literal(v_size) -> let update_sast_type = Sast.SNumber(v_size) in update_sast_type
-			| _  -> raise(Error("Invalid radius, needs to be of type of SNumber"))
+			|Sast.Id(var) -> 
+				let vdecl = try 
+
+			| _  -> raise(Error("Invalid radius, needs to be of type of SNumber"))*)
 		in 
 		(* let (s_color, s_c_typ, env) = semantic_expr env v_color in *)
 		let s_color = match v_color with 
@@ -359,15 +367,20 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sm
 		(* 
 			Sast.sexpr * smndlt  * translation_environment
 		*)
-		let (rotation_stmt, s_r_typ, env) = semantic_expr env v_rotation in 
+		let (rotation_stmt, typ, env) = semantic_expr env v_rotation in (*
 		(* Check the rotation type and make sure it is a float *)
 		let check_rotation = match rotation_stmt with 
 			Sast.Float_Literal(v_rotation) -> let updated_rotation_type = Sast.SNumber(v_rotation) in updated_rotation_type
-			| _ -> raise(Error("Invalid rotation, needs to be a float number. "))
+			| _ -> raise(Error("Invalid rotation, needs to be a float number. "))*)
+
+		let rotation_value = match typ with
+			Sast.Numbert -> rotation_stmt
+			| _ -> raise (Error ("Rotation wasn't a numbert!"))
 		in 
+
 		let new_env = add_to_var_table (env, name, typ) in 
 		(* 	| Shape of svar_decl * sdata_type * sdata_type * sexpr * sdata_type *)
-		(Sast.Shape({skind = typ; svname=name;}, updated_s_geo, check_size, updated_s_color, check_rotation), typ, new_env)
+		(Sast.Shape({skind = typ; svname=name;}, updated_s_geo, size_value, updated_s_color, rotation_value), typ, new_env)
 	(* IN AST Shape of var_decl * expr * expr * expr * expr *)
 	(* IN SAST: | Layer of svar_decl * sexpr * sexpr * sexpr * sexpr * sexpr  *)
 
