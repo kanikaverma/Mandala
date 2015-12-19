@@ -6,13 +6,13 @@ run: scanner parser semantic sast_to_jast gen_java
 gen_java: sast
 	ocamlc -c gen_java.ml
 
-sast_to_jast: scanner parser semantic sast_to_jast
+sast_to_jast_o: scanner parser semantic sast_to_jast
 	ocamlc -o semantic sast_to_jast parser.cmo scanner.cmo semantic.cmo sast_to_jast.cmo
 
 sast_to_jast: jast sast
 	ocamlc -c sast_to_jast.ml
 
-semantic: scanner parser semantic
+semantic_o: scanner parser semantic
 	ocamlc -o semantic parser.cmo scanner.cmo semantic.cmo
 
 
