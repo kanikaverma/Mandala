@@ -253,9 +253,9 @@ and proc_expr (env:Jast.drawing): (Sast.sexpr -> Jast.drawing * Jast.jdata_type)
 					(* let updated_drawn_mandalas =  drawn_mandalas @ [curr_name, updated_current_mandala] in
 					let true_and_false_mandalas = updated_drawn_mandalas @ other_false_mandalas in 
 					*)
-					let test_single_mandala_list = []@[(curr_name, updated_current_mandala)] in 
+					let actual_list = drawn_mandalas@[(curr_name, updated_current_mandala)] in 
 					let updated_vars = new_env.variables @ [(curr_name, Jast.JMandalat(updated_current_mandala))] in 
-					let new_draw_env = {mandala_list = test_single_mandala_list; variables = updated_vars; java_shapes_list = new_env.java_shapes_list;} in 
+					let new_draw_env = {mandala_list = actual_list; variables = updated_vars; java_shapes_list = new_env.java_shapes_list;} in 
 					(* let java_arg_list = [] in 
 					let updated_java_arg_list = java_arg_list @ [Jast.JId(curr_name)] in *)
 					(* (Jast.JCall(func_name, updated_java_arg_list), new_draw_env, Jast.JVoid) *)
@@ -325,7 +325,7 @@ and proc_expr (env:Jast.drawing): (Sast.sexpr -> Jast.drawing * Jast.jdata_type)
 						(* get a list of all mandalas except the one that has just been updated, then add that mandala *)
 						(* ADD BACK!! let other_unchanged_mandalas = List.filter (fun (x, mandala_info) -> if (x = update_mandala_name) then false else true) env.mandala_list in  
 						let updated_drawn_mandalas =  other_unchanged_mandalas @ [update_mandala_name, updated_current_mandala] in *)
-						let test_updated_mandalas = []@[(update_mandala_name, updated_current_mandala)] in 
+						let test_updated_mandalas = new_env.mandala_list@[(update_mandala_name, updated_current_mandala)] in 
 						let new_draw_env = {mandala_list = test_updated_mandalas; variables = new_env.variables; java_shapes_list = new_env.java_shapes_list;} in 
 
 						(* (Jast.JCall(func_name, actual_expr_list), new_draw_env, Jast.JMandalat(updated_current_mandala)) *)
@@ -539,9 +539,18 @@ let gen_java (env:Jast.drawing):(Sast.sprogram -> Jast.drawing)= function
 
 (* PROCESS SHAPES! *)
 
-let rec extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer -> Jast.jShape list) = function
-	my_layer -> 
+let rec extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer * float -> Jast.jShape list) = function
+	(my_layer, big_radius) -> 
+
+		(*raise (Error("offset value "^string_of_float big_radius));*)
 		let listed_shape = my_layer.shape in
+		let multiple_mandala_offset = 
+			if (big_radius > 0.0) 
+			then 
+				big_radius +. listed_shape.size +. 100.0
+			else
+				big_radius
+			in
 		let count = my_layer.count in
 		if (count >= 1 && listed_shape.geo = "square")
 		then 
@@ -550,7 +559,7 @@ let rec extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer -> Jas
 			 let rad_offset = my_layer.offset *. pi /. 180.0 in 
 			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count) in 
 			 let x_pos = cos (my_angle) *. my_layer.radius in
-			 let y_pos = sin (my_angle) *. my_layer.radius in
+			 let y_pos = sin (my_angle) *. my_layer.radius -. big_radius in
 			 let extra_rotation = 
 			 	if (my_layer.angularshift = 1)
 			 	then
@@ -576,7 +585,7 @@ let rec extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer -> Jas
 			 let rad_offset = my_layer.offset *. pi /. 180.0 in 
  			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count) in 
 			 let x_pos = cos (my_angle) *. my_layer.radius in
-			 let y_pos = sin (my_angle) *. my_layer.radius in
+			 let y_pos = sin (my_angle) *. my_layer.radius -. big_radius in
 			 let color = listed_shape.color in 
 			 let new_shape = Jast.Circle(listed_shape.size, x_pos, y_pos, color) in 
 				 if (k > 0) then 
@@ -594,7 +603,7 @@ let rec extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer -> Jas
 			 let rad_offset = my_layer.offset *. pi /. 180.0 in 
 			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count) in 
 			 let x_pos = cos (my_angle) *. my_layer.radius in
-			 let y_pos = sin (my_angle) *. my_layer.radius in
+			 let y_pos = sin (my_angle) *. my_layer.radius -. big_radius in
 			 let extra_rotation = 
 			 	if (my_layer.angularshift = 1)
 			 	then
@@ -620,15 +629,21 @@ let rec extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer -> Jas
 
 let get_layers  = function 
 	mandala ->
-	mandala.list_of_layers 
+	let n = List.length mandala.list_of_layers in 
+	let radius = mandala.max_layer_radius in
+	(*let f = (fun x -> mandala.max_layer_radius) in
+	let list_of_radii = Array.init n f in *)
+	let list_of_layers = mandala.list_of_layers in
+	let result = List.fold_left (fun a layer -> (layer, radius) :: a) [] list_of_layers in
+	result
 	(* function
 	Jast.mandala -> mandala_shape.list_of_layers *)
 
 let process_mandala = function
 	mandala ->
-	let list_of_layers = get_layers mandala in
-		let num_layers = List.length list_of_layers in
-		List.fold_left extract_shapes_from_layer [] list_of_layers
+	let layers_with_radii = get_layers mandala in
+		let num_layers = List.length layers_with_radii in
+		List.fold_left extract_shapes_from_layer [] layers_with_radii
 
 (* create empty initial environment *)
 (* the environment keep track of the drawing we are creating *)
@@ -641,19 +656,28 @@ let empty_drawing_env=
 }
 
 
-let rec process_mandalas (mandalas, shapes:Jast.mandala list * Jast.jShape list) = match mandalas 
+let rec process_mandalas (mandalas, shapes, total:Jast.mandala list * Jast.jShape list * float) = match mandalas 
 	with [] -> shapes
-	| [mandala] -> (shapes @ process_mandala mandala) (*let new_env = proc_stmt env stmt in new_env*)
-	| mandala :: other_mandalas ->
-		let new_shapes = process_mandala mandala in
+	| [mandala] -> 
+		let x = mandala.max_layer_radius in 
+		mandala.max_layer_radius = total; 
+		total = total +. x;
+		(shapes @ process_mandala mandala) (*let new_env = proc_stmt env stmt in new_env*)
+	| mandala :: other_mandalas -> 
+		let x = mandala.max_layer_radius in 
+		mandala.max_layer_radius = total; 
+		total = total +. x;
+		raise (Error (string_of_float total));
+		(let new_shapes = process_mandala mandala in
 		(* let (nm, tp) = List.hd new_env.var_scope.variables in *)
-		process_mandalas (other_mandalas, (shapes @ new_shapes))
+		process_mandalas (other_mandalas, (shapes @ new_shapes),total))
 
 let rec actual_final_convert (check_program: Sast.sprogram): (Jast.javaprogram) = 
 	let env = empty_drawing_env in 
 	let new_draw_env = gen_java env sast in 
 	let mandala_lists = new_draw_env.mandala_list in
 	let all_mandalas = List.fold_left (fun a (_, mandala) -> mandala :: a) [] mandala_lists in
-	let all_shapes = process_mandalas (all_mandalas, []) in
+	let total_radius = 0.0  in
+	let all_shapes = process_mandalas (all_mandalas, [], total_radius) in
 	let prog_name = Jast.CreateClass("Program") in 
     Jast.JavaProgram(prog_name, all_shapes)
