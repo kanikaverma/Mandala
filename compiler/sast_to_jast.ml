@@ -349,7 +349,6 @@ in (env, Jast.JNumbert(result))
 					let mandalas_to_be_drawn = drawn_mandalas@[(curr_name, updated_current_mandala)] in 
 					(* let l = List.length mandalas_to_be_drawn in
 					 if ( l > 1) then *)
-					raise(Error("Size of mandalas to be drawn is " ^string_of_int l)); 
 					let updated_vars = filtered_vars @ [(curr_name, Jast.JMandalat(updated_current_mandala))] in 
 					let new_draw_env = {mandala_list = mandalas_to_be_drawn; variables = updated_vars; java_shapes_list = new_env.java_shapes_list;} in 
 					(* let java_arg_list = [] in 
