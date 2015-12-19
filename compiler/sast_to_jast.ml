@@ -178,16 +178,56 @@ and proc_expr (env:Jast.drawing): (Sast.sexpr -> Jast.drawing * Jast.jdata_type)
 		(* (Sast.Binop(eval_term1, operator, eval_term2), typ1, env) *)
 		let (new_env, eval_term1) = proc_expr env term1 in 
 		let (new_env, eval_term2) = proc_expr env term2 in 
+
+		let float_term_one = match term1
+			with Sast.Float_Literal(term1) -> term1
+			| _ -> raise(Error("Operand one is not a float literal, invalid operand "))
+		in
+
+		let float_term_two = match term2
+			with Sast.Float_Literal(term2) -> term2
+			| _ -> raise(Error("Operand two is not a float literal, invalid operand "))
+		in
+
+
 		(* Check the values of eval_term1 and eval_term2 *)
 		(* let val_term1 = match eval_term1 
 		with Jast.JInt() *)
 		(* TODO: after figuring out what type the terms are, do the appropriate operation and return the value*)
+		(* Check if the actual operators are intergers or floats *)
+		(* Everything is a float *)
+		(* CHECK ABOUT CASTING INTEGER TO FLOAT *)
+		(* Just do math on the terms *)
+		(* Need to figure out how to extract the value from the jdata_type *) 
+		(* Match the thing with float and then match do float operations *)
+		(* let check_int_or_float = match eval_term1
+			with Jast.JNumbert(_) -> "float"
+			| Jast.JInt(_) -> "int"
+			| _ -> raise(Error("Doesn't match float or integer, so invalid. "))
+		if (check_int_or_float="float")
+			then
+				eval_result = eval_term1 +. eval_term2 *)
+		
+		let result = match operator 
+				with Add -> float_term_one +. float_term_two 
+				| Sub -> float_term_one -. float_term_two 
+				(* | Mult -> eval_math typ1 typ2 
+				| Div -> eval_math typ1 typ2
+				| Equal -> eval_conditionals typ1 typ2
+				| Neq -> eval_conditionals typ1 typ2 
+				| Less -> eval_conditionals typ1 typ2 
+				| Leq -> eval_conditionals typ1 typ2 
+				| Greater -> eval_conditionals typ1 typ2
+				| Geq -> eval_conditionals typ1 typ2 *) 
+
+		(* 
 		let (tester) = eval_term1 in 
 		let my_test = match tester 
 	with Jast.JInt(tester) -> raise (Error("HELLOOO FAIL INT JAST "^ string_of_int tester))
+
 	| Jast.JNumbert(tester) -> raise (Error("NUMBER T FLOAT FAIL!!!! "^ string_of_float tester))
-	| _ -> raise (Error("FAILURE!!!"))
-in (env, Jast.JInt(5))
+	| _ -> raise (Error("FAILURE!!!")) *)
+in (env, Jast.JNumbert(result)) 
 
 		(* 
 
@@ -462,10 +502,10 @@ let proc_stmt (env:Jast.drawing):(Sast.sstmt -> Jast.drawing) =function
 	| Sast.Shape(v_name, v_geo, v_size, v_color, v_rotation) ->
 		(* 	| Shape of svar_decl * sdata_type  Sast.Geot * sdata_type * sdata_type * sdata_type *)
 		let {skind = typ; svname = name;} = v_name in 
-		let Sast.Geot(s_geo) = v_geo in 
-		let Sast.Numbert(s_size) = v_size in 
-		let Sast.Colort(s_color) = v_color in 
-		let Sast.Numbert(s_rotation) = v_rotation in 
+		let Sast.SGeo(s_geo) = v_geo in 
+		let Sast.SNumber(s_size) = v_size in 
+		let Sast.SColor(s_color) = v_color in 
+		let Sast.SNumber(s_rotation) = v_rotation in 
 		let new_shape = {
 			name = name;
 			geo = s_geo;
@@ -558,16 +598,56 @@ in new_env
 			| Mandalat 
 			| Arrayt
 			| Colort of string
+				JInt of int 
+	| JVoid
+	| JNumbert of float
+	| JBooleant of int 
+	| JShapet of shape 
+	| JGeot of string 
+	| JLayert of layer
+	| JMandalat of mandala
+	| JArrayt
+	| JColort of string
 
 
 		*)
+(* Already checked types in semantic, so just need to make sure adding correct type for Jast *)
+	(* doing this to make sure we are adding the correct value for Jast to the drawing with includes all variables *)
+		let get_val_and_type = match eval_expr
+			with Jast.JNumbert(eval_expr) -> Jast.JNumbert(eval_expr)
+			| Jast.JBooleant(eval_expr) -> Jast.JBooleant(eval_expr)
+			| Jast.JShapet(eval_expr) -> Jast.JShapet(eval_expr)
+			| Jast.JGeot(eval_expr) -> Jast.JGeot(eval_expr)
+			| Jast.JLayert(eval_expr) -> Jast.JLayert(eval_expr)
+			| Jast.JMandalat(eval_expr) -> Jast.JMandalat(eval_expr)
+			| Jast.JColort(eval_expr) -> Jast.JColort(eval_expr)
+			| Jast.JVoid -> Jast.JVoid
+			| Jast.JArrayt -> Jast.JArrayt
+			| _ -> raise(Error("This experssion does not have a supported type here!"))
+			(* Sast.SNumber(eval_expr) -> Jast.JNumbert(eval_expr)
+			| Sast.SBoolean(eval_expr) -> Jast.JBooleant(eval_expr)
+			| Sast.SShape -> Jast.JShapet(eval_expr)
+			| Sast.Geot -> Jast.JGeot(eval_expr)
+			| Sast.Layert -> Jast.JLayert(eval_expr)
+			| Sast.Mandalat -> Jast.JMandalat(eval_expr)
+			| Sast.Arrayt -> Jast.JArrayt
+			| Sast.Colort -> Jast.JColort(eval_expr)
+			| Sast.Integert -> Jast.JBooleant(eval_expr)
+			| Sast.Voidt -> Jast.JVoid
+			| _ -> raise(Error("Unsupported assignment found. ")) *)
+		in 
 
-		let check_env = match typ
-		with Sast.Numbert(eval_expr) -> let updated_vars = new_env.variables @[(name, Jast.JNumbert(eval_expr))] in 
+
+		let updated_vars = new_env.variables @[(name, get_val_and_type)] in 
+		let updated_env = {mandala_list= new_env.mandala_list; variables = updated_vars; java_shapes_list= new_env.java_shapes_list;} 
+			in updated_env
+
+		(* let check_env = match typ
+		with Sast.SNumber(eval_expr) -> let updated_vars = new_env.variables @[(name, get_val_and_type)] in 
 			let updated_env = {mandala_list= new_env.mandala_list; variables = updated_vars; java_shapes_list= new_env.java_shapes_list;} 
 			in updated_env
 		| _ -> raise (Error("ASsignemnt type doesn't match variable type"))
-	in check_env
+	in check_env *)
 		(* let updated_vars = env.variables @ [(name, typ)] *)
 
 	| _ -> raise (Error("unsupported statement found")) 
