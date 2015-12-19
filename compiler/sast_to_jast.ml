@@ -320,13 +320,17 @@ in (env, Jast.JNumbert(result))
 						| _ -> raise (Error("This mandala has not been defined"))
 
 					in 
-					let (mandala_name, actual_mandala) = find_mandala env curr_name in 
+					let (mandala_name, untyped_mandala) = find_variable env curr_name in 
+					let actual_mandala = match untyped_mandala
+						with Jast.JMandalat(untyped_mandala) -> untyped_mandala
+						| _ -> raise(Error("The variable returned is invalid because it is not of type mandala. "))
+					in 
 					(* TODO: add this and find_mandala func and change updated_current_manda let mandala_info = find_mandala new_env curr_name in *)
 					(* NOTE: Below is a series of list.Filters that are intended to do the same thing as removing an element from a list, updating 
 					that element and then adding it back to the list *)
-					let drawn_mandalas = List.filter ( fun (m_name, m_typ) -> if (m_typ.is_draw = true) then true else false) env.mandala_list in 
+					 let drawn_mandalas = List.filter ( fun (m_name, m_typ) -> if (m_typ.is_draw = true) then true else false) env.mandala_list in  
 					let false_mandalas = List.filter (fun (m_name, m_typ) -> if (m_typ.is_draw=false) then true else false) env.mandala_list in 
-					let other_false_mandalas = List.filter (fun (x, mandala_info) -> if (x = curr_name) then false else true) false_mandalas in 
+					let other_mandalas = List.filter (fun (x, mandala_info) -> if (x = curr_name) then false else true) env.mandala_list in 
 
 					let updated_current_mandala = {
 						name = curr_name;
@@ -340,11 +344,13 @@ in (env, Jast.JNumbert(result))
 					(* let updated_drawn_mandalas =  drawn_mandalas @ [curr_name, updated_current_mandala] in
 					let true_and_false_mandalas = updated_drawn_mandalas @ other_false_mandalas in 
 					*)
+					(* Updated variables *)
+					let filtered_vars = List.filter (fun (var_name, var_typ) -> if (var_name=curr_name) then false else true) env.variables in 
 					let mandalas_to_be_drawn = drawn_mandalas@[(curr_name, updated_current_mandala)] in 
-					let l = List.length mandalas_to_be_drawn in
-					if ( l > 1) then
-					raise(Error("Size of mandalas to be drawn is " ^string_of_int l));
-					let updated_vars = new_env.variables @ [(curr_name, Jast.JMandalat(updated_current_mandala))] in 
+					(* let l = List.length mandalas_to_be_drawn in
+					 if ( l > 1) then *)
+					raise(Error("Size of mandalas to be drawn is " ^string_of_int l)); 
+					let updated_vars = filtered_vars @ [(curr_name, Jast.JMandalat(updated_current_mandala))] in 
 					let new_draw_env = {mandala_list = mandalas_to_be_drawn; variables = updated_vars; java_shapes_list = new_env.java_shapes_list;} in 
 					(* let java_arg_list = [] in 
 					let updated_java_arg_list = java_arg_list @ [Jast.JId(curr_name)] in *)
@@ -377,7 +383,11 @@ in (env, Jast.JNumbert(result))
 						in 
 						(* raise (Error("HELLO FIZ!!!!")); *)
 						(* let (mandala_name, actual_mandala) = find_mandala new_env update_mandala_name in *)
-						let (mandala_name, actual_mandala) = find_mandala new_env update_mandala_name in 
+						let (mandala_name, untyped_mandala) = find_variable new_env update_mandala_name in 
+						let actual_mandala = match untyped_mandala
+						with Jast.JMandalat(untyped_mandala) -> untyped_mandala
+						| _ -> raise(Error("The variable returned is invalid because it is not of type mandala. "))
+						in 
 						let curr_layer_list = actual_mandala.list_of_layers in 
 						let separate_layers_list = match rev_args 
 							with hd :: tail -> get_layer_info (new_env, tail, curr_layer_list) 
@@ -408,7 +418,7 @@ in (env, Jast.JNumbert(result))
 						
 						(* Filter out all mandalas except the current mandala *)
 
-						let unchanged_mandalas = List.filter ( fun (m_name, m_typ) -> if (m_typ.name=update_mandala_name) then false else true) env.mandala_list in 
+						let unchanged_mandalas = List.filter ( fun (m_name, m_typ) -> if (m_name=actual_mandala.name) then false else true) env.variables in 
 
 						(* Also filter out variables from variable list to update *)
 						(* let unchanges_variables =  *)
@@ -416,10 +426,10 @@ in (env, Jast.JNumbert(result))
 						(* let unchanged_mandalas = List.Filter ( fun (m_name, m_typ) -> if(m_typ.name=update_mandala_name) then false else true) env.mandala_list in *)
 						(* Then add back in the updated mandala to the list of all mandalas *)
 
-						let test_updated_mandalas = unchanged_mandalas@[(update_mandala_name, updated_current_mandala)] in 
+						let updated_variables = unchanged_mandalas@[(update_mandala_name, Jast.JMandalat(updated_current_mandala))] in 
 						(* let testing_layer_size = List.length test_updated_mandalas in 
 						raise (Error("HERE IS MANDALA SIEZ!!!!!! "^ string_of_int testing_layer_size)); *)
-						let new_draw_env = {mandala_list = test_updated_mandalas; variables = new_env.variables; java_shapes_list = new_env.java_shapes_list;} in 
+						let new_draw_env = {mandala_list = new_env.mandala_list; variables = updated_variables; java_shapes_list = new_env.java_shapes_list;} in 
 
 						(* (Jast.JCall(func_name, actual_expr_list), new_draw_env, Jast.JMandalat(updated_current_mandala)) *)
 						(new_draw_env, Jast.JMandalat(updated_current_mandala))
