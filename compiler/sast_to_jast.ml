@@ -214,14 +214,17 @@ in (env, Jast.JNumbert(result))
 		(*should use env_with_empty_vars!!*)
 		let new_env = parse_actual_args (env, args) in 
 		(*Grab the function from its table*)
-		if (fid != "draw" && fid != "addTo") then (
-			raise (Error ("ello"));
+		if ( not(fid = "draw") && not (fid = "addTo")) then (
 			let my_func_decl = find_function env fid in
 			let func_stmts = my_func_decl.sbody in 
+			let l = List.length func_stmts in
 			(*Need to process statements!!*)
 			let env_with_return = separate_statements_s(func_stmts, new_env) in 
 			let return_name = "return" in 
-			let var = find_variable env return_name in
+			let var = find_variable env_with_return return_name in 
+			(*let var = 	
+				try List.find (fun (s,_) -> s=return_name) env_with_return.drawing.variables 
+				with Not_found -> raise (Error ("Didn't find variable in Sast_to_jast! "^return_name)) in *)
 			let (n, v) = var in
 			(*let (name , val) = List.find (fun (s,_) -> s=return_name) env_with_return.drawing.variables in *)
 			let new_env = {
@@ -522,12 +525,13 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 	| Sast.Return(expr) -> 
 		let (new_env, eval_expr) = proc_expr env expr in
 		let return_val = eval_expr in
-		let new_var = ("return", return_val) in
-
-		let updated_vars = env.drawing.variables @[new_var] in 
+		let return_name = "return" in 
+		let new_var = (return_name, return_val) in
+		let updated_vars = new_env.drawing.variables @ [(return_name, return_val)] in 
 		let updated_drawing = {mandala_list= new_env.drawing.mandala_list; variables = updated_vars; java_shapes_list= new_env.drawing.java_shapes_list;} 
-		in let updated_env = {drawing = updated_drawing; functions = new_env.functions} 
-		in updated_env
+		in let updated_env = {drawing = updated_drawing; functions = new_env.functions} in 
+		let var = find_variable updated_env return_name in
+		updated_env
 
 
 		
@@ -646,8 +650,9 @@ let gen_java (env:environment):(Sast.sprogram -> environment)= function
 			(* CHECK ORDER OF STATEMENTS *)
 			let update_list = []  in 
 			(* Already reversed the statements in semantic when going from ast to jast, so don't need to reverse again *)
-			let updated_env = separate_statements_s (s, env) in  (* List.map( fun stmt_part -> separate_statements_s prog_stmts env ) in *)
-			let updated_env = separate_functions (f, updated_env) in 
+			let updated_env = separate_functions (f, env) in 
+			let updated_env = separate_statements_s (s, updated_env) in  (* List.map( fun stmt_part -> separate_statements_s prog_stmts env ) in *)
+			let l = List.length updated_env.functions in
 			(* thsi returns a list of Jast.jsstmts list and an enviroment *)
 			(* let (statements, updated_env) = resulting_statments in *)
 			(* let updated_block = Jast.JavaBlock(statements) in 
