@@ -2,8 +2,13 @@ import sys
 
 hashmap = {} 
 hashmap2 = {} 
-f = file(sys.argv[1], 'r') # generated program 
-f2 = file(sys.argv[2], 'r') # expected output 
+
+try:
+  f = file(sys.argv[1], 'r') # generated program 
+  f2 = file(sys.argv[2], 'r') # expected output 
+except IOError:
+  print -1 
+  sys.exit()
 
 def main():
   build_hash_1()
