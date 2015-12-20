@@ -227,6 +227,8 @@ let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * sm
 					in *)
 			else
 				try (let (fname, fret, fargs, fbody) =
+				(*let numFuncs = List.length env.fun_scope.functions in
+				raise (Error ("number of functions currently: "^string_of_int numFuncs))*)
 				find_function env.fun_scope fid in
 				
 				(*let actual_type_names = 
@@ -244,8 +246,10 @@ let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * sm
 					(Sast.Call(fname, actual_expr_list), fret, env)
 					(* Call of string * sexpr list*)
 
-		)
-		with Not_found -> raise (Error("undeclared function ")) 
+				)
+				with Not_found -> 
+					let numFuncs = List.length env.fun_scope.functions in
+					raise (Error(fid^"undeclared function "^string_of_int numFuncs)) 
 	(* WORKING ONE Ast.Call(vname, func_args) ->
 		let func_call = try
 			find_function env.fun_scope vname 
@@ -256,7 +260,7 @@ let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * sm
 		(* | Call of string * sexpr list *)
 	(* check type of right ahndside and recurse on that to check that it matches lefthand side*)
 	(*once it is confirmed, compare left type and righthand type and then add it to the symbol table *)
-	| _ -> raise (Error("invalid  assignment")) 
+	| _ -> raise (Error("invalid expression, was not able to match expression")) 
 
 let proc_type = function
   	 Ast.Booleant -> Sast.Booleant
@@ -557,7 +561,7 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 		(* need to update the environment here I think *)
 		let empty_list = []  in 
 		let reverse_prog_stmts = List.rev prog_stmts in 
-		let (resulting_functions, func_env) = separate_functions (prog_funcs, env, empty_list) in
+		let (resulting_functions, env) = separate_functions (prog_funcs, env, empty_list) in
 		let (statements, env) = separate_statements (reverse_prog_stmts, env, empty_list) in  (* List.map( fun stmt_part -> separate_statements prog_stmts env ) in *)
 		(*Using the scope of the env returning from statements..?*)
 
