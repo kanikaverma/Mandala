@@ -557,6 +557,89 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 		(*raise (Error("HEYYYY "^ string_of_int layer_size))*)
 		new_env
 
+	| Sast.Foreach(i_var, i_start_var, i_end_var, for_statements) ->
+
+		(*Get Jdata type values for start and end points*)
+		let Sast.Id(i)= i_var in
+		let i_start =
+		match i_start_var with 
+			Sast.Float_Literal(x) -> Jast.JNumbert(x)
+			| _ -> raise(Error("Start value of this for loop is not a float")) in
+		let i_end = 
+		match i_end_var with 
+			Sast.Float_Literal(x) -> Jast.JNumbert(x)
+			| _ -> raise(Error("End value of this for loop is not a float")) in
+
+		(*Remove i from list if it was found*)
+		let new_variables = List.filter ( fun (n, v) -> if (n = i) then false else true) env.drawing.variables in  
+		(*Add i with its updated value*)
+		let updated_vars = new_variables @[(i, i_start)] in 
+		(*Storing for later*)
+		let store_old_vars = updated_vars in
+
+		(*Create environment to pass to statement processing*)
+		let updated_drawing = {env.drawing with variables = updated_vars} in
+		let updated_env = {env with drawing = updated_drawing} in 
+
+		(*Pull actual values from for loop start end end*)
+		let Sast.Float_Literal(k_start) = i_start_var in
+		let Sast.Float_Literal(k_end) = i_end_var in
+
+
+		let rec pos_loop = function
+			(env, var_name, k_cur, k_end) -> 
+
+				(*i_cur is the data type to insert into variable table*)
+				let i_cur = Jast.JNumbert(k_cur) in 
+				(*Need to update actual value of i in the table and then update environment*)
+				let new_variables = List.filter ( fun (n, v) -> if (n = var_name) then false else true) env.drawing.variables in  
+				let updated_vars = new_variables @[(var_name, i_cur)] in 
+				let updated_drawing = {env.drawing with variables = updated_vars} in
+				let updated_env = {env with drawing = updated_drawing} in 
+
+				let fresh_env = separate_statements_s(for_statements, updated_env) in
+				let returning_env = 
+					if not (k_cur > k_end) then
+						 pos_loop(fresh_env, var_name, k_cur +. 1.0, k_end)
+					else
+						fresh_env in
+				returning_env in
+
+		let rec neg_loop = function
+			(env, var_name, k_cur, k_end) -> 
+
+				(*i_cur is the data type to insert into variable table*)
+				let i_cur = Jast.JNumbert(k_cur) in 
+				(*Need to update actual value of i in the table and then update environment*)
+				let new_variables = List.filter ( fun (n, v) -> if (n = var_name) then false else true) env.drawing.variables in  
+				let updated_vars = new_variables @[(var_name, i_cur)] in 
+				let updated_drawing = {env.drawing with variables = updated_vars} in
+				let updated_env = {env with drawing = updated_drawing} in 
+
+				let fresh_env = separate_statements_s(for_statements, updated_env) in
+				let returning_env = 
+					if not (k_cur < k_end) then
+						 neg_loop(fresh_env, var_name, k_cur -. 1.0, k_end)
+					else
+						fresh_env in
+				returning_env in
+
+	    (*Process statements in the for loop*)
+		let new_env = 
+			 if (k_start <= k_end ) then
+				pos_loop (updated_env, i, k_start, k_end)
+			else
+				neg_loop (updated_env, i, k_start, k_end)
+		in
+
+		(*Put last value of i into the stored variables*)
+		let old_variables_minus_i = List.filter ( fun (n, v) -> if (n = i) then false else true) store_old_vars in  
+		let old_vars_with_update_i = old_variables_minus_i @[(i, i_end)] in 
+
+		let updated_drawing = {new_env.drawing with variables = old_vars_with_update_i} in
+		let updated_env = {new_env with drawing = updated_drawing} in 
+		updated_env
+
 	| Sast.Return(expr) -> 
 		let (new_env, eval_expr) = proc_expr env expr in
 		let return_val = eval_expr in
