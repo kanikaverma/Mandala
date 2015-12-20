@@ -36,8 +36,11 @@ do
   # EXECUTION 
   java $exe
 
-  # COMPARING
-  diff=$(python $compare output.jpg Program.jpg)
+  #COMPARING
+  j_filename=${m_file%.*}
+  j_filename=${j_filename##*/}$".java"
+  compareTo=$"solutions/"$j_filename
+  diff=$(python $compare Program.java $compareTo)
 
   if [[ $diff -eq 0 ]]; then
     echo "Output Correct: [y]"
@@ -48,7 +51,7 @@ do
   # CLEANING 
   rm -f *.proc
   mv Turtle.java Turtle.java.keep
-  rm -f *.java
+  #rm -f *.java
   mv Turtle.java.keep Turtle.java
   rm -f *.class
   cd ..

@@ -1,0 +1,916 @@
+commit 1c131f3dd34e02499add3b39cfa332d5d0ef5286
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sat Dec 19 19:49:26 2015 -0500
+commit 9db103d2c0ec0edab567bf10b284cd633cc165f2
+Merge: a820594 346ac05
+Author: Edo Roth <enr2116@columbia.edu>
+Date:   Sat Dec 19 17:48:51 2015 -0500
+commit 346ac053f6d766c1ddbaf644ae7efe9f42c3c64f
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Dec 19 21:47:14 2015 +0000
+commit a820594374399431fd21c71fc3327dcd75f1a776
+Merge: 84ab4b0 1c08669
+Author: Edo Roth <enr2116@columbia.edu>
+Date:   Sat Dec 19 15:17:30 2015 -0500
+commit 1c086693d0cb716dee2385f2e0550ee398ce8f74
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Dec 19 20:15:18 2015 +0000
+commit 5411108bee4a083830a7df50853b916e95148b9f
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Dec 19 20:14:39 2015 +0000
+commit 24a0ee8d8a9f12470b3ce17b83ce46cc52e0a962
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Dec 19 16:21:33 2015 +0000
+commit 84ab4b0c1b380e53a7ccee08f33e33994916be9b
+Merge: 4b257df 6ad43cd
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Dec 19 07:13:58 2015 +0000
+commit 4b257df85e25eec93e620f6e5ff7b7a1e1c9d8b1
+Merge: 56391be 2389df9
+Author: Edo Roth <enr2116@columbia.edu>
+Date:   Sat Dec 19 01:42:48 2015 -0500
+commit 2389df985819c2dd1c8c7e0ef6ecc7d8d39c4a32
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Dec 19 06:40:46 2015 +0000
+commit 56391be3c54cac4956947f1e61084120ecd7dd8d
+Merge: e66a6b3 a5f392a
+Author: Edo Roth <enr2116@columbia.edu>
+Date:   Sat Dec 19 01:18:35 2015 -0500
+commit a5f392abcebde76276c938b29c62e954133767b3
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Dec 19 06:17:21 2015 +0000
+commit b3cacabd8d83feae11782c13277999dbddf3335f
+Author: samw7823 <srwiener@gmail.com>
+Date:   Fri Dec 18 22:49:47 2015 -0500
+commit 369339ca2c25f6e0e2948ff6a35383ab851665cb
+Author: samw7823 <srwiener@gmail.com>
+Date:   Fri Dec 18 21:32:49 2015 -0500
+commit 94946232276260954617d2caadd19867a190bad6
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Dec 19 01:52:26 2015 +0000
+commit 9eb58f8757cede092a2770e288b844c765e830ec
+Author: samw7823 <srwiener@gmail.com>
+Date:   Fri Dec 18 19:50:36 2015 -0500
+commit 6ad43cd3df9eff54b2f3670cffa9d286026bd87c
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Dec 19 00:44:35 2015 +0000
+commit 9e4d8f0c8079197645da6b74228ee013480a232f
+Author: vagrant <vagrant@precise32.(none)>
+Date:   Fri Dec 18 22:59:32 2015 +0000
+commit e66a6b308aac659e284c1af2a174c8b616dbb3f9
+Merge: 60c8cf9 922274d
+Author: hvemuri <hv2169@columbia.edu>
+Date:   Fri Dec 18 16:20:18 2015 -0500
+commit 922274db0cddd60fea32e55d113088e13c20ad00
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Fri Dec 18 16:19:03 2015 -0500
+commit de0fd03334f3383ad8dadb8093313233213cfb9c
+Author: edoroth <edoroth@gmail.com>
+Date:   Fri Dec 18 20:18:21 2015 +0000
+commit ad71f2f88e533eb7847fca878ecae325ccdcdba1
+Author: samw7823 <srwiener@gmail.com>
+Date:   Fri Dec 18 00:06:18 2015 -0500
+commit 8d2feda1998f8f463600a380de015177cd6a54b9
+Author: samw7823 <srwiener@gmail.com>
+Date:   Thu Dec 17 20:41:50 2015 -0500
+commit f7504218054c0832f8ce4bdb68f68fbe20149e57
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Dec 12 13:38:14 2015 -0500
+commit 60c8cf9b114f7102903a7535a80fc9ed4f4742cb
+Merge: 50e1ab4 eb9d763
+Author: hvemuri <hv2169@columbia.edu>
+Date:   Sat Dec 12 13:10:48 2015 -0500
+commit eb9d763cb4993339494627fc8b4930a21f79d636
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sat Dec 12 13:10:22 2015 -0500
+commit 50e1ab405803d4e3bb26286513c5680698918ab3
+Merge: ac14328 775d712
+Author: hvemuri <hv2169@columbia.edu>
+Date:   Wed Dec 9 17:17:37 2015 -0500
+commit 775d7129c402c594575943d8aa1e2eec7ec572cd
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Wed Dec 9 17:16:32 2015 -0500
+commit ac1432894b6e500b09b0a375d141b8c8ff222b27
+Merge: ed62894 02156be
+Author: Edo Roth <enr2116@columbia.edu>
+Date:   Wed Dec 9 01:21:39 2015 -0500
+commit 02156be3c223ada1cc76b577556e66f1ae4be0c7
+Author: edoroth <edoroth@gmail.com>
+Date:   Wed Dec 9 06:20:08 2015 +0000
+commit ed628943a76f843e981a1a92d65fe59506d19255
+Merge: 7be3ec3 d956d47
+Author: hvemuri <hv2169@columbia.edu>
+Date:   Tue Dec 8 21:33:41 2015 -0500
+commit d956d47ee7a2d8ad9f519a62ed013ed1a36a0035
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Tue Dec 8 21:33:03 2015 -0500
+commit 7be3ec3a756e13cece30f24d254e3df35704ad54
+Merge: 16ee1d3 bdead21
+Author: Edo Roth <enr2116@columbia.edu>
+Date:   Tue Dec 8 17:41:13 2015 -0500
+commit bdead21742dfbfdff7ba16e5472caf4be7927f35
+Author: edoroth <edoroth@gmail.com>
+Date:   Tue Dec 8 22:40:47 2015 +0000
+commit 16ee1d37661aff514d8aa78daab2a0bc71724018
+Merge: b11b916 930b7ba
+Author: Edo Roth <enr2116@columbia.edu>
+Date:   Tue Dec 8 14:09:41 2015 -0500
+commit 930b7ba3fcc73736ec6c234cb4aa4ddd4307a9f4
+Author: edoroth <edoroth@gmail.com>
+Date:   Tue Dec 8 18:48:51 2015 +0000
+commit b11b9164e934aa49940480cf9c59af007691d0e5
+Merge: 462e686 74a0131
+Author: samw7823 <samw7823@users.noreply.github.com>
+Date:   Mon Dec 7 23:16:20 2015 -0500
+commit 74a0131ad8f3b373c791631a974924dba82eb009
+Author: edoroth <edoroth@gmail.com>
+Date:   Tue Dec 8 04:03:28 2015 +0000
+commit 66402403caa71442287a3db63db6e44f74c7b5df
+Merge: 87d76a9 462e686
+Author: Edo Roth <enr2116@columbia.edu>
+Date:   Mon Dec 7 22:05:52 2015 -0500
+commit 462e6868dbaef6e99c632010d47036bd0b56a942
+Merge: 810116e be8c916
+Author: samw7823 <samw7823@users.noreply.github.com>
+Date:   Mon Dec 7 22:00:22 2015 -0500
+commit 87d76a9e8f87d898a3332bc38fca740e1df6f11b
+Author: edoroth <edoroth@gmail.com>
+Date:   Tue Dec 8 03:00:11 2015 +0000
+commit be8c916f40714959186baca7fa95542a3bb062ba
+Merge: 5e6353b 810116e
+Author: samw7823 <srwiener@gmail.com>
+Date:   Mon Dec 7 21:59:37 2015 -0500
+commit 5e6353b6f52c99680ad5712f9e94f88546c2f468
+Author: samw7823 <srwiener@gmail.com>
+Date:   Mon Dec 7 21:46:12 2015 -0500
+commit 36c614dded6accd096b3234bedfe170de6fdef5d
+Author: samw7823 <srwiener@gmail.com>
+Date:   Mon Dec 7 19:56:06 2015 -0500
+commit 9a6fb64354dffcf7ead42e895719c63399d52e36
+Author: samw7823 <srwiener@gmail.com>
+Date:   Mon Dec 7 19:37:55 2015 -0500
+commit 43a3f3734d27b624f6babf04933f3e8cc9727b11
+Author: samw7823 <srwiener@gmail.com>
+Date:   Mon Dec 7 19:31:28 2015 -0500
+commit b18682081626fb28626ccf37c54609a8539de9f2
+Author: edoroth <edoroth@gmail.com>
+Date:   Mon Dec 7 06:40:18 2015 +0000
+commit a953af9d8f82fee5e3f78e999072ce91cf35f7c2
+Author: edoroth <edoroth@gmail.com>
+Date:   Mon Dec 7 06:24:59 2015 +0000
+commit 810116e51273595423a75a3375615aa5137c64bc
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sun Dec 6 21:59:11 2015 -0500
+commit 74913516f273676d44fe604945948ce02ac4655f
+Merge: 5deffd1 4a52b51
+Author: samw7823 <samw7823@users.noreply.github.com>
+Date:   Sun Dec 6 20:57:44 2015 -0500
+commit 4a52b519e0cee8b7b41d8b63a58b153a94bf156c
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sun Dec 6 20:57:10 2015 -0500
+commit c2552c78ef3b5001325bd01fabd95ad7f33a225c
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Dec 5 22:57:04 2015 -0500
+commit 00f23d69c411d2094a91a8ce7af807fef04d9a8d
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Dec 5 22:48:42 2015 -0500
+commit 513580e4297674dc9b65758830a1202270ae1d4f
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Dec 5 21:42:04 2015 -0500
+commit dd2dbd6346fab31b5489b5cc032d532181a1afc5
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Dec 5 20:28:06 2015 -0500
+commit b26d2e2d95123e3d8981ff2c7de178ce490dae34
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Dec 5 17:38:59 2015 -0500
+commit cf13a8628f67075f764b958ac7b66672a0637386
+Merge: a7145dc 5deffd1
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Dec 5 17:37:10 2015 -0500
+commit 5deffd1213d4b3eb79a996cec4aa4b561c7b26f1
+Merge: 561e83c a62ebc2
+Author: samw7823 <samw7823@users.noreply.github.com>
+Date:   Fri Dec 4 17:06:50 2015 -0500
+commit a62ebc2189e347a1bc956f857af6504297a2358c
+Author: samw7823 <srwiener@gmail.com>
+Date:   Fri Dec 4 17:03:55 2015 -0500
+commit a7145dc488898d6b5a46ae08a34319858582fc62
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Fri Dec 4 13:48:00 2015 -0500
+commit c7057fd05b0d9aa43691dfabd5d7a52ba5bbd8fc
+Author: samw7823 <srwiener@gmail.com>
+Date:   Thu Nov 26 09:23:03 2015 -0500
+commit 561e83cb69037c336c0710fe2af4e612491e2572
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Tue Nov 24 20:45:16 2015 -0500
+commit 003d9c425b6f82894ac0e6f0e7b1afa543893c9d
+Merge: 24bc67d ebba968
+Author: samw7823 <samw7823@users.noreply.github.com>
+Date:   Tue Nov 24 19:48:24 2015 -0500
+commit ebba9685ca483e9742db3a852575d7e28277984b
+Author: samw7823 <srwiener@gmail.com>
+Date:   Tue Nov 24 19:44:19 2015 -0500
+commit 24bc67d8178693289ed8ed6444e7722cdaabec05
+Merge: 30b870e a99e361
+Author: hvemuri <hv2169@columbia.edu>
+Date:   Tue Nov 24 19:24:39 2015 -0500
+commit a99e3610584b489445fcb8e79efbdfc562ef5615
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Tue Nov 24 19:23:57 2015 -0500
+commit 30b870ebd61a10c9ed6e06218a74ce621f85b5e2
+Merge: 2bdce2b b6c8470
+Author: samw7823 <samw7823@users.noreply.github.com>
+Date:   Sat Nov 21 19:17:14 2015 -0500
+commit b6c8470c5f720cf52e5bf34b6496925556b18353
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Nov 21 19:15:32 2015 -0500
+commit 2bdce2be56c8ab6dbdf8f33112780d9dca1584d0
+Merge: 06c9d9c c88912b
+Author: samw7823 <samw7823@users.noreply.github.com>
+Date:   Sat Nov 21 18:49:09 2015 -0500
+commit c88912b6645f59bb618f0bdd0c001293831a9c74
+Merge: 587fcde 06c9d9c
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Nov 21 18:48:04 2015 -0500
+commit 587fcde844184a16dc3ceca9e23f277d00f09fd9
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Nov 21 18:42:16 2015 -0500
+commit 06c9d9caf3513a0c4eeb78fef8a2c7cd90fa4352
+Merge: f5ddf15 f91ce86
+Author: Edo Roth <enr2116@columbia.edu>
+Date:   Sat Nov 21 18:22:16 2015 -0500
+commit f91ce86b63d7a625dd769029bdaafe3558d9a053
+Merge: 1242622 f5ddf15
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Nov 21 23:19:03 2015 +0000
+commit 1242622a3bf2609adb6a1926b182896ff8abbff9
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Nov 21 23:18:28 2015 +0000
+commit f5ddf151450907428d1303a930a899132af5fa60
+Merge: cf493a5 55b8695
+Author: Edo Roth <enr2116@columbia.edu>
+Date:   Sat Nov 21 18:17:44 2015 -0500
+commit 55b8695b46267cb03209f1d8d8ab03414c490525
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Nov 21 23:17:14 2015 +0000
+commit 9e51af292abcc9cbc4fc65a1a197c209db9c636d
+Merge: 17e8837 cf493a5
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Nov 21 23:08:45 2015 +0000
+commit cf493a537519d2b63512e2476e942331e17d0aaf
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Nov 21 23:01:51 2015 +0000
+commit 7aaf9db9a73518e85151195adecdde24daee7c6b
+Merge: ba23ac5 1612874
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Nov 21 22:57:37 2015 +0000
+commit ba23ac5723b3d58165993e20798d3d2a8e283da5
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Nov 21 22:57:15 2015 +0000
+commit 161287493ffac0ffe1913357396a91d3b9baa4c5
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sat Nov 21 17:46:12 2015 -0500
+commit 68cd0e8081fb86d38a55a240eb84cf601bc92f6e
+Merge: 9522c5a bd8e1a8
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Nov 21 17:21:38 2015 -0500
+commit bd8e1a82f3f1147176b6b2239d84e534b4bf4a17
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sat Nov 21 17:13:26 2015 -0500
+commit 8e733562f12d8c3a2414f2d6447bc7919c7a6db7
+Merge: 6a823a6 ea12f91
+Author: Edo Roth <enr2116@columbia.edu>
+Date:   Sat Nov 21 16:21:26 2015 -0500
+commit 17e8837b97dec78a10a78c21fa834fb34e218ca9
+Merge: fab66a3 6a823a6
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Nov 21 21:19:33 2015 +0000
+commit ea12f91ae98b32102a9d8a89daee2bf4874e6c75
+Author: samw7823 <srwiener@gmail.com>
+Date:   Tue Nov 17 12:16:59 2015 -0500
+commit 52c083085b09897a651291783d3648e23bff9f87
+Author: samw7823 <srwiener@gmail.com>
+Date:   Tue Nov 17 12:15:21 2015 -0500
+commit 6a823a6bab71c5513e5a078ece32f2bbbbd2a993
+Merge: 465785a 3b315f7
+Author: samw7823 <samw7823@users.noreply.github.com>
+Date:   Mon Nov 16 15:06:08 2015 -0500
+commit 3b315f7c6aefc6e2414ab2c172e615911aa3e247
+Author: vagrant <vagrant@precise32.(none)>
+Date:   Mon Nov 16 20:02:48 2015 +0000
+commit fab66a343603ef1ec7e82c6029595dc50e5b86a0
+Merge: 08eb49b 465785a
+Author: Edo Roth <enr2116@columbia.edu>
+Date:   Mon Nov 16 11:32:42 2015 -0500
+commit 9724f93d814f894fd93463cde30900845ce589cd
+Merge: dfca87f 465785a
+Author: vagrant <vagrant@precise32.(none)>
+Date:   Mon Nov 16 07:04:24 2015 +0000
+commit dfca87fa3fd50d9f5ac5aee060360770d5890fac
+Author: vagrant <vagrant@precise32.(none)>
+Date:   Mon Nov 16 07:00:47 2015 +0000
+commit 465785a64b42de4d1aa982adb55a99532b101360
+Merge: 62c40e5 7026ea8
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Mon Nov 16 02:00:21 2015 -0500
+commit 62c40e55be4e0d3057db4e30b7e7c07578c54d4c
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Mon Nov 16 02:00:08 2015 -0500
+commit 6937cecc6b7f0f8a69a66eaa594710788cdfa462
+Author: vagrant <vagrant@precise32.(none)>
+Date:   Mon Nov 16 05:54:58 2015 +0000
+commit 7026ea8fc3115c7d2d714be6a9f94c910ddf47c9
+Merge: a200197 08eb49b
+Author: Edo Roth <enr2116@columbia.edu>
+Date:   Mon Nov 16 00:03:59 2015 -0500
+commit a2001976cb6334b7d762f965c0be4587d5466970
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sun Nov 15 23:13:27 2015 -0500
+commit 9522c5a1ba7280aced8d3d3c7c9e8760d00d6f83
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sun Nov 15 23:12:29 2015 -0500
+commit 683ceeb3f2afeea68a9b0fd76d44ef8c79c7a81f
+Merge: 44965c9 a7ab2f7
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sun Nov 15 22:54:30 2015 -0500
+commit 44965c98f669f5941eb841f9885456f958b1a00e
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sun Nov 15 22:54:09 2015 -0500
+commit a7ab2f7e00f9184a477f3dc1f5a78260bf07b25f
+Merge: b2dbe06 6d617ea
+Author: samw7823 <samw7823@users.noreply.github.com>
+Date:   Sun Nov 15 22:51:20 2015 -0500
+commit 6d617ea8235e8e32d4bbe6b50460f13128277250
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sun Nov 15 22:50:48 2015 -0500
+commit b2dbe069312fd7949f41f7b9e2b3a8a532eb3fa5
+Merge: 817821e 4092ec7
+Author: samw7823 <samw7823@users.noreply.github.com>
+Date:   Sun Nov 15 22:08:43 2015 -0500
+commit 4092ec7604a9ec870ed4e5d248d4e18bc701b982
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sun Nov 15 22:08:20 2015 -0500
+commit 12b74fc7372bd64846a1e83b6a2453cfd72ce78c
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Sun Nov 15 21:49:49 2015 -0500
+commit 817821ee70613f2bea9e43e5078f92f833092f3e
+Merge: c439653 a9c84e5
+Author: samw7823 <samw7823@users.noreply.github.com>
+Date:   Sun Nov 15 21:35:56 2015 -0500
+commit 08eb49bfb5a803de0ac8c8ef9fbfbb6f7a79e86c
+Author: edoroth <edoroth@gmail.com>
+Date:   Mon Nov 16 02:30:20 2015 +0000
+commit a9c84e5624c7b459aa08d21cf89b1dca2e9199ea
+Merge: a4f0cae c439653
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sun Nov 15 21:29:14 2015 -0500
+commit c439653c7d31de0df37fdf933fedfe9ecaf9a510
+Merge: 36a5be7 c0dc9fb
+Author: Edo Roth <enr2116@columbia.edu>
+Date:   Sun Nov 15 21:29:05 2015 -0500
+commit c0dc9fb8379e074f925359eb93bcbad40b9e5d7f
+Author: edoroth <edoroth@gmail.com>
+Date:   Mon Nov 16 02:27:07 2015 +0000
+commit a4f0caee67841aaf8b397fe584bcd0b5953bbfdd
+Merge: 1f9fc68 36a5be7
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sun Nov 15 21:26:02 2015 -0500
+commit 1f9fc684a8c486ee8fbdf64d7100afb38905b4a6
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sun Nov 15 21:25:52 2015 -0500
+commit 36a5be7e1ec63e828b0acfcebc6e9b34b2478ef3
+Merge: c1a4a83 83f747a
+Author: Edo Roth <enr2116@columbia.edu>
+Date:   Sun Nov 15 21:25:10 2015 -0500
+commit 83f747a781b78c9fb79e70975df0aa4c68548a23
+Author: edoroth <edoroth@gmail.com>
+Date:   Mon Nov 16 02:24:35 2015 +0000
+commit c1a4a83405ba689ad4592811d84c0a5e6a615932
+Merge: dbfbe39 d1c85bf
+Author: samw7823 <samw7823@users.noreply.github.com>
+Date:   Sun Nov 15 21:10:38 2015 -0500
+commit d1c85bf24cc4aeee4e1765758c0bd0efea29413f
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sun Nov 15 21:09:58 2015 -0500
+commit dbfbe39654fcc027a5dfac00a0c3a1cc578d2bcd
+Merge: 4982c31 d9aed18
+Author: samw7823 <samw7823@users.noreply.github.com>
+Date:   Sun Nov 15 20:50:59 2015 -0500
+commit d9aed1839972919652a28ee44dc17445d8fac6fb
+Merge: e155599 4982c31
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sun Nov 15 20:48:38 2015 -0500
+commit e155599557b9d19fde85d43c6e64015a3b70f223
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sun Nov 15 20:48:17 2015 -0500
+commit 4982c31446c399dbafacec3b38331a298418abfc
+Merge: 3ecea5e 5054485
+Author: hvemuri <hv2169@columbia.edu>
+Date:   Sun Nov 15 20:11:20 2015 -0500
+commit 505448575f786f11c33320b24d2530e0d3bf9b34
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sun Nov 15 20:10:54 2015 -0500
+commit 3ecea5e90b0c05369598bff1e13f14b62da0781d
+Merge: bb65142 a1d90a8
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Sun Nov 15 19:50:44 2015 -0500
+commit a1d90a8f137e4d7d64a4be066db45d6bf280579e
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Sun Nov 15 19:49:55 2015 -0500
+commit bb65142ebb70af27c448848db76703e76e582ff3
+Merge: 8fb8395 ad2bd3e
+Author: hvemuri <hv2169@columbia.edu>
+Date:   Sun Nov 15 14:45:13 2015 -0500
+commit ad2bd3e9f6b4d9d70504e741b64c809ec2c58c63
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sun Nov 15 14:44:44 2015 -0500
+commit 8fb839581d9e9a7d9fd0f31ecbd733c2528e8d81
+Merge: cfe7673 ef0500b
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Sun Nov 15 04:26:05 2015 -0500
+commit ef0500bd9d40f63661b6b5f91e70a5ca686390a9
+Merge: 9554d9d cfe7673
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Sun Nov 15 04:23:25 2015 -0500
+commit 9554d9d49eec42ad67df4e7534a374a24247117d
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Sun Nov 15 03:49:32 2015 -0500
+commit 8e6903e797be87ff3d4bf892b329542184385157
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Sun Nov 15 03:21:50 2015 -0500
+commit d3af35849de5dd16fbb31ae8adb8f9b9cfad79ba
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Sun Nov 15 02:38:34 2015 -0500
+commit cfe76731b28844c924bba3baf34912b9d463e844
+Merge: 2ffdfc7 d86907e
+Author: Edo Roth <enr2116@columbia.edu>
+Date:   Sun Nov 15 02:35:24 2015 -0500
+commit d86907e5df3d2bd6531160535bd997d31a4eaa17
+Author: edoroth <edoroth@gmail.com>
+Date:   Sun Nov 15 07:24:11 2015 +0000
+commit 2ffdfc7377c297684f1a439f9706eafd01a84bab
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sun Nov 15 02:20:08 2015 -0500
+commit a40b3f223951278bd8d7dc00e02028b6fdd058a0
+Merge: 8d16c99 1a72312
+Author: hvemuri <hv2169@columbia.edu>
+Date:   Sun Nov 15 02:17:20 2015 -0500
+commit 1a723128461e11b0403b98105513d4fe08452011
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sun Nov 15 02:17:02 2015 -0500
+commit 457b582961ab8f43c009be87964cb1555d1c61fe
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sun Nov 15 02:15:02 2015 -0500
+commit 8d16c998b86a61d2afd253e140c508dba6258ee8
+Merge: d5aedf7 fe45cbe
+Author: hvemuri <hv2169@columbia.edu>
+Date:   Sun Nov 15 01:29:06 2015 -0500
+commit fe45cbe7cf4def90549dcf002cccad55e64fc839
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sun Nov 15 01:25:13 2015 -0500
+commit 2747c2a0caea8dfbc991f58bbafc581ffbcc988f
+Author: edoroth <edoroth@gmail.com>
+Date:   Sun Nov 15 05:43:53 2015 +0000
+commit 93c165c3cff875010810b2eb352112a7d58498e5
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Sun Nov 15 00:00:22 2015 -0500
+commit 8e0cb935ef0dcc1b3f8d1411f44d737e81edca7d
+Author: edoroth <edoroth@gmail.com>
+Date:   Sun Nov 15 04:09:38 2015 +0000
+commit d5aedf7794a379c9faa4be5ded0e56e573e62efd
+Author: edoroth <edoroth@gmail.com>
+Date:   Sun Nov 15 00:23:26 2015 +0000
+commit 555d50a0e23b063947deb20022605870112a95de
+Author: edoroth <edoroth@gmail.com>
+Date:   Sun Nov 15 00:21:59 2015 +0000
+commit 8128199cc8d674ec26eab133656687fdd45cba2c
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sat Nov 14 18:46:08 2015 -0500
+commit 7a210345da765e87cc832e3b97e9d115fc6f69e7
+Merge: eaeda0b 8bf66ac
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Nov 14 11:38:27 2015 -0500
+commit eaeda0bfdf9989ab99d09d36b2fb0b2a7862dfb3
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Nov 14 11:37:43 2015 -0500
+commit 8bf66acc80b83cb4df1338d199560f8425e8875b
+Merge: 0f7254a de2ec1f
+Author: Edo Roth <enr2116@columbia.edu>
+Date:   Sat Nov 14 00:21:51 2015 -0500
+commit de2ec1f49841021512cd80d58250d3f05f321f44
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Nov 14 04:55:56 2015 +0000
+commit 7fd04a54c46f3764640c5cd08b8e640a31864f05
+Merge: 61eb0e4 0f7254a
+Author: samw7823 <srwiener@gmail.com>
+Date:   Fri Nov 13 23:38:20 2015 -0500
+commit 0f7254a0c45654681d4e3b2731b5406e0da71898
+Merge: 2e94021 4d653e4
+Author: Edo Roth <enr2116@columbia.edu>
+Date:   Fri Nov 13 23:38:06 2015 -0500
+commit 4d653e4e064c4770f95c2b531619de02a5bdaf60
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Nov 14 04:37:39 2015 +0000
+commit 61eb0e4dad305c55968c9c210252d26743f98dd2
+Author: samw7823 <srwiener@gmail.com>
+Date:   Fri Nov 13 23:15:52 2015 -0500
+commit 2e940213da398af775c095b3bf0408e90d8a43ff
+Merge: bbb2620 cfabd9a
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Nov 14 01:14:13 2015 +0000
+commit cfabd9af0ba9ab81639d3cbc954cdce23d309140
+Merge: 7a9ec3d 45a24a0
+Author: samw7823 <samw7823@users.noreply.github.com>
+Date:   Fri Nov 13 17:58:00 2015 -0500
+commit 45a24a08c830b30af163e30c7c2645c7906f34df
+Merge: 5519db0 7a9ec3d
+Author: samw7823 <srwiener@gmail.com>
+Date:   Fri Nov 13 17:56:54 2015 -0500
+commit 5519db06579078410351e89a5e747087d87a1783
+Author: samw7823 <srwiener@gmail.com>
+Date:   Fri Nov 13 17:55:12 2015 -0500
+commit 7a9ec3d39f15a522dcd4f82bb8cf8a84a3b0a24c
+Merge: 36930b1 97272dc
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Fri Nov 13 17:32:24 2015 -0500
+commit 97272dc41b282ad710f413fdf51375d7b9d54a8a
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Fri Nov 13 17:31:08 2015 -0500
+commit 36930b13336dedeb0bb214c5467e71d15d2fe240
+Merge: a4459eb caa58d1
+Author: samw7823 <samw7823@users.noreply.github.com>
+Date:   Fri Nov 13 17:19:38 2015 -0500
+commit caa58d1103f2033eaa02063f17e47a3232982da0
+Author: samw7823 <srwiener@gmail.com>
+Date:   Fri Nov 13 17:18:49 2015 -0500
+commit efa4325a805e08b5eabf283ae404532a6f7f3c9e
+Author: samw7823 <srwiener@gmail.com>
+Date:   Fri Nov 13 15:12:26 2015 -0500
+commit a4459ebc17994f85070b1f30794ca8d4a525896a
+Merge: 3b138c2 8cfd595
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Fri Nov 13 14:46:54 2015 -0500
+commit 8cfd5959ff0ae89ff752330e901bb83f569d722f
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Fri Nov 13 14:45:05 2015 -0500
+commit bbb2620ee2ed1807426ab4442038d71638e005c0
+Merge: 0b34689 3b138c2
+Author: edoroth <edoroth@gmail.com>
+Date:   Fri Nov 13 19:38:41 2015 +0000
+commit 3b138c20052637504931fe77a8af7d79ea3f49d5
+Merge: 76d8d3b bfa474f
+Author: samw7823 <samw7823@users.noreply.github.com>
+Date:   Fri Nov 13 14:11:57 2015 -0500
+commit bfa474ffae6eb508fd52635d88db20bbc85d0be5
+Author: samw7823 <srwiener@gmail.com>
+Date:   Fri Nov 13 14:10:53 2015 -0500
+commit 76d8d3bfd93fbfd8909f17ca526cf391796853f5
+Merge: 8260d2c 63cbbf5
+Author: hvemuri <hv2169@columbia.edu>
+Date:   Thu Nov 12 22:31:22 2015 -0500
+commit 63cbbf5e5b3dab1026e8d89ef668ecec3e2715b9
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Thu Nov 12 22:30:58 2015 -0500
+commit 8260d2c606d368d8a3a62a7b6d43970c20311f76
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Thu Nov 12 22:12:47 2015 -0500
+commit 16900d39bedcde55bd89173b68852be34a8c3ab5
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Thu Nov 12 21:48:03 2015 -0500
+commit 6fe2aa25f379ca74add020b4972d39d22b0298fc
+Merge: 974d6f8 2ff7897
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Thu Nov 12 20:17:43 2015 -0500
+commit 2ff78970c11ac85f48981cbd02aba17c97a959fe
+Merge: e5810b1 b15eae0
+Author: samw7823 <samw7823@users.noreply.github.com>
+Date:   Thu Nov 12 20:16:56 2015 -0500
+commit 974d6f8d7465a90adda085f14c255c6ba07fb6d7
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Thu Nov 12 20:16:22 2015 -0500
+commit b15eae062c5654015f442f755120837f0fb4433c
+Merge: 110387b e5810b1
+Author: samw7823 <srwiener@gmail.com>
+Date:   Thu Nov 12 20:16:05 2015 -0500
+commit 110387b84b6009fd4923fafb234d03f5041065b4
+Author: samw7823 <srwiener@gmail.com>
+Date:   Thu Nov 12 20:16:00 2015 -0500
+commit e5810b1264ae01e4a1e309dbde32f31d01d0643a
+Merge: fdfa3d8 829504d
+Author: samw7823 <samw7823@users.noreply.github.com>
+Date:   Thu Nov 12 20:13:35 2015 -0500
+commit 829504dc69edab3c5e66afb48a316d56b9cf55de
+Merge: f538f4b fdfa3d8
+Author: samw7823 <srwiener@gmail.com>
+Date:   Thu Nov 12 20:12:48 2015 -0500
+commit f538f4b8edad6bc3dc4a966a9696d05f7e51d9c0
+Author: samw7823 <srwiener@gmail.com>
+Date:   Thu Nov 12 20:12:42 2015 -0500
+commit 0b34689a9013de45cf714faeeb294e16d6521541
+Merge: 7e4bb24 fdfa3d8
+Author: edoroth <edoroth@gmail.com>
+Date:   Fri Nov 13 00:24:19 2015 +0000
+commit fdfa3d88c7f8a9caa615deba5f708517ca6f0a98
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Thu Nov 12 18:32:44 2015 -0500
+commit 37059ce145b1761d0a079bc41aea6d63b8855033
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Wed Nov 11 02:18:16 2015 -0500
+commit 4e555c215a6cb9dc81bbf09ad2f69a6ab0c00a62
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Tue Nov 10 15:15:54 2015 -0500
+commit ad9d0451f43fc7b300353339700cc178afb50c5b
+Author: edoroth <edoroth@gmail.com>
+Date:   Tue Nov 10 18:10:46 2015 +0000
+commit 7e4bb2456cea548616c1dfc22b37b08353f2bd48
+Merge: 4e02b81 e2d9c8a
+Author: Edo Roth <enr2116@columbia.edu>
+Date:   Tue Nov 10 12:47:19 2015 -0500
+commit e2d9c8a684b3d52730772b6b0b55a2a8e1901d61
+Author: edoroth <edoroth@gmail.com>
+Date:   Tue Nov 10 17:32:36 2015 +0000
+commit 4b0b71f9fdcf92cfcc41578a59a65f3716c64a13
+Merge: 2688676 4e02b81
+Author: edoroth <edoroth@gmail.com>
+Date:   Tue Nov 10 16:05:54 2015 +0000
+commit 4e02b819d7053eabd27c522802623a7c8760db65
+Merge: 15da623 c32f6f3
+Author: hvemuri <hv2169@columbia.edu>
+Date:   Mon Nov 9 15:46:00 2015 -0500
+commit c32f6f3177bc5d1fef4f1b3beb1d63e0374b2541
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Mon Nov 9 15:45:35 2015 -0500
+commit 15da623650e7fc7252e2f2b61f10fea97bbde96f
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sun Nov 8 21:20:14 2015 -0500
+commit be519f0271c6f8df5955cd98e7c7b07743a8b341
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sun Nov 8 21:01:10 2015 -0500
+commit 84954b911ebdc738718253ace21dbef3c0c9d208
+Merge: ed3d0da 5a552b4
+Author: hvemuri <hv2169@columbia.edu>
+Date:   Sun Nov 8 20:29:52 2015 -0500
+commit ed3d0daa4f100790dc42ef68b4a63bcbf848d9da
+Merge: edffd14 41cbaa7
+Author: hvemuri <hv2169@columbia.edu>
+Date:   Sun Nov 8 20:29:13 2015 -0500
+commit 41cbaa711f17a1d711b7f74905033f393988f182
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sun Nov 8 19:29:40 2015 -0500
+commit 3503360c1583bb74d61c1ee6fb97bfb71410fa01
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sun Nov 8 17:17:38 2015 -0500
+commit 5a552b4c900766b6177c49d6b1f099e40757205e
+Merge: d1b3767 edffd14
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Nov 7 23:13:20 2015 -0500
+commit d1b3767609423333adac24fd9397c8e1f6b9fc70
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Nov 7 23:13:15 2015 -0500
+commit 26886767e05f03c8d455a214f7860bc483902cd1
+Merge: 2007746 edffd14
+Author: edoroth <edoroth@gmail.com>
+Date:   Sun Nov 8 01:02:07 2015 +0000
+commit 2007746cc65c7f2a3b69a16bc62a0b6df2eb014b
+Author: edoroth <edoroth@gmail.com>
+Date:   Sun Nov 8 01:00:42 2015 +0000
+commit edffd1492c0e63cd12f2ac851383e47e7a520e6e
+Merge: 7245130 74ef22a
+Author: hvemuri <hv2169@columbia.edu>
+Date:   Sat Nov 7 19:46:24 2015 -0500
+commit 74ef22a96e55e103ab38c0d55ef620f5b1098b74
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sat Nov 7 19:45:54 2015 -0500
+commit 0a4a9559af690025d26536174bc3dd3e797861c3
+Merge: f8136a4 7245130
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Nov 7 18:55:54 2015 -0500
+commit f8136a4f7deae48e1b979e7436096107f782247c
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Nov 7 18:55:49 2015 -0500
+commit 7245130d1f04a5b594461c9ae773a205bb1b128e
+Merge: 624f562 56f97b7
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Nov 7 23:42:47 2015 +0000
+commit 624f56282c1acd21a28ed209be8a24f3b412faec
+Author: edoroth <edoroth@gmail.com>
+Date:   Sat Nov 7 23:42:25 2015 +0000
+commit 56f97b746b23861dea2c7024641a63fc0703261c
+Merge: e3d2315 e463971
+Author: hvemuri <hv2169@columbia.edu>
+Date:   Sat Nov 7 18:42:01 2015 -0500
+commit e463971b49eb081b85ab35a4e97323d3fb0d418c
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sat Nov 7 18:41:35 2015 -0500
+commit e3d2315cd132927449ec901b75e7d4bdd88b4b3c
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Nov 7 18:15:54 2015 -0500
+commit 5774fd8f9301314305ff6b99a445915d8dade851
+Merge: 0ed6070 3d94450
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Nov 7 18:12:40 2015 -0500
+commit 0ed6070e0835d56739770fbbe6c0baa999ddfe8c
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Nov 7 18:12:34 2015 -0500
+commit 3d9445073eb211b8ffb23ea9ca5f3a71ac35ecbb
+Merge: 76d424e 911284d
+Author: hvemuri <hv2169@columbia.edu>
+Date:   Sat Nov 7 18:11:25 2015 -0500
+commit 911284d0a23a9f55f084bab7056b5eb492223f6a
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sat Nov 7 18:10:46 2015 -0500
+commit 76d424e2992f3fb334b7734924ba8080c248e04e
+Merge: c78bc78 2ad066e
+Author: hvemuri <hv2169@columbia.edu>
+Date:   Sat Nov 7 18:05:51 2015 -0500
+commit 2ad066e4e1a7608b261a88f0ef1caf6e53631eae
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Nov 7 18:00:18 2015 -0500
+commit 66fef87a0f9734f15dcf45e554914de4c256cc28
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sat Nov 7 18:04:17 2015 -0500
+commit c78bc783c0cf23ac9f08bfa1b1289b41bcf94b15
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Nov 7 18:00:18 2015 -0500
+commit bbb1ea402864acdffeba65a75d142d024be5bf71
+Author: samw7823 <srwiener@gmail.com>
+Date:   Sat Nov 7 16:51:00 2015 -0500
+commit c52450a282af28d64f62779ba0a4c50b78bda4fa
+Author: edoroth <edoroth@gmail.com>
+Date:   Fri Nov 6 20:26:26 2015 +0000
+commit 2fa506f0934a8d66817f2f50ba1d286fe29eb00b
+Author: edoroth <edoroth@gmail.com>
+Date:   Fri Nov 6 19:21:05 2015 +0000
+commit 8651b2a660d8e91e0e1189c9809a477363996d3a
+Author: edoroth <edoroth@gmail.com>
+Date:   Fri Nov 6 18:38:12 2015 +0000
+commit f347e3fd06805e6b90ab4a72d36312e234c3a4aa
+Author: vagrant <vagrant@precise32.(none)>
+Date:   Fri Nov 6 16:57:47 2015 +0000
+commit 1b5e7f60f8f514d31fd40b92a3d9af64db1fef06
+Merge: 8d6aa92 a966cc6
+Author: samw7823 <srwiener@gmail.com>
+Date:   Thu Nov 5 21:59:40 2015 -0500
+commit 8d6aa926b18625df9aba7e3658d3b422ead38eaf
+Author: samw7823 <srwiener@gmail.com>
+Date:   Thu Nov 5 21:59:36 2015 -0500
+commit a966cc6c5b70554ad49a81a30f83730b0619ca99
+Merge: 3432ebb 962a224
+Author: edoroth <edoroth@gmail.com>
+Date:   Fri Nov 6 02:18:37 2015 +0000
+commit 3432ebbd46f39c52bf2c0d6bf77bd6d16af06762
+Author: vagrant <vagrant@precise32.(none)>
+Date:   Fri Nov 6 02:17:08 2015 +0000
+commit 962a224f87beada9197bf62e20540aca59036521
+Merge: bdc2a27 db2f19d
+Author: samw7823 <srwiener@gmail.com>
+Date:   Thu Nov 5 21:09:42 2015 -0500
+commit bdc2a27799b50b543f934e46cfecbc6161dac27a
+Author: samw7823 <srwiener@gmail.com>
+Date:   Thu Nov 5 21:08:30 2015 -0500
+commit db2f19d11e362fd513fe33174412e7f69bed912a
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Thu Nov 5 19:52:22 2015 -0500
+commit 22b3b4a3f1c705938e9b8194fcaff6b9fc47b7ea
+Author: samw7823 <srwiener@gmail.com>
+Date:   Wed Nov 4 00:19:19 2015 -0500
+commit 6f61dc627ef36eedd24dc3fcc4c07a57fd20fe4f
+Author: samw7823 <srwiener@gmail.com>
+Date:   Fri Oct 30 14:55:14 2015 -0400
+commit 3cafd760dd84a9c12b88d7c2e043b80d2ac03578
+Author: samw7823 <srwiener@gmail.com>
+Date:   Fri Oct 30 12:56:30 2015 -0400
+commit cf4857ed25383fc2f052de5d515087762471f59b
+Author: samw7823 <srwiener@gmail.com>
+Date:   Fri Oct 30 12:46:25 2015 -0400
+commit f83caf458912f787ef547974737fa62b10fa17c4
+Merge: b78dbe7 82ffdd3
+Author: samw7823 <srwiener@gmail.com>
+Date:   Wed Oct 28 19:17:54 2015 -0400
+commit b78dbe71b277ee52de4431d1d105c3cf75222e52
+Author: samw7823 <srwiener@gmail.com>
+Date:   Wed Oct 28 19:16:29 2015 -0400
+commit 82ffdd338478f597f08c657a41eb1f926485464a
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Tue Oct 27 00:12:27 2015 -0400
+commit 0497088e50c10ae530e54ec2ba47ec106b996a12
+Merge: 5d9a7a6 3eac592
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Tue Oct 27 00:09:50 2015 -0400
+commit 5d9a7a634bcd7fb25323997a8fb5417a975c216e
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Tue Oct 27 00:08:51 2015 -0400
+commit 3eac59245ec72e7ccf90c3ab2b49f7cbd16677c6
+Author: edoroth <enr2116@columbia.edu>
+Date:   Mon Oct 26 23:41:26 2015 -0400
+commit fe0cc4c0cf3bbb7a3403d6f7236da14c2ebc2d61
+Author: edoroth <enr2116@columbia.edu>
+Date:   Mon Oct 26 23:41:01 2015 -0400
+commit f07d813dcc9fdb08acdb3144a774d26249929610
+Author: samw7823 <srwiener@gmail.com>
+Date:   Mon Oct 26 20:34:46 2015 -0400
+commit 95f5ae3b8d7d82dc34cbf8ce7611f7c5b4eca7a6
+Author: samw7823 <samw7823@users.noreply.github.com>
+Date:   Sun Oct 25 22:18:12 2015 -0400
+commit 59a0fbd0a3d7ff5f2d5af9f9751b297a62b51384
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sun Oct 25 21:44:37 2015 -0400
+commit 9f2fac9801f62184f97fa63b9f839ee391f6c692
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sun Oct 25 21:22:25 2015 -0400
+commit 03d2b3002b591d505c353aed76e841187980f689
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sun Oct 25 21:20:38 2015 -0400
+commit c9563c08115caece197890abf552c4871f56e2d0
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sun Oct 25 21:17:28 2015 -0400
+commit 580d20b9aa5eed0e2d73ff3594fd39bbc99684bc
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Sun Oct 25 20:41:04 2015 -0400
+commit b3a50cf947761e12d641fea83e7a5ccd8e2053de
+Merge: 4426954 ec0fff4
+Author: samw7823 <srwiener@gmail.com>
+Date:   Fri Oct 23 14:56:49 2015 -0400
+commit 44269542cdf4bb04408adea0c41ee06fc810ab4e
+Author: samw7823 <srwiener@gmail.com>
+Date:   Fri Oct 23 14:56:35 2015 -0400
+commit ec0fff4f0382f2478eb5d94c839fd3bae9e94059
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Fri Oct 23 14:23:13 2015 -0400
+commit ff37f28dc7c00d52faab235c3fe1ae998ae0b055
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Thu Oct 22 16:24:18 2015 -0400
+commit 2911e6a8f7d98d39f749b0b46301a908d10d6d2a
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Thu Oct 22 14:26:12 2015 -0400
+commit d112603d7912079ef92ec05378b8c5d1e1bc9c94
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Thu Oct 22 03:04:04 2015 -0400
+commit 07839659931cee049972cefbf88bf60c2e900f2f
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Wed Oct 21 21:26:06 2015 -0400
+commit c8568b024e6fed5308dd1ee36ac659ce02721a89
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Wed Oct 21 21:02:13 2015 -0400
+commit efff97feaffa88c2a474bdcb49275823506dcee3
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Wed Oct 21 20:49:16 2015 -0400
+commit 5632659e75b67658325408a85f7a7ddd450f3808
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Wed Oct 21 16:20:57 2015 -0400
+commit 16b527927dc50681573d015ef0ecd685f2e699d0
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Wed Oct 21 15:48:31 2015 -0400
+commit 94dc21cc16117b2bf3756c815480239bb85f6ed6
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Wed Oct 21 01:15:34 2015 -0400
+commit 47e7f00a4e9801f75d58cb3a5c64cf9cc8e79a88
+Merge: dea149e 2bf2cd7
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Tue Oct 20 21:20:15 2015 -0400
+commit dea149e42ba11a7a88ff204eb4accc7624adfcc3
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Tue Oct 20 21:20:04 2015 -0400
+commit 2bf2cd78e461b8c8863b9bf4531078813452650b
+Merge: 1942b03 75b2da7
+Author: hvemuri <hv2169@columbia.edu>
+Date:   Tue Oct 20 21:04:15 2015 -0400
+commit 75b2da77e28c8b28447d31b27eb14ede81c87025
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Tue Oct 20 21:03:20 2015 -0400
+commit 1942b0389cc96dba6b6bfc333ec5fa6019a37d16
+Merge: 3ec8ec3 a4c2b4b
+Author: hvemuri <hv2169@columbia.edu>
+Date:   Mon Oct 19 02:22:39 2015 -0400
+commit a4c2b4b56c5620f6197f4409377220d2fb9b0c0f
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Mon Oct 19 02:20:44 2015 -0400
+commit 3ec8ec32d717dac862cb53ca5988c97b7e9f63ae
+Author: edoroth <enr2116@columbia.edu>
+Date:   Sun Oct 18 15:14:23 2015 -0400
+commit 186929285d5e082fd19e0f66fdaf3850531cd7e8
+Author: edoroth <enr2116@columbia.edu>
+Date:   Fri Oct 16 16:41:44 2015 -0400
+commit 42d0b2e1d45aab1d2834773b9ab8e01a539a119a
+Merge: e7e3cbf 8e1257d
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Wed Sep 30 17:01:38 2015 -0400
+commit e7e3cbfb4d86b5e5d116f375a175587c4336b64a
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Wed Sep 30 17:01:10 2015 -0400
+commit 8e1257dfaecfe45b959488be4a64952d138cdafc
+Merge: 5ca89ed 351f4a4
+Author: hvemuri <hv2169@columbia.edu>
+Date:   Mon Sep 21 04:00:43 2015 -0400
+commit 351f4a4bc6a2fed08efac67ce44ff1030f438aae
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Mon Sep 21 03:59:46 2015 -0400
+commit 5ca89ed06b5748d65a16cf5f61efc99fbbd0e73b
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Mon Sep 21 03:58:13 2015 -0400
+commit c7371def82d7fc3d5c49d3a744b2f9caa6dc9876
+Author: Harsha Vemuri <hv2169@columbia.edu>
+Date:   Mon Sep 21 03:55:11 2015 -0400
+commit 939098830d10775fc03eba5f69a3df524ed2c504
+Author: Kanika Verma <vermakanika@hotmail.com>
+Date:   Mon Sep 21 00:40:51 2015 -0400
