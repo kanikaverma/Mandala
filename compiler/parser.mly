@@ -41,7 +41,7 @@ decls:
   | decls stmt                                               { ($2 :: fst $1), snd $1 }
 
 fdecl:
-  DEF any_id ID LPAREN formals_opt RPAREN COLON LBRACE stmt_list RBRACE
+  DEF any_id ID LPAREN formals_opt RPAREN COLON LBRACE stmt_list RBRACE SEMI
     {{ 
       fname = $3;         
       returntype = $2;    
