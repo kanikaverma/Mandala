@@ -46,7 +46,7 @@ let find_variable (scope: symbol_table) name=
 		List.find (fun (s,_) -> s=name) scope.variables
  
 	(* with Not_found -> try List.find (fun (s, _) -> s=name) scope.parent.variables*) 
-	with Not_found -> raise (Error ("Semantic not finding variable in lookup table"^name))
+	with Not_found -> raise (Error ("Semantic not finding variable in lookup table "^name))
 		(*	Some(parent)-> find_variable parent name
 		| _ -> raise (Error("THIS IS NOT FOUND "^name)) *)
 
@@ -342,6 +342,7 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sm
 		let new_env = add_to_var_table (env, name, typ) in 
 		(Sast.Layer({skind = typ; svname = name;}, s_radius, s_shape, s_count, s_offset, s_angular_shift), typ, new_env)
 
+
 	(* IN AST Layer of var_decl * expr * expr * expr * expr * expr  *)
 		(* IN SASST: | Shape of svar_decl * sexpr * sexpr * sexpr * sexpr *)
 
@@ -440,6 +441,7 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sm
 
 	| Ast.Foreach(varName, countStart, countEnd, body) ->
 		(*create custom env for the scope of the for loop*)
+		let body = List.rev body in
 		let func_env=
 			{
 				var_scope = {parent = env.var_scope.parent; variables=(varName,Sast.Numbert)::env.var_scope.variables};
@@ -502,8 +504,17 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 		with [] -> (update_list, env)
 		| [stmt] -> let (new_stmt, typ, new_env) = semantic_stmt env stmt in (update_list@[new_stmt], new_env)
 		| stmt :: other_stmts ->
+			(*let x = match stmt with
+			Ast.Layer (_, _, _, _, _, _) -> raise(Error("Found a layer"))
+			| Ast.Shape(_, _, _,_, _) -> raise(Error("Found a shape"))
+			| Ast.Assign(_, _) -> raise(Error("Found an assignment"))
+			| Ast.Expr(_) -> raise(Error ("found a call yoooo"))
+			| _ -> *)
 			let (new_stmt, typ, new_env) = semantic_stmt env stmt in
+			(*LAYERPROB*)
 			separate_statements (other_stmts, new_env, update_list@[new_stmt])
+			(*in result  in x*)
+			(*LAYERPROB just want to return the separate statements line*)
 
 	(*let findReturnStmt stmtList =
 		try 

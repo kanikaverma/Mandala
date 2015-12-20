@@ -35,7 +35,7 @@ type var_decl = {
 
 type stmt =
 	| Block of stmt list
-	| Expr of expr (* commented out because we are seeing if it is necessary *)
+	| Expr of expr 
 	| Assign of var_decl * expr
 	| ArrAssign of var_decl * expr list
 	| Return of expr
