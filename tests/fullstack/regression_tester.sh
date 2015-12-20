@@ -37,7 +37,10 @@ do
   java $exe
 
   #COMPARING
-  diff=$(python $compare Program.java Expected.java)
+  j_filename=${m_file%.*}
+  j_filename=${j_filename##*/}$".java"
+  compareTo=$"solutions/"$j_filename
+  diff=$(python $compare Program.java $compareTo)
 
   if [[ $diff -eq 0 ]]; then
     echo "Output Correct: [y]"

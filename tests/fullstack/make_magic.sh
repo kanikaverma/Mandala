@@ -30,12 +30,11 @@ javac $j_file
 # EXECUTION
 java $exe 
 
-echo $filename
-filename=${filename%.*}
-echo ${filename##*/}
+j_filename=${filename%.*}
+j_filename=${j_filename##*/}$".java"
 
 # SAVE OUTPUT
-cat "Program.java" > "Expected.java"
+cat "Program.java" > $"solutions/"$j_filename
 
 # CLEANING
 rm -f *.proc

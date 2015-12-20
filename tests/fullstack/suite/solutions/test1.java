@@ -48,7 +48,7 @@ public static void drawTriangle(Turtle t, double size, double x, double y, doubl
     Turtle t = new Turtle();
     t.hide();
     t.speed(0);
-    drawCircle(t,50.,0.,0.,"blue");
+    drawCircle(t,25.,0.,0.,"red");
 try {
   Thread.sleep(3000);
 } catch(InterruptedException ex) {
