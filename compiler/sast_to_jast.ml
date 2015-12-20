@@ -87,6 +87,13 @@ with [] -> env
 			
 
 
+and process_arguments  (params, l: Sast.sexpr list * string list) = match params
+			with [] -> l
+			| [param] -> let result = match param with Sast.Float_Literal(term1) -> l
+							|Sast.Id(var) -> l @ [var] in result
+			| param :: other_params -> let result = match param with Sast.Float_Literal(term1) -> l
+							|Sast.Id(var) -> l @ [var] in 
+							process_arguments (other_params, result)
 
 and proc_expr (env:environment): (Sast.sexpr -> environment * Jast.jdata_type) = function
 	Sast.Id(vname) ->
@@ -217,41 +224,42 @@ in (env, Jast.JNumbert(result))
 			(*empty out variables, store them, put in the arg variables, later add back at end (but remove arg variables)*)
 		let old_variables = env.drawing.variables in
 
-		let env_with_empty_vars = {
-			drawing = {mandala_list = env.drawing.mandala_list; variables = []; java_shapes_list = env.drawing.java_shapes_list};
+		let all_param_names = process_arguments (args, []) in
+		let only_param_variables = List.filter ( fun (n, v) -> if ( List.mem n all_param_names ) then true else false) env.drawing.variables in  
+
+		let env_with_param_vars = {
+			drawing = {mandala_list = env.drawing.mandala_list; variables = only_param_variables; java_shapes_list = env.drawing.java_shapes_list};
 			functions =  env.functions;
 		} in
-
 
 		(*should use env_with_empty_vars!!*)
  
 		(*Grab the function from its table*)
 		if ( not(fid = "draw") && not (fid = "addTo")) then (
-			let my_func_decl = find_function env_with_empty_vars fid in
+			let my_func_decl = find_function env_with_param_vars fid in
 			let my_formals = my_func_decl.sformals in
-			let new_env = match_formals(my_formals, args, env_with_empty_vars) in
+			let new_env = match_formals(my_formals, args, env_with_param_vars) in
 			let func_stmts = my_func_decl.sbody in 
 			let l = List.length func_stmts in
 			(*Need to process statements!!*)
 			let env_with_return = separate_statements_s(func_stmts, new_env) in 
 			let return_name = "return" in 
 			(*let var = find_variable env_with_return return_name in *)
-			let var = 	
-				(*try*) List.find (fun (s,_) -> s=return_name) env_with_return.drawing.variables 
-				(*with Not_found -> (
-				(*Check if return type is void*)
-					let return_typ = my_func_decl.sreturntype in
-					if (return_typ = Sast.Voidt) then 
-					("oops", Jast.JInt(5))
-					raise (Error ("Didn't find return statement for non-void function"^return_name)) ) in*)
+			(*let h = try ( List.find (fun (s,_) -> s=return_name) env_with_return.drawing.variables )
 
+			with Not_found -> (
+				let return_typ = my_func_decl.sreturntype in
+				if (return_typ = Sast.Voidt) then 
+				raise (Error ("Didn't find return statement for non-void function"^return_name)); )*)
+
+
+			let var = List.find (fun (s,_) -> s=return_name) env_with_return.drawing.variables 
 			in let (n, v) = var in
 			(*let (name , val) = List.find (fun (s,_) -> s=return_name) env_with_return.drawing.variables in *)
 			let new_env = {
 				drawing = {mandala_list = env_with_return.drawing.mandala_list; variables = old_variables; java_shapes_list = env_with_return.drawing.java_shapes_list};
 				functions =  env_with_return.functions;
 			} in
-
 			(new_env, v) )
 
 	else 
@@ -281,7 +289,7 @@ in (env, Jast.JNumbert(result))
 					(* TODO: add this and find_mandala func and change updated_current_manda let mandala_info = find_mandala new_env curr_name in *)
 					(* NOTE: Below is a series of list.Filters that are intended to do the same thing as removing an element from a list, updating 
 					that element and then adding it back to the list *)
-					 let drawn_mandalas = List.filter ( fun (m_name, m_typ) -> if (m_typ.is_draw = true) then true else false) env.drawing.mandala_list in  
+					let drawn_mandalas = List.filter ( fun (m_name, m_typ) -> if (m_typ.is_draw = true) then true else false) env.drawing.mandala_list in  
 					let false_mandalas = List.filter (fun (m_name, m_typ) -> if (m_typ.is_draw=false) then true else false) env.drawing.mandala_list in 
 					let other_mandalas = List.filter (fun (x, mandala_info) -> if (x = curr_name) then false else true) env.drawing.mandala_list in 
 
@@ -336,8 +344,7 @@ in (env, Jast.JNumbert(result))
 								get_layers (other_layers, new_env, layer_list@[new_stmt])
 							*)
 						in 
-						(* raise (Error("HELLO FIZ!!!!")); *)
-						(* let (mandala_name, actual_mandala) = find_mandala new_env update_mandala_name in *)
+
 						let (mandala_name, untyped_mandala) = find_variable env update_mandala_name in 
 						let actual_mandala = match untyped_mandala
 						with Jast.JMandalat(untyped_mandala) -> untyped_mandala
@@ -567,7 +574,7 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 		let (new_env, eval_expr) = proc_expr env assign_expr in 
 		(* now get the variable *)
 		let {skind = typ; svname = name;} = vardecl in 
-		
+
 		(* Now add the name and assignemnt to the symbol table *)
 		(*  variables: (string * jdata_type) list; *)
 		(* now check the type of the variable *)
@@ -612,7 +619,7 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 			| Jast.JColort(eval_expr) -> Jast.JColort(eval_expr)
 			| Jast.JVoid -> Jast.JVoid
 			| Jast.JArrayt -> Jast.JArrayt
-			| _ -> raise(Error("This experssion does not have a supported type here!"))
+			| _ -> raise(Error("This expression does not have a supported type here!"))
 			(* Sast.SNumber(eval_expr) -> Jast.JNumbert(eval_expr)
 			| Sast.SBoolean(eval_expr) -> Jast.JBooleant(eval_expr)
 			| Sast.SShape -> Jast.JShapet(eval_expr)
@@ -626,8 +633,12 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 			| _ -> raise(Error("Unsupported assignment found. ")) *)
 		in 
 
+		let (n,v) = try List.find (fun (s,_) -> s=name) env.drawing.variables 
+			with Not_found -> (name,get_val_and_type) in
 
-		let updated_vars = new_env.drawing.variables @[(name, get_val_and_type)] in 
+		let new_variables = List.filter ( fun (n, v) -> if (n = name) then false else true) new_env.drawing.variables in  
+
+		let updated_vars = new_variables @[(n, get_val_and_type)] in 
 		let updated_drawing = {mandala_list= new_env.drawing.mandala_list; variables = updated_vars; java_shapes_list= new_env.drawing.java_shapes_list;} 
 			in let updated_env = {drawing = updated_drawing; functions = new_env.functions} in updated_env
 
