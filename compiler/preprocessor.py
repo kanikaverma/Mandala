@@ -84,6 +84,7 @@ def process(input_file):
     stack.pop()
 
   output = StringIO(remove_semis(output))
+  output = StringIO(add_semis_to_funcs(output))
 
   return output 
 
@@ -91,7 +92,6 @@ def remove_semis(text_io):
   text = text_io.getvalue()
   in_braces = False 
   output_text = ""
-  queue = []
 
   for line in text.splitlines():
     if '{' in line:
@@ -108,6 +108,26 @@ def remove_semis(text_io):
       output_text += line
       output_text += "\n"
  
+  return output_text
+
+def add_semis_to_funcs(text_io):
+  text = text_io.getvalue()
+  in_func = False 
+  output_text = ""
+
+  for line in text.splitlines():
+    if 'Def' in line:
+      in_func = True 
+    if in_func:
+      if '}' in line:
+        in_func = False 
+    if in_func and line[-1] != '{':
+      output_text += line + ';'
+      output_text += "\n"
+    else:
+      output_text += line
+      output_text += "\n"
+
   return output_text
   
 # removes comments from the line 

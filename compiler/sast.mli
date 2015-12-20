@@ -11,6 +11,7 @@ type smndlt =
 	| Colort
 	| Integert
 	| Voidt
+	| Loopt
 
 (* RENAME SDATA_TYPE to svalue because it is really the VALUES!!!!! *)
 type sdata_type =

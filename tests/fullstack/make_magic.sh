@@ -30,8 +30,11 @@ javac $j_file
 # EXECUTION
 java $exe 
 
+j_filename=${filename%.*}
+j_filename=${j_filename##*/}$".java"
+
 # SAVE OUTPUT
-# todo
+cat "Program.java" > $"solutions/"$j_filename
 
 # CLEANING
 rm -f *.proc
