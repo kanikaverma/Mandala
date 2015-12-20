@@ -389,6 +389,8 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sm
 	(* IN AST Shape of var_decl * expr * expr * expr * expr *)
 	(* IN SAST: | Layer of svar_decl * sexpr * sexpr * sexpr * sexpr * sexpr  *)
 
+	
+
 	| Ast.Expr(expression) -> 
 		let newExpr = try
 			semantic_expr env expression 
@@ -396,15 +398,7 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sm
 			raise (Error("undefined expression"))  			(*this error should be fixed to something more relevant*)
 		in let (x, typ, ret_env)= newExpr in 
 		(Sast.Expr(x), typ, env)
-
-
-	| Ast.Return(x) -> 
-			let newExpr = try
-				semantic_expr env x 
-			with Not_found ->
-				raise (Error("Invalid return value"))  			(*this error should be fixed to something more relevant*)
-			in let (x, typ, ret_env)= newExpr in 
-			(Sast.Return(x), typ, env)
+	
 
 	(*Assign is of form var_decl*expr  *)
 	| Ast.Assign(lefthand, righthand) ->
@@ -417,12 +411,22 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sm
 		(*let lefthand {kind = typ2; vname = name2} = x *)
 		(*let (typ2, name2) =(lefthand.kind, lefthand.vname) *)
 
-		in match typ with (*Assign of svar_decl * sexpr*)
+		in let result = match typ with (*Assign of svar_decl * sexpr*)
 			 typ2 -> let new_env = add_to_var_table (env, name2, typ2) 
 				in (Sast.Assign(({skind = typ2; svname = name2}), assign_val), typ, new_env) (* check strctural equality *)
 			| _ -> raise (Error("Assignment could not be typechecked")) 
+		in result 
 
-
+	| Ast.Return(x) -> 
+		let (_, returntype) = List.find (fun (s,_) -> s="return") env.var_scope.variables in
+		let newExpr = semantic_expr env x in
+		let (x, typ, ret_env)= newExpr in 
+		let result = match typ with 
+			returntype -> (Sast.Return(x), typ, env)
+			| _ -> raise (Error("User defined function is returning something of the wrong type"))
+			(*with Not_found -> raise (Error ("User defined function has no return type")) *) 	
+		in result 
+	| _ -> raise (Error("Unable to match statement"))
 	(* 
 	let rec extract_type (scope: function_table) name = function
 		(sdata_type, string) -> (sdata_type)
@@ -508,7 +512,7 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 		let new_returntype = proc_type returntype in
 		let func_env=
 			{
-				var_scope = {parent = env.var_scope.parent; variables=[]};
+				var_scope = {parent = env.var_scope.parent; variables=[("return",new_returntype)]};
 				fun_scope = fun_empty_table_init;
 			} in 
 		(*gets list of formals in sast format, fills the func_env with the inputs in the var table*)
