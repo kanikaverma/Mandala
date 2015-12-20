@@ -4,11 +4,9 @@
 #!/bin/bash
 
 preprocessor="../../compiler/preprocessor.py"
-semantic="../../compiler/semantic.sh"
 run="../../compiler/run"
 j_file="Program.java"
 exe="Program"
-expected="Expected.java"
 warnings="../tests/fullstack/warnings.txt"
 compare="compare.py"
 
@@ -16,7 +14,6 @@ compare="compare.py"
 
 cd ../../compiler
 echo "" > $warnings 
-echo "" > $expected
 make 2> $warnings
 cd ../tests/fullstack
 
@@ -49,7 +46,6 @@ do
   fi
 
   # CLEANING 
-  echo "done"
   rm -f *.proc
   mv Turtle.java Turtle.java.keep
   rm -f *.java
