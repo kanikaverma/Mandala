@@ -25,9 +25,38 @@ let find_variable (scope: environment) name=
 	try
 		List.find (fun (s,_) -> s=name) scope.drawing.variables 
 	with Not_found -> raise (Error ("Didn't find variable in Sast_to_jast! "^name))
+let find_variable_check_return_type (scope, return_typ: environment * smndlt) name=
+	try
+		List.find (fun (s,_) -> s=name) scope.drawing.variables 
+	with Not_found -> 
+	if (not(return_typ = Sast.Voidt)) then 
+		raise (Error ("Didn't find return statement for non-void function"))
+	else
+		raise (Error("We failed"))
 let find_mandala (scope: environment) mandala_name = 
 	try List.find ( fun (str, mandala) -> str = mandala_name) scope.drawing.mandala_list
 	with Not_found -> raise (Error ("MANDALA WAS NOT FOUND IN MANDALA LIST! "^mandala_name))
+
+let rec proc_bin_expr (scope: environment):(Sast.sexpr -> Sast.sexpr)  = function
+	Sast.Float_Literal(term1) -> Sast.Float_Literal(term1)
+	| Sast.Id(var) -> 
+		let (n,v) = find_variable scope var in
+		let Jast.JNumbert(my_float) = v in
+		Sast.Float_Literal(my_float)
+	| Sast.Binop(t1, op, t2) ->
+
+		let eval_term1 = proc_bin_expr scope t1 in 
+		let eval_term2 = proc_bin_expr scope t2 in 
+		let Sast.Float_Literal(float_term_one) = eval_term1 in 
+		let Sast.Float_Literal(float_term_two) = eval_term2 in 
+
+		let result = match op 
+			with Add -> float_term_one +. float_term_two 
+			| Sub -> float_term_one -. float_term_two 
+			| Mult -> float_term_one *. float_term_two 
+			| Div -> float_term_one /. float_term_two
+
+		in Sast.Float_Literal(result)
 
 
 
@@ -121,12 +150,17 @@ and proc_expr (env:environment): (Sast.sexpr -> environment * Jast.jdata_type) =
 		in *)
 		(env, Jast.JNumbert(number_var))
 	| Sast.Binop(term1, operator, term2) ->
+
+
 		(* TODO: Finish this!!*)
 		(* (Sast.Binop(eval_term1, operator, eval_term2), typ1, env) *)
-		let (new_env, eval_term1) = proc_expr env term1 in 
-		let (new_env, eval_term2) = proc_expr env term2 in 
+		let eval_term1 = proc_bin_expr env term1 in 
+		let eval_term2 = proc_bin_expr env term2 in 
 
-		let float_term_one = match term1
+		(*let Sast.Float_Literal(term1) = eval_term1 in
+		let Sast.Float_Literal(term2) = eval_term2 in*)
+
+		let float_term_one = match eval_term1
 			with Sast.Float_Literal(term1) -> term1
 			| Sast.Id(var) -> 
 				let (n,v) = find_variable env var in
@@ -135,7 +169,7 @@ and proc_expr (env:environment): (Sast.sexpr -> environment * Jast.jdata_type) =
 			| _ -> raise(Error("Operand one is not a float literal, invalid operand "))
 		in
 
-		let float_term_two = match term2
+		let float_term_two = match eval_term2
 			with Sast.Float_Literal(term2) -> term2
 			| Sast.Id(var) -> 
 				let (n,v) = find_variable env var in
@@ -143,25 +177,6 @@ and proc_expr (env:environment): (Sast.sexpr -> environment * Jast.jdata_type) =
 				my_float
 			| _ -> raise(Error("Operand two is not a float literal, invalid operand "))
 		in
-
-
-		(* Check the values of eval_term1 and eval_term2 *)
-		(* let val_term1 = match eval_term1 
-		with Jast.JInt() *)
-		(* TODO: after figuring out what type the terms are, do the appropriate operation and return the value*)
-		(* Check if the actual operators are intergers or floats *)
-		(* Everything is a float *)
-		(* CHECK ABOUT CASTING INTEGER TO FLOAT *)
-		(* Just do math on the terms *)
-		(* Need to figure out how to extract the value from the jdata_type *) 
-		(* Match the thing with float and then match do float operations *)
-		(* let check_int_or_float = match eval_term1
-			with Jast.JNumbert(_) -> "float"
-			| Jast.JInt(_) -> "int"
-			| _ -> raise(Error("Doesn't match float or integer, so invalid. "))
-		if (check_int_or_float="float")
-			then
-				eval_result = eval_term1 +. eval_term2 *)
 		
 		let result = match operator 
 				with Add -> float_term_one +. float_term_two 
@@ -244,6 +259,7 @@ in (env, Jast.JNumbert(result))
 			(*Need to process statements!!*)
 			let env_with_return = separate_statements_s(func_stmts, new_env) in 
 			let return_name = "return" in 
+
 			(*let var = find_variable env_with_return return_name in *)
 			(*let h = try ( List.find (fun (s,_) -> s=return_name) env_with_return.drawing.variables )
 
@@ -252,9 +268,9 @@ in (env, Jast.JNumbert(result))
 				if (return_typ = Sast.Voidt) then 
 				raise (Error ("Didn't find return statement for non-void function"^return_name)); )*)
 
+			let var = find_variable_check_return_type (env_with_return, my_func_decl.sreturntype) return_name in
 
-			let var = List.find (fun (s,_) -> s=return_name) env_with_return.drawing.variables 
-			in let (n, v) = var in
+			let (n, v) = var in
 			(*let (name , val) = List.find (fun (s,_) -> s=return_name) env_with_return.drawing.variables in *)
 			let new_env = {
 				drawing = {mandala_list = env_with_return.drawing.mandala_list; variables = old_variables; java_shapes_list = env_with_return.drawing.java_shapes_list};
@@ -556,6 +572,89 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 		let layer_size = List.length let_layers_listss in 
 		(*raise (Error("HEYYYY "^ string_of_int layer_size))*)
 		new_env
+
+	| Sast.Foreach(i_var, i_start_var, i_end_var, for_statements) ->
+
+		(*Get Jdata type values for start and end points*)
+		let Sast.Id(i)= i_var in
+		let i_start =
+		match i_start_var with 
+			Sast.Float_Literal(x) -> Jast.JNumbert(x)
+			| _ -> raise(Error("Start value of this for loop is not a float")) in
+		let i_end = 
+		match i_end_var with 
+			Sast.Float_Literal(x) -> Jast.JNumbert(x)
+			| _ -> raise(Error("End value of this for loop is not a float")) in
+
+		(*Remove i from list if it was found*)
+		let new_variables = List.filter ( fun (n, v) -> if (n = i) then false else true) env.drawing.variables in  
+		(*Add i with its updated value*)
+		let updated_vars = new_variables @[(i, i_start)] in 
+		(*Storing for later*)
+		let store_old_vars = updated_vars in
+
+		(*Create environment to pass to statement processing*)
+		let updated_drawing = {env.drawing with variables = updated_vars} in
+		let updated_env = {env with drawing = updated_drawing} in 
+
+		(*Pull actual values from for loop start end end*)
+		let Sast.Float_Literal(k_start) = i_start_var in
+		let Sast.Float_Literal(k_end) = i_end_var in
+
+
+		let rec pos_loop = function
+			(env, var_name, k_cur, k_end) -> 
+
+				(*i_cur is the data type to insert into variable table*)
+				let i_cur = Jast.JNumbert(k_cur) in 
+				(*Need to update actual value of i in the table and then update environment*)
+				let new_variables = List.filter ( fun (n, v) -> if (n = var_name) then false else true) env.drawing.variables in  
+				let updated_vars = new_variables @[(var_name, i_cur)] in 
+				let updated_drawing = {env.drawing with variables = updated_vars} in
+				let updated_env = {env with drawing = updated_drawing} in 
+
+				let fresh_env = separate_statements_s(for_statements, updated_env) in
+				let returning_env = 
+					if not (k_cur > k_end) then
+						 pos_loop(fresh_env, var_name, k_cur +. 1.0, k_end)
+					else
+						fresh_env in
+				returning_env in
+
+		let rec neg_loop = function
+			(env, var_name, k_cur, k_end) -> 
+
+				(*i_cur is the data type to insert into variable table*)
+				let i_cur = Jast.JNumbert(k_cur) in 
+				(*Need to update actual value of i in the table and then update environment*)
+				let new_variables = List.filter ( fun (n, v) -> if (n = var_name) then false else true) env.drawing.variables in  
+				let updated_vars = new_variables @[(var_name, i_cur)] in 
+				let updated_drawing = {env.drawing with variables = updated_vars} in
+				let updated_env = {env with drawing = updated_drawing} in 
+
+				let fresh_env = separate_statements_s(for_statements, updated_env) in
+				let returning_env = 
+					if not (k_cur < k_end) then
+						 neg_loop(fresh_env, var_name, k_cur -. 1.0, k_end)
+					else
+						fresh_env in
+				returning_env in
+
+	    (*Process statements in the for loop*)
+		let new_env = 
+			 if (k_start <= k_end ) then
+				pos_loop (updated_env, i, k_start, k_end)
+			else
+				neg_loop (updated_env, i, k_start, k_end)
+		in
+
+		(*Put last value of i into the stored variables*)
+		let old_variables_minus_i = List.filter ( fun (n, v) -> if (n = i) then false else true) store_old_vars in  
+		let old_vars_with_update_i = old_variables_minus_i @[(i, i_end)] in 
+
+		let updated_drawing = {new_env.drawing with variables = old_vars_with_update_i} in
+		let updated_env = {new_env with drawing = updated_drawing} in 
+		updated_env
 
 	| Sast.Return(expr) -> 
 		let (new_env, eval_expr) = proc_expr env expr in
