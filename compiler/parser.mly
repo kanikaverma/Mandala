@@ -99,8 +99,8 @@ stmt:
   | RETURN expr SEMI                                         { Return($2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE                  { IF($3, $5, Block([])) }
   | IF LPAREN expr RPAREN stmt ELSE stmt                     { IF($3, $5, $7) }
-  | FOREACH ID ASSIGN LITERAL TO LITERAL COLON 
-    LBRACE stmt_list RBRACE                                  { Foreach($2, $4, $6, $9) }
+  | FOREACH ID ASSIGN FLOAT_LITERAL TO FLOAT_LITERAL COLON 
+    LBRACE stmt_list RBRACE SEMI                                  { Foreach($2, $4, $6, $9) }
   | assign_expr ASSIGN CREATE MANDALA SEMI                   { Mandala($1) }
   | assign_expr ASSIGN CREATE SHAPE COLON LBRACE GEO expr 
     SIZE expr 

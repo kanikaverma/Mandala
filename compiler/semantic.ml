@@ -298,6 +298,13 @@ let rec proc_formals (var_decl_list, env, update_var_decl_list: Ast.var_decl lis
 		let (new_var_decl, new_env) = proc_var_decl(var_decl, env) in
 		proc_formals (other_var_decls, new_env, update_var_decl_list@[new_var_decl])
 
+let var_empty_table_init = {parent=None; variables=[]}
+let fun_empty_table_init = { functions = [];}
+let empty_environment = 
+{
+	var_scope =  var_empty_table_init;
+	fun_scope = fun_empty_table_init;
+}
 
 let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * smndlt * translation_environment) = function
 	Ast.Mandala(mandala_arg) ->
@@ -430,6 +437,18 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sm
 			| _ -> raise (Error("User defined function is returning something of the wrong type"))
 			(*with Not_found -> raise (Error ("User defined function has no return type")) *) 	
 		in result 
+
+	| Ast.Foreach(varName, countStart, countEnd, body) ->
+		(*create custom env for the scope of the for loop*)
+		let func_env=
+			{
+				var_scope = {parent = env.var_scope.parent; variables=(varName,Sast.Numbert)::env.var_scope.variables};
+				fun_scope = env.fun_scope;
+			} in 
+		let empty_list=[] in
+		let (statements, func_env) = separate_statements (body, func_env, empty_list) in
+		(Sast.Foreach(Sast.Id(varName), Sast.Float_Literal(countStart), Sast.Float_Literal(countEnd), statements), Sast.Loopt, env)
+
 	| _ -> raise (Error("Unable to match statement"))
 	(* 
 	let rec extract_type (scope: function_table) name = function
@@ -458,13 +477,7 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sm
 		semantic_stmt env stmt)) new_env func_declaration.body in 
 		final_env *)
 
-	let var_empty_table_init = {parent=None; variables=[]}
-	let fun_empty_table_init = { functions = [];}
-	let empty_environment = 
-	{
-		var_scope =  var_empty_table_init;
-		fun_scope = fun_empty_table_init;
-	}
+	
 	(* let initialize_functions env func_list =
 		let (func_list, last_env) = List.fold_left (
 			fun(sfunc_decl_list, env) func_list -> let 
@@ -485,7 +498,7 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 		let (new_stmt, typ, env) = semantic_stmt env stmt in 
 		check_statements other_stmts env *)
 	
-	let rec separate_statements (stmts, env, update_list:Ast.stmt list * translation_environment * Sast.sstmt list) = match stmts 
+	and separate_statements (stmts, env, update_list:Ast.stmt list * translation_environment * Sast.sstmt list) = match stmts 
 		with [] -> (update_list, env)
 		| [stmt] -> let (new_stmt, typ, new_env) = semantic_stmt env stmt in (update_list@[new_stmt], new_env)
 		| stmt :: other_stmts ->
