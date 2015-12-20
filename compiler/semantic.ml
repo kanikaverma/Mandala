@@ -43,7 +43,8 @@ type translation_environment ={
 (* returns the name, type and value *)
 let find_variable (scope: symbol_table) name=
 	try
-		List.find (fun (s,_) -> s=name) scope.variables 
+		List.find (fun (s,_) -> s=name) scope.variables
+ 
 	(* with Not_found -> try List.find (fun (s, _) -> s=name) scope.parent.variables*) 
 	with Not_found -> raise (Error ("Semantic not finding variable in lookup table"^name))
 		(*	Some(parent)-> find_variable parent name
@@ -84,14 +85,18 @@ in new_envf
 *)
 (* CURRENTLY CANNOT UPDATE VARIABLES, CAN ONLY DECLARE THEM *)
 
-(* TODO: types  *)
+(* TODO: check to make sure it doesn't already exist before adding  *)
 let add_to_var_table (env, name, typ)  =
- 
-	let new_vars = (name, typ)::env.var_scope.variables in
-	let new_sym_table = {parent = env.var_scope.parent; 
-		variables = new_vars;} in
-	let new_env = { env with var_scope = new_sym_table} in
-	new_env
+ 	try
+		let (n, t) = List.find (fun(s,_)-> s=name) env.var_scope.variables in
+		env 
+	with Not_found ->
+		let new_vars = (name, typ)::env.var_scope.variables in
+		let new_sym_table = {parent = env.var_scope.parent; 
+			variables = new_vars;} in
+		let new_env = { env with var_scope = new_sym_table} in
+		new_env
+
 
 (* TODO: see why functions are using sdata_type, maybe they shouldn't be using it? are they using it wrong. sdata_type should be a value *)
  let add_to_func_table env sfunc_decl =
@@ -122,7 +127,7 @@ sexp r , binop , gen_tv_expr sexpr2 )*)
 let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * smndlt  * translation_environment) = function
 
 	Ast.Id(vname) ->
-		if (vname="circle" || vname="triangle" || vname="sqaure")
+		if (vname="circle" || vname="triangle" || vname="square")
 			(* Check for built-in Ids for shapes like circle, triangle, and square *)
 			then
 			let geo_typ = Sast.Geot in 
@@ -222,6 +227,8 @@ let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * sm
 					in *)
 			else
 				try (let (fname, fret, fargs, fbody) =
+				(*let numFuncs = List.length env.fun_scope.functions in
+				raise (Error ("number of functions currently: "^string_of_int numFuncs))*)
 				find_function env.fun_scope fid in
 				
 				(*let actual_type_names = 
@@ -239,8 +246,10 @@ let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * sm
 					(Sast.Call(fname, actual_expr_list), fret, env)
 					(* Call of string * sexpr list*)
 
-		)
-		with Not_found -> raise (Error("undeclared function ")) 
+				)
+				with Not_found -> 
+					let numFuncs = List.length env.fun_scope.functions in
+					raise (Error(fid^"undeclared function "^string_of_int numFuncs)) 
 	(* WORKING ONE Ast.Call(vname, func_args) ->
 		let func_call = try
 			find_function env.fun_scope vname 
@@ -251,7 +260,7 @@ let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * sm
 		(* | Call of string * sexpr list *)
 	(* check type of right ahndside and recurse on that to check that it matches lefthand side*)
 	(*once it is confirmed, compare left type and righthand type and then add it to the symbol table *)
-	| _ -> raise (Error("invalid  assignment")) 
+	| _ -> raise (Error("invalid expression, was not able to match expression")) 
 
 let proc_type = function
   	 Ast.Booleant -> Sast.Booleant
@@ -384,6 +393,8 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sm
 	(* IN AST Shape of var_decl * expr * expr * expr * expr *)
 	(* IN SAST: | Layer of svar_decl * sexpr * sexpr * sexpr * sexpr * sexpr  *)
 
+	
+
 	| Ast.Expr(expression) -> 
 		let newExpr = try
 			semantic_expr env expression 
@@ -391,6 +402,7 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sm
 			raise (Error("undefined expression"))  			(*this error should be fixed to something more relevant*)
 		in let (x, typ, ret_env)= newExpr in 
 		(Sast.Expr(x), typ, env)
+	
 
 	(*Assign is of form var_decl*expr  *)
 	| Ast.Assign(lefthand, righthand) ->
@@ -403,21 +415,22 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sm
 		(*let lefthand {kind = typ2; vname = name2} = x *)
 		(*let (typ2, name2) =(lefthand.kind, lefthand.vname) *)
 
-		in match typ with (*Assign of svar_decl * sexpr*)
+		in let result = match typ with (*Assign of svar_decl * sexpr*)
 			 typ2 -> let new_env = add_to_var_table (env, name2, typ2) 
 				in (Sast.Assign(({skind = typ2; svname = name2}), assign_val), typ, new_env) (* check strctural equality *)
 			| _ -> raise (Error("Assignment could not be typechecked")) 
+		in result 
 
-
-(*NEED TO IMPLEMENT RETURN*)
-	(*| Ast.Return(x) -> 
-		let newExpr = try
-				semantic_expr env expression 
-			with Not_found ->
-				raise (Error("Return is failing yo"))  			(*this error should be fixed to something more relevant*)
-			in let (x, typ, ret_env)= newExpr in 
-			(Sast.Expr(x), typ, env)*)
-
+	| Ast.Return(x) -> 
+		let (_, returntype) = List.find (fun (s,_) -> s="return") env.var_scope.variables in
+		let newExpr = semantic_expr env x in
+		let (x, typ, ret_env)= newExpr in 
+		let result = match typ with 
+			returntype -> (Sast.Return(x), typ, env)
+			| _ -> raise (Error("User defined function is returning something of the wrong type"))
+			(*with Not_found -> raise (Error ("User defined function has no return type")) *) 	
+		in result 
+	| _ -> raise (Error("Unable to match statement"))
 	(* 
 	let rec extract_type (scope: function_table) name = function
 		(sdata_type, string) -> (sdata_type)
@@ -479,7 +492,12 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 			let (new_stmt, typ, new_env) = semantic_stmt env stmt in
 			separate_statements (other_stmts, new_env, update_list@[new_stmt])
 
-	(*NEED TO CREATE NEW ENVIRONMENT*)
+	(*let findReturnStmt stmtList =
+		try 
+			List.find (fun(x)-> match x with Sast.Return(y)) stmtList
+		with Not_found -> raise (Error ("No return statement in user defined function")) *)
+
+	(*NEED TO CREATE NEW ENVIRONMENT WHILE PROCESSING BODY STATEMENTS*)
 	let rec semantic_func (env: translation_environment): (Ast.func_decl -> Sast.sfuncdecl * translation_environment) = function
 		my_func ->
 		let fname = my_func.fname in
@@ -487,10 +505,27 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 		let formals = my_func.formals in 
 		let body = my_func.body in
 
+		(* need to:
+			process formals, while doing this, create a new enviornment w/ inputs filled in that will be used to typecheck the statements
+			typecheck all the statements, get back an Sast stmt list 
+			the last statement in this stmt list will be the return stmtm
+				as part of this, make sure the function is returning the right thing, and create the sast version of the return type
+		*)
+
 		let empty_list = [] in
 		let new_returntype = proc_type returntype in
-		let (new_formals, env) = proc_formals (formals, env, empty_list) in
-		let (new_stmts, env) = separate_statements(body, env, empty_list) in
+		let func_env=
+			{
+				var_scope = {parent = env.var_scope.parent; variables=[("return",new_returntype)]};
+				fun_scope = fun_empty_table_init;
+			} in 
+		(*gets list of formals in sast format, fills the func_env with the inputs in the var table*)
+		let (new_formals, func_env) = proc_formals (formals, func_env, empty_list) in
+		(*walks through body of function, checking types etc.*)
+		let (new_stmts, func_env) = separate_statements(body, func_env, empty_list) in
+		(*check that function returned the right thing-- get the return stmt from stmt list, check its typ against returntyp*)
+		(*let rettyp = findReturnStmt new_stmts in *)
+		(*CHECK IF rettyp is same as new_returntype*)
 
 		let sfuncdecl = {
 			sfname = fname;
@@ -509,11 +544,11 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 		(*Create an empty environment and save the new one??*)
 		| [func] -> 
 		(* Change in some way to handle scope*)
-			let scoped_environment = {
+			(*let scoped_environment = {
 				var_scope = {parent = env.var_scope.parent; variables=[]};
 				fun_scope = fun_empty_table_init;
-			} in 
-			let (new_func, new_env) = semantic_func scoped_environment func in (update_list@[new_func], new_env)
+			} in *) 
+			let (new_func, new_env) = semantic_func (*scoped_environment*) env func in (update_list@[new_func], new_env)
 		| func :: other_funcs ->
 			let (new_func, new_env) = semantic_func env func in
 			(* let (nm, tp) = List.hd new_env.var_scope.variables in *)
@@ -524,12 +559,11 @@ let return_stmt = Sast.Mandala({skind = return_typ; svname = test_name}) in *)
 		let (prog_stmts, prog_funcs) = check_program in 
 		let env = empty_environment in 
 		(* need to update the environment here I think *)
-		let update_list = []  in 
+		let empty_list = []  in 
 		let reverse_prog_stmts = List.rev prog_stmts in 
-		let resulting_statements = separate_statements (reverse_prog_stmts, env, update_list) in  (* List.map( fun stmt_part -> separate_statements prog_stmts env ) in *)
-		let (statements, env) = resulting_statements in
+		let (resulting_functions, env) = separate_functions (prog_funcs, env, empty_list) in
+		let (statements, env) = separate_statements (reverse_prog_stmts, env, empty_list) in  (* List.map( fun stmt_part -> separate_statements prog_stmts env ) in *)
 		(*Using the scope of the env returning from statements..?*)
-		let (resulting_functions, func_env) = separate_functions (prog_funcs, env, update_list) in
 
 		Sast.SProg(statements, resulting_functions)
 		(* NEED TO ADD FUNCTION DECLARATION! *)
