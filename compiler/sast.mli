@@ -11,6 +11,7 @@ type smndlt =
 	| Colort
 	| Integert
 	| Voidt
+	| Loopt
 
 (* RENAME SDATA_TYPE to svalue because it is really the VALUES!!!!! *)
 type sdata_type =
@@ -57,7 +58,7 @@ and sstmt =
 	| Expr of sexpr
 	| Return of sexpr
 	| IF of sexpr * sstmt * sstmt
-	| Foreach of sexpr * sexpr * sstmt
+	| Foreach of sexpr * sexpr * sexpr * sstmt list
 	| While of sexpr * sstmt
 	| Shape of svar_decl * sdata_type * sexpr * sdata_type * sexpr
 	| Mandala of svar_decl
