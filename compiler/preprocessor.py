@@ -84,7 +84,7 @@ def process(input_file):
     stack.pop()
 
   output = StringIO(remove_semis(output))
-  output = StringIO(add_semis_to_funcs(output))
+  output = StringIO(handle_funcs_and_loops(output))
 
   return output 
 
@@ -110,22 +110,50 @@ def remove_semis(text_io):
  
   return output_text
 
-def add_semis_to_funcs(text_io):
+def handle_funcs_and_loops(text_io):
   text = text_io.getvalue()
-  in_func = False 
+  # in_func = False 
+  # in_loop = False 
   output_text = ""
 
+  # for line in text.splitlines():
+  #   if 'Def' in line:
+  #     in_func = True 
+  #   if in_func:
+  #     if '}' in line:
+  #       in_func = False 
+  #   if in_func and line[-1] != '{':
+  #     output_text += line + ';'
+  #     output_text += "\n"
+  #   else:
+  #     output_text += line
+  #     output_text += "\n"
+
+  # for line in text.splitlines():
+  #   if 'Foreach' in line:
+  #     in_loop = True 
+  #   if in_loop and not in_func:
+  #     if '}' in line:
+  #       in_loop = False
+  #   if in_loop and line[-1] != '{':
+  #     output_text += line + ';'
+  #     output_text += "\n"
+  #   else:
+  #     output_text += line
+  #     output_text += "\n"
+
   for line in text.splitlines():
-    if 'Def' in line:
-      in_func = True 
-    if in_func:
-      if '}' in line:
-        in_func = False 
-    if in_func and line[-1] != '{':
-      output_text += line + ';'
+    if line[-1] == '{' or ';' in line:
+      output_text += line 
+      output_text += "\n"
+    elif 'Geo' in line or 'Size' in line or 'Color' in line or 'Rotation' in line:
+      output_text += line 
+      output_text += "\n"
+    elif 'Radius' in line or 'Shape' in line or 'Count' in line or 'Offset' in line or 'AngularShift' in line:
+      output_text += line 
       output_text += "\n"
     else:
-      output_text += line
+      output_text += line + ';'
       output_text += "\n"
 
   return output_text
@@ -155,7 +183,8 @@ if __name__ == "__main__":
 
   # get the path 
   filename = os.path.basename(infile.name)
-  directory = os.path.dirname(infile.name) + '/'
+  try:
+    directory = os.path.dirname(infile.name) + '/'
 
   # get the filename without extension 
   if filename.lower().endswith(extensions):
