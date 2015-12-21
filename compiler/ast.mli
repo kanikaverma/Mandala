@@ -1,4 +1,4 @@
-type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq
+type op = Add | Sub | Mult | Div | Equal 
 
 type mndlt =
 	| Numbert
@@ -30,8 +30,7 @@ type var_decl = {
 	kind : mndlt;
 	vname : string;
 }
- (* type var_decl_assign = 
-	VarDeclAssign of var_decl * value  *)
+
 
 type stmt =
 	| Block of stmt list
