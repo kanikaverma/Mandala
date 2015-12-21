@@ -1,0 +1,99 @@
+public class Program{
+
+public static void drawCircle(Turtle t, double radius, double x, double y, String color) {
+   t.penColor(color);
+   t.up(); t.setPosition(x , y + radius); t.down();
+		for (int i = 0; i < 360; i++) {
+			t.forward(radius * 2 * Math.PI / 360);
+			t.right(1);
+       }
+}
+public static void drawSquare(Turtle t, double size, double x, double y, double rotation, String color) {
+    t.penColor(color);
+	  t.up();
+    t.setPosition(x - size/2, y + size/2);
+    rotation = rotation % 90;
+    double radius = Math.sqrt(2) * size / 2;
+    if (rotation > 0 ) t.left(45);
+	  for (int i = 0; i < rotation; i++) {
+			t.forward(radius * 2 * Math.PI / 360);
+			t.right(1);
+       }
+	  t.down();
+    if (rotation > 0) t.right(45);
+    int turn = 90;
+    t.forward( size ); t.right( turn );
+    t.forward( size ); t.right( turn );
+    t.forward( size ); t.right( turn );
+    t.forward( size ); t.right( turn );
+    t.left( rotation );
+}
+public static void drawTriangle(Turtle t, double size, double x, double y, double rotation, String color) {
+    t.penColor(color);
+    t.up(); t.setPosition(x - size/2, y + Math.sqrt(3)*size/6);
+    rotation = rotation % 120;
+    double radius = size / Math.sqrt(3);
+    if (rotation > 0) t.left(60);
+    for (int i = 0; i < rotation; i++) {
+      t.forward(radius*2*Math.PI / 360); t.right(1);
+    }
+    t.down(); if (rotation > 0) t.right(60); int turn = 120;
+    t.forward(size); t.right(turn);
+    t.forward(size); t.right(turn);
+    t.forward(size); t.right(turn);
+    t.left( rotation );
+}
+  public static void main(String[] args) {
+
+    Turtle t = new Turtle();
+    t.hide();
+    t.speed(0);
+    drawSquare(t,10.,-49.4976388653,49.4973105003,0.,"black");
+    drawSquare(t,10.,-69.9999999998,-0.000185751285566,0.,"black");
+    drawSquare(t,10.,-49.4973761735,-49.4975731925,0.,"black");
+    drawSquare(t,10.,9.28756427674e-05,-69.9999999999,0.,"black");
+    drawSquare(t,10.,49.4975075195,-49.4974418465,0.,"black");
+    drawSquare(t,10.,70.,0.,0.,"black");
+    drawSquare(t,10.,49.4975075195,49.4974418465,0.,"black");
+    drawSquare(t,10.,9.28756427674e-05,69.9999999999,0.,"black");
+    drawCircle(t,10.,-42.4265475988,42.4262661431,"red");
+    drawCircle(t,10.,-59.9999999998,-0.000159215387628,"red");
+    drawCircle(t,10.,-42.4263224344,-42.4264913078,"red");
+    drawCircle(t,10.,7.96076938007e-05,-59.9999999999,"red");
+    drawCircle(t,10.,42.4264350168,-42.4263787256,"red");
+    drawCircle(t,10.,60.,0.,"red");
+    drawCircle(t,10.,42.4264350168,42.4263787256,"red");
+    drawCircle(t,10.,7.96076938007e-05,59.9999999999,"red");
+    drawSquare(t,10.,-35.3554563323,35.3552217859,0.,"black");
+    drawSquare(t,10.,-49.9999999998,-0.00013267948969,0.,"black");
+    drawSquare(t,10.,-35.3552686953,-35.3554094232,0.,"black");
+    drawSquare(t,10.,6.63397448339e-05,-50.,0.,"black");
+    drawSquare(t,10.,35.355362514,-35.3553156047,0.,"black");
+    drawSquare(t,10.,50.,0.,0.,"black");
+    drawSquare(t,10.,35.355362514,35.3553156047,0.,"black");
+    drawSquare(t,10.,6.63397448339e-05,50.,0.,"black");
+    drawTriangle(t,10.,-28.2843650659,28.2841774287,0.,"blue");
+    drawTriangle(t,10.,-39.9999999999,-0.000106143591752,0.,"blue");
+    drawTriangle(t,10.,-28.2842149563,-28.2843275385,0.,"blue");
+    drawTriangle(t,10.,5.30717958671e-05,-40.,0.,"blue");
+    drawTriangle(t,10.,28.2842900112,-28.2842524837,0.,"blue");
+    drawTriangle(t,10.,40.,0.,0.,"blue");
+    drawTriangle(t,10.,28.2842900112,28.2842524837,0.,"blue");
+    drawTriangle(t,10.,5.30717958671e-05,40.,0.,"blue");
+    drawCircle(t,10.,-21.2132737994,21.2131330716,"red");
+    drawCircle(t,10.,-29.9999999999,-7.96076938139e-05,"red");
+    drawCircle(t,10.,-21.2131612172,-21.2132456539,"red");
+    drawCircle(t,10.,3.98038469003e-05,-30.,"red");
+    drawCircle(t,10.,21.2132175084,-21.2131893628,"red");
+    drawCircle(t,10.,30.,0.,"red");
+    drawCircle(t,10.,21.2132175084,21.2131893628,"red");
+    drawCircle(t,10.,3.98038469003e-05,30.,"red");
+try {
+  Thread.sleep(3000);
+} catch(InterruptedException ex) {
+ Thread.currentThread().interrupt();
+}
+  t.save("Program.jpg");
+  }
+
+}

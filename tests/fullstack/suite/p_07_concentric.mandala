@@ -1,0 +1,44 @@
+Mandala m = Create Mandala
+
+Shape s = Create Shape:
+  Geo circle
+  Size 50.0
+  Color red
+  Rotation 0.0
+
+Shape s2 = Create Shape:
+  Geo circle
+  Size 75.0
+  Color blue
+  Rotation 0.0
+
+Shape s3 = Create Shape:
+  Geo circle
+  Size 100.0
+  Color green
+  Rotation 0.0
+
+Layer l = Create Layer:
+  Radius 0.0
+  Shape s
+  Count 1
+  Offset 0.0
+  AngularShift 0 
+
+Layer l2 = Create Layer:
+  Radius 0.0
+  Shape s2
+  Count 1
+  Offset 0.0
+  AngularShift 0 
+
+Layer l3 = Create Layer:
+  Radius 0.0
+  Shape s3
+  Count 1
+  Offset 0.0
+  AngularShift 0 
+
+addTo: (m, l, l2, l3)
+
+draw: (m) 

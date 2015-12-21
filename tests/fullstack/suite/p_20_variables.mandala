@@ -1,0 +1,29 @@
+Mandala m = Create Mandala
+
+Number x = 50.0
+Number y = 50.0
+Number z = x + y
+
+Shape s = Create Shape:
+  Geo square
+  Size 10.0
+  Color black
+  Rotation 0.0
+
+Layer l = Create Layer:
+  Radius x
+  Shape s
+  Count 8
+  Offset 0.0
+  AngularShift 0 
+
+Layer l2 = Create Layer:
+  Radius z
+  Shape s
+  Count 8
+  Offset 0.0
+  AngularShift 0 
+
+addTo: (m, l, l2)
+
+draw: (m) 

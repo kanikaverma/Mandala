@@ -32,7 +32,7 @@ javac $j_file
 java $exe 
 
 j_filename=${filename%.*}
-j_filename=${j_filename##*/}$".java"
+j_filename=${j_filename##*/}$".txt"
 
 # SAVE OUTPUT
 cat "Program.java" > $"solutions/"$j_filename

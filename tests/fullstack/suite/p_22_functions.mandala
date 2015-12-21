@@ -1,0 +1,30 @@
+Mandala m = Create Mandala
+
+Def Number myfunc (Number a, Number b):
+  Return a + b
+
+Number r = myfunc: (50.0, 50.0)
+
+Shape s = Create Shape:
+  Geo circle
+  Size 10.0
+  Color black
+  Rotation 0.0 
+
+Layer l = Create Layer:
+  Radius 100.0
+  Shape s 
+  Count 4 
+  Offset 0.0 
+  AngularShift 0
+
+Layer l2 = Create Layer:
+  Radius r
+  Shape s 
+  Count 4 
+  Offset 45.0 
+  AngularShift 0
+
+addTo: (m, l, l2)
+
+draw: (m)
