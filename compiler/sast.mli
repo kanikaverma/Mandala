@@ -36,13 +36,11 @@ type sexpr =
 	| Binop of sexpr * op * sexpr
 	| Call of string * sexpr list
 
-
+(*Formal variable has type and name*)
 and svar_decl = {
 
 	skind : smndlt;
 	svname : string;
-	(*svalue : sdata_type;*)
-	
 }
 
 and sfuncdecl = {
@@ -64,7 +62,9 @@ and sstmt =
 	| Mandala of svar_decl
 	| Layer of svar_decl * sexpr * sexpr * sexpr * sexpr * sexpr 
 	| FuncCall of sexpr
+
 type sfunc_decltype =
 	SFunc_Decl  of sfuncdecl * smndlt(** sdata_type*)
+
 type sprogram =
 	SProg of sstmt list  * sfuncdecl list(* need to add back * sfunc_decl list *)

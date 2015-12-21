@@ -1,0 +1,18 @@
+Mandala m = Create Mandala
+
+Shape s = Create Shape:
+  Geo triangle
+  Size 30.0
+  Color black
+  Rotation 0.0
+
+Layer l = Create Layer:
+  Radius 80.0
+  Shape s
+  Count 8
+  Offset 0.0
+  AngularShift 1 
+
+addTo: (m, l)
+
+draw: (m) 

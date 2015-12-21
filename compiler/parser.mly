@@ -1,17 +1,15 @@
 %{ open Ast;; %}
 
-%token LPAREN RPAREN LBRACKET RBRACKET LBRACE RBRACE COMMA SEMI /* PERIOD add accessors*/
-%token PLUS MINUS TIMES DIVIDE /* MODULUS EXP */
+%token LPAREN RPAREN LBRACKET RBRACKET LBRACE RBRACE COMMA SEMI
+%token PLUS MINUS TIMES DIVIDE 
 %token EQ NEQ LT LEQ GT GEQ 
 %token IF ELSE
-%token BREAK FOREACH TO CONTINUE
-/* %token TRUE FALSE AND OR NOT XOR */
+%token FOREACH TO
 %token ASSIGN COLON 
-%token DEF RETURN CREATE /* DRAW ADDTO */
+%token DEF RETURN CREATE
 %token RADIUS COUNT SIZE COLOR ROTATION OFFSET ANGULARSHIFT
 %token NUMBER BOOLEAN VOID SHAPE GEO LAYER MANDALA 
 %token CIRCLE TRIANGLE SQUARE
-/* need to add geo_type to AST possibly, define cases for different GEO TYPES */
 %token <float> FLOAT_LITERAL
 %token <int> LITERAL
 %token <string> ID
@@ -20,8 +18,6 @@
 %nonassoc NOELSE
 %nonassoc ELSE
 %right ASSIGN 
-/* %left  COMMA */
-/* %right COLON */
 %right EQ NEQ 
 %left LT GT LEQ GEQ 
 %left  PLUS MINUS
@@ -48,17 +44,7 @@ fdecl:
       formals = $5;       
       body = List.rev $9      
     }}
-
-  | DEF any_id LBRACKET RBRACKET ID LPAREN formals_opt RPAREN COLON LBRACE stmt_list RBRACE
-    {{ 
-      fname = $5;         
-      returntype = $2;   
-      formals = $7;        
-      body = List.rev $11       
-    }}   
-
-/* need to add in all options for RETURN_TYPE and see if cdecl fits under here */
-/* NUMBER STRING GEO MANDALA LAYER SHAPE NUMBER[] STRING[] GEO[] LAYER[] SHAPE[] MANDALA[]*/      
+   
 
 formals_opt: 
   /* nothing */                                              { [] }
@@ -76,10 +62,10 @@ formal:
   }}
 
 any_id:
-    type_id                                                  { $1 }
+    custom_types                                             { $1 }
   | basic_types                                              { $1 }
 
-type_id:
+custom_types:
     MANDALA                                                  { Mandalat }
   | LAYER                                                    { Layert }
   | SHAPE                                                    { Shapet }
@@ -113,7 +99,6 @@ stmt:
     OFFSET expr 
     ANGULARSHIFT expr RBRACE SEMI                            { Layer($1, $8, $10, $12, $14, $16) }
   | assign_expr ASSIGN expr SEMI                             { Assign($1, $3) }
-  | array_expr ASSIGN LBRACE actuals_opt RBRACE SEMI         { ArrAssign($1, $4) } 
 
 
 expr:
@@ -125,20 +110,8 @@ expr:
   | expr TIMES expr                                          { Binop($1, Mult, $3) }
   | expr DIVIDE expr                                         { Binop($1, Div, $3) }
   | expr EQ expr                                             { Binop($1, Equal, $3) }
-  | expr NEQ expr                                            { Binop($1, Neq, $3) }
-  | expr LT expr                                             { Binop($1, Less, $3) }
-  | expr LEQ expr                                            { Binop($1, Leq, $3) }
-  | expr GT expr                                             { Binop($1, Greater, $3) }
-  | expr GEQ expr                                            { Binop($1, Geq, $3) }
   | LPAREN expr RPAREN                                       { $2 }
   | ID COLON LPAREN actuals_opt RPAREN                       { Call($1, $4) }
-
-array_expr:
-  any_id LBRACKET RBRACKET ID
-  {{ 
-    kind = $1;   
-    vname = $4;   
-  }}
 
 assign_expr:
   any_id ID       

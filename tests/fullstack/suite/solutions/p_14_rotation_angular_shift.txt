@@ -48,14 +48,14 @@ public static void drawTriangle(Turtle t, double size, double x, double y, doubl
     Turtle t = new Turtle();
     t.hide();
     t.speed(0);
-    drawCircle(t,10.,-70.7109126647,70.7104435718,"black");
-    drawCircle(t,10.,-70.7105373907,-70.7108188464,"black");
-    drawCircle(t,10.,70.7107250279,-70.7106312094,"black");
-    drawCircle(t,10.,70.7107250279,70.7106312094,"black");
-    drawCircle(t,10.,-99.9999999996,-0.00026535897938,"black");
-    drawCircle(t,10.,0.000132679489668,-99.9999999999,"black");
-    drawCircle(t,10.,100.,0.,"black");
-    drawCircle(t,10.,0.000132679489668,99.9999999999,"black");
+    drawTriangle(t,30.,-56.5687301317,56.5683548575,495.,"black");
+    drawTriangle(t,30.,-79.9999999997,-0.000212287183504,450.,"black");
+    drawTriangle(t,30.,-56.5684299125,-56.5686550771,405.,"black");
+    drawTriangle(t,30.,0.000106143591734,-79.9999999999,360.,"black");
+    drawTriangle(t,30.,56.5685800223,-56.5685049675,315.,"black");
+    drawTriangle(t,30.,80.,0.,270.,"black");
+    drawTriangle(t,30.,56.5685800223,56.5685049675,225.,"black");
+    drawTriangle(t,30.,0.000106143591734,79.9999999999,180.,"black");
 try {
   Thread.sleep(3000);
 } catch(InterruptedException ex) {

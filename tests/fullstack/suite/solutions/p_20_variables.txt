@@ -48,7 +48,22 @@ public static void drawTriangle(Turtle t, double size, double x, double y, doubl
     Turtle t = new Turtle();
     t.hide();
     t.speed(0);
-    drawCircle(t,50.,0.,0.,"blue");
+    drawSquare(t,10.,-70.7109126647,70.7104435718,0.,"black");
+    drawSquare(t,10.,-99.9999999996,-0.00026535897938,0.,"black");
+    drawSquare(t,10.,-70.7105373907,-70.7108188464,0.,"black");
+    drawSquare(t,10.,0.000132679489668,-99.9999999999,0.,"black");
+    drawSquare(t,10.,70.7107250279,-70.7106312094,0.,"black");
+    drawSquare(t,10.,100.,0.,0.,"black");
+    drawSquare(t,10.,70.7107250279,70.7106312094,0.,"black");
+    drawSquare(t,10.,0.000132679489668,99.9999999999,0.,"black");
+    drawSquare(t,10.,-35.3554563323,35.3552217859,0.,"black");
+    drawSquare(t,10.,-49.9999999998,-0.00013267948969,0.,"black");
+    drawSquare(t,10.,-35.3552686953,-35.3554094232,0.,"black");
+    drawSquare(t,10.,6.63397448339e-05,-50.,0.,"black");
+    drawSquare(t,10.,35.355362514,-35.3553156047,0.,"black");
+    drawSquare(t,10.,50.,0.,0.,"black");
+    drawSquare(t,10.,35.355362514,35.3553156047,0.,"black");
+    drawSquare(t,10.,6.63397448339e-05,50.,0.,"black");
 try {
   Thread.sleep(3000);
 } catch(InterruptedException ex) {
