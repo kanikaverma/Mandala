@@ -239,6 +239,16 @@ in (env, Jast.JNumbert(result))
 			(* Can make Float of float adn Litearl of Int, then when you get it back, can just look up value in the table *)
 
 	|Sast.Call(fid, args) ->
+
+		if not (  List.length args > 0 ) then ( 
+			(*Make sure that func_decl has no formal arguments*)
+			let my_func_decl = find_function env fid in
+			let my_body = my_func_decl.sbody in
+			let new_env = separate_statements_s(my_body, env) in
+			(new_env, Jast.JVoid)
+
+		)
+		 else 
 		(* run proc_expr on the actual arguments for the function *)
 		(* let (new_env, actual_types) = List.map (fun expr -> proc_expr env expr) args in *)
 			(*Add all variables only to my scope -- everything same except for variables*)
