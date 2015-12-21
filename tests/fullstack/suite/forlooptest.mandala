@@ -1,13 +1,13 @@
 Mandala m = Create Mandala
 
-Foreach i=1.0 To 6.0:
-  Number x = i * 10.0
+Foreach i = 10.0 To 20.0: 
+  Number x = 10.0
   Shape tempShape = Create Shape:
     Geo triangle 
     Size x
     Color red 
     Rotation 0.0
-  Number y = i * 20.0
+  Number y = 20.0
   Layer tempLayer = Create Layer:
     Radius y 
     Shape tempShape 
