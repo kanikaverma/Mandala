@@ -300,18 +300,19 @@ in (env, Jast.JNumbert(result))
 
 					in 
 					(*let (mandala_name, untyped_mandala) = find_variable env curr_name in *)
-					let (mandala_name, untyped_mandala) =  List.find (fun (s,_) -> s=curr_name) env.drawing.variables in
-					let actual_mandala = match untyped_mandala
+					let (mandala_name, actual_mandala) = find_mandala env curr_name in
+					 (*List.find (fun (s,_) -> s=curr_name) env.drawing.variables in*)
+					(*let actual_mandala = match untyped_mandala
 						with Jast.JMandalat(untyped_mandala) -> untyped_mandala
 						| _ -> raise(Error("The variable returned is invalid because it is not of type mandala. "))
-					in 
+					in *)
 					(*let actual_mandala = untyped_mandala in*)
 					(* TODO: add this and find_mandala func and change updated_current_manda let mandala_info = find_mandala new_env curr_name in *)
 					(* NOTE: Below is a series of list.Filters that are intended to do the same thing as removing an element from a list, updating 
 					that element and then adding it back to the list *)
-					let drawn_mandalas = List.filter ( fun (m_name, m_typ) -> if (m_typ.is_draw = true) then true else false) env.drawing.mandala_list in  
+					(*let drawn_mandalas = List.filter ( fun (m_name, m_typ) -> if (m_typ.is_draw = true) then true else false) env.drawing.mandala_list in  
 					let false_mandalas = List.filter (fun (m_name, m_typ) -> if (m_typ.is_draw=false) then true else false) env.drawing.mandala_list in 
-					let other_mandalas = List.filter (fun (x, mandala_info) -> if (x = curr_name) then false else true) env.drawing.mandala_list in
+					let other_mandalas = List.filter (fun (x, mandala_info) -> if (x = curr_name) then false else true) env.drawing.mandala_list in*)
 
 					let updated_current_mandala = {
 						name = curr_name;
@@ -327,10 +328,11 @@ in (env, Jast.JNumbert(result))
 					let true_and_false_mandalas = updated_drawn_mandalas @ other_false_mandalas in 
 					*)
 					(* Updated variables *)
-					let filtered_vars = List.filter (fun (var_name, var_typ) -> if (var_name=curr_name) then false else true) env.drawing.variables in 
-					(*let filtered_mandalas = List.filter (fun (var_name, var_typ) -> if (var_name=curr_name) then false else true) env.drawing.mandala_list in *)
+					let filtered_vars = List.filter (fun (var_name, var_typ) -> if (var_name=curr_name) then false else true) env.drawing.variables in
 
-					let mandalas_to_be_drawn = drawn_mandalas@[(curr_name, updated_current_mandala)] in 
+					let filtered_mandalas = List.filter (fun (var_name, var_typ) -> if (var_name=curr_name) then false else true) env.drawing.mandala_list in
+
+					let mandalas_to_be_drawn = filtered_mandalas@[(curr_name, updated_current_mandala)] in 
 					(* let l = List.length mandalas_to_be_drawn in
 					 if ( l > 1) then *)
 					let updated_vars = filtered_vars @ [(curr_name, Jast.JMandalat(updated_current_mandala))] in 
@@ -381,9 +383,9 @@ in (env, Jast.JNumbert(result))
 
 						let l = List.length old_layer_list in
 						(*if (l > 0) then
-						raise(Error("I have this many old layers: "^string_of_int l));
+						raise(Error("I have this many old layers: "^string_of_int l));*)
 
-						let l = List.length actual_layer_list in
+						(*let l = List.length actual_layer_list in
 						if (l > 1) then
 						raise(Error("I have this many new layers: "^string_of_int l));*)
 
@@ -417,7 +419,7 @@ in (env, Jast.JNumbert(result))
 
 						(*Take out this mandala and add it back in with updated stuff*)
 						let unchanged_mandalas = List.filter ( fun (m_name, m_typ) -> if (m_name=update_mandala_name) then false else true) env.drawing.mandala_list in 
-						let updated_mandala_list = env.drawing.mandala_list@[update_mandala_name, updated_current_mandala] in
+						let updated_mandala_list = unchanged_mandalas@[update_mandala_name, updated_current_mandala] in
 
 						let new_draw_env = {mandala_list = updated_mandala_list; variables = updated_variables; java_shapes_list = env.drawing.java_shapes_list;} in
 						let new_env = {drawing = new_draw_env; functions = env.functions} in
@@ -454,7 +456,7 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 		} in 
 		let new_mandalas = env.drawing.mandala_list @ [(name1, new_mandala)] in
 		let new_vars = env.drawing.variables @ [(name1, Jast.JMandalat(new_mandala))] in 
-		let new_drawing = {mandala_list=new_mandalas; variables = new_vars; java_shapes_list = [];} in
+		let new_drawing = {mandala_list=new_mandalas; variables = new_vars; java_shapes_list = env.drawing.java_shapes_list;} in
 		(* (Jast.JStmt(Jast.JMandala(name1, new_mandala)), new_env) *)
 		let new_env = {drawing = new_drawing; functions = env.functions;} 
 	in new_env
@@ -612,7 +614,7 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 
 				let fresh_env = separate_statements_s(for_statements, updated_env) in
 				let returning_env = 
-					if not (k_cur > k_end) then
+					if not (k_cur >= k_end) then
 						 pos_loop(fresh_env, var_name, k_cur +. 1.0, k_end)
 					else
 						fresh_env in
@@ -631,7 +633,7 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 
 				let fresh_env = separate_statements_s(for_statements, updated_env) in
 				let returning_env = 
-					if not (k_cur < k_end) then
+					if not (k_cur <= k_end) then
 						 neg_loop(fresh_env, var_name, k_cur -. 1.0, k_end)
 					else
 						fresh_env in
@@ -649,7 +651,7 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 		let old_variables_minus_i = List.filter ( fun (n, v) -> if (n = i) then false else true) store_old_vars in  
 		let old_vars_with_update_i = old_variables_minus_i @[(i, i_end)] in 
 
-		let updated_drawing = new_env.drawing in
+		let updated_drawing = {new_env.drawing with variables = old_vars_with_update_i} in
 		let updated_env = {new_env with drawing = updated_drawing} in 
 		updated_env
 
@@ -909,7 +911,7 @@ let get_layers  = function
 
 let process_mandala = function
 	mandala ->
-	if (mandala.is_draw) then
+	if (mandala.is_draw = true) then
 	(*raise (Error("Some truth exists!"));*)
 	let layers_with_radii = get_layers mandala in
 		let num_layers = List.length layers_with_radii in
