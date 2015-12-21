@@ -30,7 +30,7 @@ and layer = {
 	name: string;
 	radius : float;
 	shape : shape;
-	count : int;
+	count : float;
 	offset : float;
 	angularshift : int
 }
