@@ -31,16 +31,15 @@ javac $j_file
 # EXECUTION
 java $exe 
 
+# SAVE OUTPUT
 j_filename=${filename%.*}
 j_filename=${j_filename##*/}$".txt"
-
-# SAVE OUTPUT
 cat "Program.java" > $"solutions/"$j_filename
 
 # CLEANING
 rm -f *.proc
 mv Turtle.java Turtle.java.keep
-#rm -f *.java
+rm -f *.java
 mv Turtle.java.keep Turtle.java
 rm -f *.class
 cd ..
