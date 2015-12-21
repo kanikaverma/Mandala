@@ -6,3 +6,7 @@ parser.mli
 *.proc
 *.cpp
 *.class
+clean.py
+clean.txt
+log.txt
+
