@@ -7,37 +7,14 @@ open Lexing
 
 exception Error of string
 
+(*Generates jast by running through scanner, parser, semantic check, and sast_to_jast*)
 let jast =
 	let lexbuf = Lexing.from_channel stdin in
 	let ast = Parser.program Scanner.token lexbuf in
 	let sast = Semantic.semantic_check ast in
 	Sast_to_jast.actual_final_convert sast
 
-(*let proc_expr =function
-	Sast.Call(fname, actual_args)->
-		print_string "    t.setPosition(0, 0);\n";      (*should be in sast.mandala case*)
-		print_string "    t.dot();\n"      (*should be in sast.mandala case*)
-let proc_stmt = function
-	Sast.Mandala(vname) ->
-		(*print java code for mandala of this name*)
-		print_string "    Turtle t = new Turtle();\n";    (*should be in sast.mandala case*)
-		print_string "    t.hide();\n"   (*should be in sast.mandala case*)
-	| Sast.Expr(expression)->
-		proc_expr expression
-	| _ -> raise (Error("unsupported statement found")) 
-let gen_java = function
-	Sast.SProg(s)-> 
-		let x = List.length s in
-		if (x>0) then (
-			print_string "public class Program {\n\n";
- 			print_string "  public static void main(String[] args) {\n\n";
-		
-			List.map proc_stmt s; 
-			print_string "	t.save(\"Program.jpg\");";
-			print_string "  }\n\n}"
-		)	
-		else print_string "No input provided" *)
-
+(*Generates primitive functions for drawing shapes*)
 let draw_circle = function
 	(radius, x, y, color) -> 
 		print_string "    drawCircle(t,";
@@ -84,6 +61,7 @@ let draw_triangle = function
     print_string "\"";
     print_string ");\n"
 
+(*Match on shapes*)
 let proc_shape = function
 	Jast.Circle(radius,x,y,color) ->
 		draw_circle(radius,x,y,color)
@@ -93,6 +71,7 @@ let proc_shape = function
     draw_triangle(side,x,y,rotation,color)
 	|  _ -> raise (Error("other shapes unsupported"))
 
+(*Build primitive methods in java*)
 let define_methods = function
 	x -> if (x> 0) then (
 			(* CIRCLES *)
@@ -146,11 +125,12 @@ let define_methods = function
 
 		else print_string "not defining methods"
 
-
+(*Default classname is set to "Program"*)
 let get_string_of_classname = function 
 	Jast.CreateClass(string_of_classname) -> string_of_classname
 
-let gen_java_modified = function
+(*Final function that parses Jast program and generates code*)
+let gen_java_final = function
 	Jast.JavaProgram(classname, shapes) ->
 		let string_of_classname = get_string_of_classname classname in
 			print_string "public class ";
@@ -164,7 +144,7 @@ let gen_java_modified = function
 	 		print_string "    t.hide();\n";
 			print_string "    t.speed(0);\n";
 
-			(*Go through and print all the shapes!*)
+			(*Go through and print all the shapes*)
 			let l = List.length shapes in 
 			if (l > 0) then 
 				(List.map proc_shape shapes)
@@ -187,4 +167,4 @@ let gen_java_modified = function
 			print_string "  }\n\n}\n"
 
 let _ =	
-	gen_java_modified jast
+	gen_java_final jast

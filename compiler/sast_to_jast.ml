@@ -139,33 +139,19 @@ and proc_expr (env:environment): (Sast.sexpr -> environment * Jast.jdata_type) =
 			raise (Error("undeclared identifier: "^vname))
 		in let (name, value) = var_info in 
 		(env, value)
-	| Sast.Literal(literal_var) ->
-		(* raise (Error("Hit literal var")) *)
-		(* TODO: Actually evaluate! *)
-		(*let new_literal = match literal_var 
-			with Jast.JInt(literal_var) -> literal_var
-			| _ -> raise (Errror("Incorrect literal "))
-		in *)
+
+	| Sast.Literal(literal_var) ->	
 		(env, Jast.JInt(literal_var))
 	| Sast.Float_Literal(number_var) ->
-		(* Todo: actually evaluate!! *)
-		(* raise (Error("Hit number var")) *)
-		(*let new_float = match number_var
-			with Jast.JNumbert(number_var) -> let updated_float = number_var in updated_float
-			| _ -> raise (Error("Incorrect float value"))
-		in *)
 		(env, Jast.JNumbert(number_var))
 	| Sast.Binop(term1, operator, term2) ->
 
 
-		(* TODO: Finish this!!*)
-		(* (Sast.Binop(eval_term1, operator, eval_term2), typ1, env) *)
+		(*Recursively calls a binary operator*)
 		let eval_term1 = proc_bin_expr env term1 in 
 		let eval_term2 = proc_bin_expr env term2 in 
 
-		(*let Sast.Float_Literal(term1) = eval_term1 in
-		let Sast.Float_Literal(term2) = eval_term2 in*)
-
+		(*Can be a variable or a float literal*)
 		let float_term_one = match eval_term1
 			with Sast.Float_Literal(term1) -> term1
 			| Sast.Id(var) -> 
@@ -184,26 +170,13 @@ and proc_expr (env:environment): (Sast.sexpr -> environment * Jast.jdata_type) =
 			| _ -> raise(Error("Operand two is not a float literal, invalid operand "))
 		in
 		
+		(*Calls supported binary operator*)
 		let result = match operator 
 				with Add -> float_term_one +. float_term_two 
 				| Sub -> float_term_one -. float_term_two 
 				| Mult -> float_term_one *. float_term_two 
 				| Div -> float_term_one /. float_term_two
-				(* 
-				| Equal -> float_term_one -. float_term_two 
-				| Neq -> eval_conditionals typ1 typ2 
-				| Less -> eval_conditionals typ1 typ2 
-				| Leq -> eval_conditionals typ1 typ2 
-				| Greater -> eval_conditionals typ1 typ2
-				| Geq -> eval_conditionals typ1 typ2 *) 
 
-		(* 
-		let (tester) = eval_term1 in 
-		let my_test = match tester 
-	with Jast.JInt(tester) -> raise (Error("HELLOOO FAIL INT JAST "^ string_of_int tester))
-
-	| Jast.JNumbert(tester) -> raise (Error("NUMBER T FLOAT FAIL!!!! "^ string_of_float tester))
-	| _ -> raise (Error("FAILURE!!!")) *)
 in (env, Jast.JNumbert(result)) 
 
 	(*Process function calls*)
@@ -229,12 +202,9 @@ in (env, Jast.JNumbert(result))
 
 		)
 		 else 
-		(* run proc_expr on the actual arguments for the function *)
-		(* let (new_env, actual_types) = List.map (fun expr -> proc_expr env expr) args in *)
-			(*Add all variables only to my scope -- everything same except for variables*)
-			(*empty out variables, store them, put in the arg variables, later add back at end (but remove arg variables)*)
 
-
+		(*Add all variables only to this function's scope -- everything is the same except for variables*)
+		(*At end, empty out variables, store them, put in the arg variables, later add back at end (but remove arg variables)*)
 		let all_param_names = process_arguments (args, []) in
 		let only_param_variables = List.filter ( fun (n, v) -> if ( List.mem n all_param_names ) then true else false) env.drawing.variables in  
 
@@ -242,8 +212,6 @@ in (env, Jast.JNumbert(result))
 			drawing = {mandala_list = env.drawing.mandala_list; variables = only_param_variables; java_shapes_list = env.drawing.java_shapes_list};
 			functions =  env.functions;
 		} in
-
-		(*should use env_with_empty_vars!!*)
  
 		(*Grab the function from its table*)
 		if ( not(fid = "draw") && not (fid = "addTo")) then (
@@ -252,14 +220,14 @@ in (env, Jast.JNumbert(result))
 			let new_env = match_formals(my_formals, args, env_with_param_vars) in
 			let func_stmts = my_func_decl.sbody in 
 			let l = List.length func_stmts in
-			(*Need to process statements!!*)
+			(*Process statements with limited scope*)
 			let env_with_return = separate_statements_s(func_stmts, new_env) in 
 			let return_name = "return" in 
 
+			(*Get return value (will check if return type is void if applicable)*)
 			let var = find_variable_check_return_type (env_with_return, my_func_decl.sreturntype) return_name in
 
 			let (n, v) = var in
-			(*let (name , val) = List.find (fun (s,_) -> s=return_name) env_with_return.drawing.variables in *)
 			let new_env = {
 				drawing = {mandala_list = env_with_return.drawing.mandala_list; variables = old_variables; java_shapes_list = env_with_return.drawing.java_shapes_list};
 				functions =  env_with_return.functions;
@@ -270,31 +238,16 @@ in (env, Jast.JNumbert(result))
 		let len = List.length args in
 		if (fid ="draw")
 		then
-			(* check that arg passed in is a valid argument *)
-			(* CHECK FOR ARG PASSED IN *)
-
 			if (len == 1) 
 				then (*Drawing one mandala*)
 					let check_arg = List.hd args in 
 					let curr_name = match check_arg
 						with Sast.Id(check_arg) -> let new_check_arg = check_arg in new_check_arg
 						| _ -> raise (Error("This mandala has not been defined"))
-
 					in 
-					(*let (mandala_name, untyped_mandala) = find_variable env curr_name in *)
+
+					(*Find mandala from mandala_list*)
 					let (mandala_name, actual_mandala) = find_mandala env curr_name in
-					 (*List.find (fun (s,_) -> s=curr_name) env.drawing.variables in*)
-					(*let actual_mandala = match untyped_mandala
-						with Jast.JMandalat(untyped_mandala) -> untyped_mandala
-						| _ -> raise(Error("The variable returned is invalid because it is not of type mandala. "))
-					in *)
-					(*let actual_mandala = untyped_mandala in*)
-					(* TODO: add this and find_mandala func and change updated_current_manda let mandala_info = find_mandala new_env curr_name in *)
-					(* NOTE: Below is a series of list.Filters that are intended to do the same thing as removing an element from a list, updating 
-					that element and then adding it back to the list *)
-					(*let drawn_mandalas = List.filter ( fun (m_name, m_typ) -> if (m_typ.is_draw = true) then true else false) env.drawing.mandala_list in  
-					let false_mandalas = List.filter (fun (m_name, m_typ) -> if (m_typ.is_draw=false) then true else false) env.drawing.mandala_list in 
-					let other_mandalas = List.filter (fun (x, mandala_info) -> if (x = curr_name) then false else true) env.drawing.mandala_list in*)
 
 					let updated_current_mandala = {
 						name = curr_name;
@@ -302,39 +255,30 @@ in (env, Jast.JNumbert(result))
 						max_layer_radius = actual_mandala.max_layer_radius;
 						is_draw = true;
 					} in
-					let test_layer_size = List.length actual_mandala.list_of_layers in 
-					(*raise(Error("I have a mandala with this many layers: "^ string_of_int test_layer_size));*)
-					(*raise (Error("THIS IS SIZE OF LAYERS in draw func " ^ string_of_int test_layer_size));*)
-					(* list of all mandalas to draw *)
-					(* let updated_drawn_mandalas =  drawn_mandalas @ [curr_name, updated_current_mandala] in
-					let true_and_false_mandalas = updated_drawn_mandalas @ other_false_mandalas in 
-					*)
-					(* Updated variables *)
+
+					(*Remove current mandala from variable list*)
 					let filtered_vars = List.filter (fun (var_name, var_typ) -> if (var_name=curr_name) then false else true) env.drawing.variables in
 
+					(*Remove current mandala from mandala list*)
 					let filtered_mandalas = List.filter (fun (var_name, var_typ) -> if (var_name=curr_name) then false else true) env.drawing.mandala_list in
 
+					(*Reintroduce mandala with updated values and return environment*)
 					let mandalas_to_be_drawn = filtered_mandalas@[(curr_name, updated_current_mandala)] in 
-					(* let l = List.length mandalas_to_be_drawn in
-					 if ( l > 1) then *)
 					let updated_vars = filtered_vars @ [(curr_name, Jast.JMandalat(updated_current_mandala))] in 
 					let new_draw_env = {mandala_list = mandalas_to_be_drawn; variables = updated_vars; java_shapes_list = env.drawing.java_shapes_list;} in 
 					let new_env = {drawing = new_draw_env; functions = env.functions;} in
 
-					(* let java_arg_list = [] in 
-					let updated_java_arg_list = java_arg_list @ [Jast.JId(curr_name)] in *)
-					(* (Jast.JCall(func_name, updated_java_arg_list), new_draw_env, Jast.JVoid) *)
 					(new_env, Jast.JVoid)
 
-				(* (Jast.JCall(fid, actual_expr_list), Sast.Void, env) *)
 				else raise(Error("Draw function has incorrect parameters"^ string_of_int len))
+
 			else 
 				if (fid="addTo")
-				then (* Check that length is greater than 1, or at least two args *)
+				then 
+				(* Check that length is greater than 1 -- args must contain a mandala and at least one layer*)
 					if (len > 1)
 					then 
-						(*pull out the first argument, which is a mandala *)
-						(* The first argument should be the mandala that you are adding the layer to *)
+						(*Pull out the first argument, which should be the mandala that a layer(s) is being added to *)
 						let rev_args = List.rev args in
 						let update_mandala = List.hd rev_args in 
 						let update_mandala_name = match update_mandala 
@@ -345,36 +289,22 @@ in (env, Jast.JNumbert(result))
 
 						let (mandala_name, untyped_mandala) =  List.find (fun (s,_) -> s=update_mandala_name) env.drawing.variables in
 
-						(*let (mandala_name, untyped_mandala) = find_variable env update_mandala_name in *)
-						(*let actual_mandala = physical_mandala*)
 						let actual_mandala = match untyped_mandala
 						with Jast.JMandalat(untyped_mandala) -> untyped_mandala
 						| _ -> raise(Error("The variable returned is invalid because it is not of type mandala. "))
 						in
 						let old_layer_list = actual_mandala.list_of_layers in 
 
-						(*if(arg_name = "tempLayer") then 
-						raise(Error("Found these many layers"^ string_of_int l));*)
-
+						(*Get layers by looking up all arguments and checking whether they've been defined*)
 						let new_layers_list = match rev_args 
 							with hd :: tail -> get_layer_info (env, tail, old_layer_list) 
 							| _ -> raise (Error("This doesn't have a mandala and layers ! "^update_mandala_name))
 						in 
-						(* separate_layers_list is of type Jast.layer list * Jast.drawing *)
 						let (actual_layer_list, layer_updated_env) = new_layers_list in
 
 						let l = List.length old_layer_list in
-						(*if (l > 0) then
-						raise(Error("I have this many old layers: "^string_of_int l));*)
 
-						(*let l = List.length actual_layer_list in
-						if (l > 1) then
-						raise(Error("I have this many new layers: "^string_of_int l));*)
-
-						let updated_layer_list = ((*old_layer_list @*) actual_layer_list) in
-						let l = List.length updated_layer_list in
-						(*if (l > 1) then
-						raise(Error("I have this many layers in a mandala in addTo: "^string_of_int l)); *)
+						let updated_layer_list = actual_layer_list in
 
 						let rec find_max l = match l with
 							| [] -> 0.0
@@ -425,8 +355,7 @@ and separate_statements_s (stmts, env:Sast.sstmt list * environment) = match stm
 
 and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 	Sast.Mandala(var_decl) ->
-		(*print java code for mandala of this name*)
-		(*create new mandala object of name vname*)
+		(*Create new mandala object of name vname*)
 		let {skind = typ1; svname= name1;}= var_decl in
 		(* Create a new mandala *)
 		let new_mandala = 
@@ -439,40 +368,25 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 		let new_mandalas = env.drawing.mandala_list @ [(name1, new_mandala)] in
 		let new_vars = env.drawing.variables @ [(name1, Jast.JMandalat(new_mandala))] in 
 		let new_drawing = {mandala_list=new_mandalas; variables = new_vars; java_shapes_list = env.drawing.java_shapes_list;} in
-		(* (Jast.JStmt(Jast.JMandala(name1, new_mandala)), new_env) *)
 		let new_env = {drawing = new_drawing; functions = env.functions;} 
 	in new_env
 	| Sast.Layer(var_decl, v_radius, v_shape, v_count, v_offset, v_angular_shift) ->
-		(* get the var_decl *)
+		(* Return the var_decl for Jast*)
 		let {skind = typ; svname = name;} = var_decl in 
 		let (env, j_radius) = proc_expr env v_radius in
-			(* Match with JData_types to get type of flaot *)
+			(* Match with JData_types to get type of float *)
 			let actual_radius = match j_radius 
 				with Jast.JNumbert(j_radius) -> let new_num = j_radius in new_num 
-				| _ -> raise (Error("Incorrect type for radius!"))
+				| _ -> raise (Error("Incorrect type for radius in layer"))
 			in
 
 		let (env, j_shape_typ) = proc_expr env v_shape in 
 		let actual_j_shape = match j_shape_typ 
 			with Jast.JShapet(j_shape_typ) -> j_shape_typ
-			| _ -> raise (Error("FAILED TO ADD SHAPE TO LAYER!!!"))
+			| _ -> raise (Error("Incorrect type for shape when adding to layer"))
 		in 
-
-			(* Create a temporary Shape! *)
-			(* let temp_shape =  {
-				name = "test1";
-				geo = "Circle";
-				size = 1.0;
-				color= "Blue";
-				rotation= 1.0;
-			} in *)
-			(* Match with j_data type to get type of Geo *)
-			(* let actual_shape = match j_shape 
-				with Jast.JGeot(j_shape) -> let new_shape = j_shape in new_shape 
-				| _ -> raise (Error("Incorrect tpy for Shape it should be a geo type! "))
-			in *)
 		let (env, j_count) = proc_expr env v_count in 
-			(* Match with jdata_typ to get the int count *)
+			(* Match with jdata_typ to get the float count *)
 			let actual_count = match j_count 
 				with Jast.JInt(j_count) -> let new_count = j_count in new_count 
 				| _ -> raise (Error("Incorrect type for count")) 
@@ -496,7 +410,7 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 			offset = actual_offset;
 			angularshift = actual_angular_shift;
 		} in 
-		(* Add to variable list *)
+		(* Add to variable list and mandala list and update environment*)
 		let new_variables = env.drawing.variables @ [(name, Jast.JLayert(new_layer))] in 
 		let new_drawing = {mandala_list = env.drawing.mandala_list; variables = new_variables; java_shapes_list = env.drawing.java_shapes_list;} in 
 		let new_env = {drawing = new_drawing; functions = env.functions;} in
@@ -536,22 +450,20 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 	in let new_env = {drawing = new_drawing; functions = env.functions;}
 	in new_env
 
+	(*Process an expression*)
 	| Sast.Expr(expression)->
 		(* Want to add this expression to the mandala list *)
 		(* proc_expr returns a jexpr and an updated drawing *)
 		let updated_expr = proc_expr env expression in 
 		(* Return type of proc_expr is Jast.jexpr * Jast.drawing * Jast.jdata_type *)
 		let (new_env, j_typ) = updated_expr in
-		(* now want to return new environment and jstmt *)
-		(* let updated_java_stmt = Jast.JStmt(j_expr) in *)
-		(* let updated_env = Jast.symbol_table(new_env) in *)
-		(* (updated_java_stmt, new_env) *)
+		(* Now want to return new environment and jstmt *)
 		let (update_names,updated_env_mandalas) = List.hd new_env.drawing.mandala_list in 
 		let let_layers_listss = updated_env_mandalas.list_of_layers in 
 		let layer_size = List.length let_layers_listss in 
-		(*raise (Error("HEYYYY "^ string_of_int layer_size))*)
 		new_env
 
+ 	(*Process foreach loop*)
 	| Sast.Foreach(i_var, i_start_var, i_end_var, for_statements) ->
 
 		(*Get Jdata type values for start and end points*)
@@ -580,20 +492,20 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 		let Sast.Float_Literal(k_start) = i_start_var in
 		let Sast.Float_Literal(k_end) = i_end_var in
 
-
+		(*Increasing loops*)
 		let rec pos_loop = function
 			(env, var_name, k_cur, k_end) -> 
 
 				(*i_cur is the data type to insert into variable table*)
 				let i_cur = Jast.JNumbert(k_cur) in 
-				(*if (k_cur > 1.0) then
-				raise(Error("current i is "^string_of_float k_cur));*)
+
 				(*Need to update actual value of i in the table and then update environment*)
 				let new_variables = List.filter ( fun (n, v) -> if (n = var_name) then false else true) env.drawing.variables in  
 				let updated_vars = new_variables @[(var_name, i_cur)] in 
 				let updated_drawing = {env.drawing with variables = updated_vars} in
 				let updated_env = {env with drawing = updated_drawing} in 
 
+				(*Go through all statements*)
 				let fresh_env = separate_statements_s(for_statements, updated_env) in
 				let returning_env = 
 					if not (k_cur >= k_end) then
@@ -602,6 +514,7 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 						fresh_env in
 				returning_env in
 
+		(*Decreasing loops*)
 		let rec neg_loop = function
 			(env, var_name, k_cur, k_end) -> 
 
@@ -637,9 +550,11 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 		let updated_env = {new_env with drawing = updated_drawing} in 
 		updated_env
 
+	(*Process return statement*)
 	| Sast.Return(expr) -> 
 		let (new_env, eval_expr) = proc_expr env expr in
 		let return_val = eval_expr in
+		(*Signal for a function call to grab the return statement*)
 		let return_name = "return" in 
 		let new_var = (return_name, return_val) in
 		let updated_vars = new_env.drawing.variables @ [(return_name, return_val)] in 
@@ -648,46 +563,14 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 		updated_env
 
 
-		
+		(*Process assignment*)
 	 | Sast.Assign(vardecl, assign_expr) ->
 	 	(* TODO: Finish this*)
 		let (new_env, eval_expr) = proc_expr env assign_expr in 
 		(* now get the variable *)
 		let {skind = typ; svname = name;} = vardecl in 
 
-		(* Now add the name and assignemnt to the symbol table *)
-		(*  variables: (string * jdata_type) list; *)
-		(* now check the type of the variable *)
-		(* update the variable list and add it to the list of vars *)
-		(* Jast.drawing * Jast.jdata_type *)
-		(* 
-			type sdata_type =
-			Int
-			| Literalt
-			| Float
-			| Void
-			| Numbert of float 
-			| Booleant
-			| Shapet
-			| Geot of string 
-			| Layert
-			| Mandalat 
-			| Arrayt
-			| Colort of string
-				JInt of int 
-	| JVoid
-	| JNumbert of float
-	| JBooleant of int 
-	| JShapet of shape 
-	| JGeot of string 
-	| JLayert of layer
-	| JMandalat of mandala
-	| JArrayt
-	| JColort of string
-
-
-		*)
-(* Already checked types in semantic, so just need to make sure adding correct type for Jast *)
+	(* Already checked types in semantic, so just need to make sure adding correct type for Jast *)
 	(* doing this to make sure we are adding the correct value for Jast to the drawing with includes all variables *)
 		let get_val_and_type = match eval_expr
 			with Jast.JNumbert(eval_expr) -> Jast.JNumbert(eval_expr)
@@ -700,17 +583,6 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 			| Jast.JVoid -> Jast.JVoid
 			| Jast.JArrayt -> Jast.JArrayt
 			| _ -> raise(Error("This expression does not have a supported type here!"))
-			(* Sast.SNumber(eval_expr) -> Jast.JNumbert(eval_expr)
-			| Sast.SBoolean(eval_expr) -> Jast.JBooleant(eval_expr)
-			| Sast.SShape -> Jast.JShapet(eval_expr)
-			| Sast.Geot -> Jast.JGeot(eval_expr)
-			| Sast.Layert -> Jast.JLayert(eval_expr)
-			| Sast.Mandalat -> Jast.JMandalat(eval_expr)
-			| Sast.Arrayt -> Jast.JArrayt
-			| Sast.Colort -> Jast.JColort(eval_expr)
-			| Sast.Integert -> Jast.JBooleant(eval_expr)
-			| Sast.Voidt -> Jast.JVoid
-			| _ -> raise(Error("Unsupported assignment found. ")) *)
 		in 
 
 		let (n,v) = try List.find (fun (s,_) -> s=name) env.drawing.variables 
@@ -722,18 +594,7 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 		let updated_drawing = {mandala_list= new_env.drawing.mandala_list; variables = updated_vars; java_shapes_list= new_env.drawing.java_shapes_list;} 
 			in let updated_env = {drawing = updated_drawing; functions = new_env.functions} in updated_env
 
-		(* let check_env = match typ
-		with Sast.SNumber(eval_expr) -> let updated_vars = new_env.variables @[(name, get_val_and_type)] in 
-			let updated_env = {mandala_list= new_env.mandala_list; variables = updated_vars; java_shapes_list= new_env.java_shapes_list;} 
-			in updated_env
-		| _ -> raise (Error("ASsignemnt type doesn't match variable type"))
-	in check_env *)
-		(* let updated_vars = env.variables @ [(name, typ)] *)
-
 	| _ -> raise (Error("unsupported statement found")) 
-
-
-
 
 
 (*Simply add function declaration to our environment *)
@@ -746,10 +607,8 @@ let proc_func (env: environment):(Sast.sfuncdecl -> environment) = function
 		} in 
 		new_env
 
-(* Need to chagne it to return a Jast.jstmt * drawing instead of just a mandala list *)
 
-
-(* check out each statement *)
+(* Parse each statement and keep track of environment*)
 (* returns Jast.jStmt list * env *)
 let rec separate_functions_s (funcs, env: Sast.sfuncdecl list * environment) = match funcs
 	with [] -> env
@@ -766,39 +625,26 @@ let gen_java (env:environment):(Sast.sprogram -> environment)= function
 		(* Check if the program has at least one statement *)
 		let x = List.length s in
 		if (x>0) then (
-			(* CHECK ORDER OF STATEMENTS *)
+			(*Check order of statements *)
 			let update_list = []  in 
 			(* Already reversed the statements in semantic when going from ast to jast, so don't need to reverse again *)
 			let updated_env = separate_functions_s (f, env) in 
 			let updated_env = separate_statements_s (s, updated_env) in  (* List.map( fun stmt_part -> separate_statements_s prog_stmts env ) in *)
 			let l = List.length updated_env.functions in
-			(* thsi returns a list of Jast.jsstmts list and an enviroment *)
-			(* let (statements, updated_env) = resulting_statments in *)
-			(* let updated_block = Jast.JavaBlock(statements) in 
-			let updated_main = Jast.JavaMain(updated_block) in *)
-			(* let updated_class = Jast.JavaClass(updated_main) in *) 
-			(* let empty_javaclass_list = [] in 
-			let updated_javaclass_list = empty_javaclass_list @ [updated_class] in *)
-			(* CREATE SHAPE LIST HERE! *)
-			(* let test_shape_list =  updated_env.java_shapes_list in 
-			let updated_program = Jast.JavaProgram(updated_class, test_shape_list) in *)
-			(* let updated_symbol_table = {draw_stmts = updated_env;} in *)
 			updated_env
-
 		)	
 
-		else raise (Error("INPUT IS 0 arguements!"))
+		else 
+			raise (Error("Input has no arguments"))
 
 (*Process a layer and load them all into the shapes structure in environment *)
 let extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer * float -> Jast.jShape list) = function
 	(my_layer, big_radius) -> 
 
-		(*raise (Error("offset value "^string_of_float big_radius));*)
 		let listed_shape = my_layer.shape in
 		let multiple_mandala_offset = 
 			if (big_radius > 0.0) 
 			then 
-				(*(raise (Error ("Big radius is "^string_of_float big_radius));)*)
 				big_radius +. listed_shape.size +. 200.0
 			else
 				big_radius
@@ -809,7 +655,7 @@ let extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer * float ->
 			let rec loop = function
 			(new_list, k) -> 
 			 let rad_offset = my_layer.offset *. pi /. 180.0 in 
-			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count) in 
+			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int) my_layer.count in 
 			 let x_pos = cos (my_angle) *. my_layer.radius in
 			 let y_pos = sin (my_angle) *. my_layer.radius in
 			 let extra_rotation = 
@@ -828,14 +674,14 @@ let extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer * float ->
 				 else
 					new_list@[new_shape]
 			in 
-			loop(new_list, count-1)
+			loop(new_list, count - 1)
 
 		else if (count >= 1 && listed_shape.geo = "circle")
 		then 
 			let rec loop = function
 			(new_list, k) ->
 			 let rad_offset = my_layer.offset *. pi /. 180.0 in 
- 			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count) in 
+ 			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /. (float_of_int) my_layer.count in 
 			 let x_pos = cos (my_angle) *. my_layer.radius in
 			 let y_pos = sin (my_angle) *. my_layer.radius  in
 			 let color = listed_shape.color in 
@@ -846,14 +692,14 @@ let extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer * float ->
 				 else
 					new_list@[new_shape] 
 			in 
-			loop(new_list, count-1)
+			loop(new_list, count - 1)
 
 		else if (count >= 1 && listed_shape.geo = "triangle")
 		then 
 			let rec loop = function
 			(new_list, k) -> 
 			 let rad_offset = my_layer.offset *. pi /. 180.0 in 
-			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count) in 
+			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /. (float_of_int my_layer.count) in 
 			 let x_pos = cos (my_angle) *. my_layer.radius in
 			 let y_pos = sin (my_angle) *. my_layer.radius in
 			 let extra_rotation = 
@@ -872,25 +718,22 @@ let extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer * float ->
 				 else
 					new_list@[new_shape]
 			in 
-			loop(new_list, count-1)
+			loop(new_list, count - 1)
 
 	else 
-		(*let new_shape = Jast.Circle(100.0, 0.0, 0.0) in
-		new_list@[new_shape]*)
+
 	raise (Error ("Only circles, squares, and triangles supported."))
 
+(*Pulls out all layers and deals with max radius given a mandala*)
 let get_layers  = function 
 	mandala ->
 	let n = List.length mandala.list_of_layers in 
 	let radius = mandala.max_layer_radius in
-	(*let f = (fun x -> mandala.max_layer_radius) in
-	let list_of_radii = Array.init n f in *)
 	let list_of_layers = mandala.list_of_layers in
 	let result = List.fold_left (fun a layer -> (layer, radius) :: a) [] list_of_layers in
 	result
-	(* function
-	Jast.mandala -> mandala_shape.list_of_layers *)
 
+(*Checks mandala and outputs list of shapes generated. Only draws those with is_draw boolean*)
 let process_mandala = function
 	mandala ->
 	if (mandala.is_draw = true) then
@@ -901,8 +744,8 @@ let process_mandala = function
 	else
 		[]
 
-(* create empty initial environment *)
-(* the environment keep track of the drawing we are creating *)
+(* Create empty initial environment *)
+(* The environment keeps track of the drawing we are creating *)
 let empty_drawing_env=
 {
 	mandala_list = [];
@@ -915,7 +758,7 @@ let empty_environment = {
  	functions = [];
 }
 
-
+(*Go through all mandalas and eventually convert into shape structures*)
 let rec process_mandalas (mandalas, shapes, total:Jast.mandala list * Jast.jShape list * float) = match mandalas 
 	with [] -> shapes
 	| [mandala] -> 
@@ -926,10 +769,8 @@ let rec process_mandalas (mandalas, shapes, total:Jast.mandala list * Jast.jShap
 			max_layer_radius = total;
 			is_draw = mandala.is_draw
 		} in
-		(*if (new_mandala.max_layer_radius = 0.0) then
- 			raise (Error ("max radius of "^ string_of_float new_mandala.max_layer_radius));*)
 		total = total +. x;
-		(shapes @ process_mandala new_mandala) (*let new_env = proc_stmt env stmt in new_env*)
+		(shapes @ process_mandala new_mandala)
 	| mandala :: other_mandalas -> 
 		let x = mandala.max_layer_radius in 
 		let new_mandala = {
@@ -938,18 +779,20 @@ let rec process_mandalas (mandalas, shapes, total:Jast.mandala list * Jast.jShap
 			max_layer_radius = total;
 			is_draw = mandala.is_draw
 		} in
-		(*if (new_mandala.max_layer_radius = 0.0) then
- 			raise (Error ("max radius of "^ string_of_float new_mandala.max_layer_radius));*)
 		total = total +. x;
 		(let new_shapes = process_mandala mandala in
 		process_mandalas (other_mandalas, (shapes @ new_shapes),total))
 
+(*Final conversion from Sast program to Jast program which runs all statements and moves into final structure*)
 let actual_final_convert (check_program: Sast.sprogram): (Jast.javaprogram) = 
 	let env = empty_environment in 
+	(*Parse all statements and update environment*)
 	let new_draw_env = gen_java env sast in 
 	let mandala_lists = new_draw_env.drawing.mandala_list in
 	let all_mandalas = List.rev (List.fold_left (fun a (_, mandala) -> mandala :: a) [] mandala_lists) in
 	let total_radius = 0.0  in
+	(*Get shapes from mandalas*)
 	let all_shapes = process_mandalas (all_mandalas, [], total_radius) in
+	(*All classes will have same name to allow java compilation*)
 	let prog_name = Jast.CreateClass("Program") in 
     Jast.JavaProgram(prog_name, all_shapes)
