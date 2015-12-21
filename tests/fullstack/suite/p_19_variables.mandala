@@ -1,0 +1,21 @@
+Mandala m = Create Mandala
+
+Number size = 25.0
+Number radius = 100.0
+
+Shape s = Create Shape:
+  Geo circle
+  Size size
+  Color black
+  Rotation 0.0
+
+Layer l = Create Layer:
+  Radius radius
+  Shape s
+  Count 8
+  Offset 0.0
+  AngularShift 0 
+
+addTo: (m, l)
+
+draw: (m) 

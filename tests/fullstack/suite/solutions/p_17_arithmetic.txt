@@ -48,14 +48,30 @@ public static void drawTriangle(Turtle t, double size, double x, double y, doubl
     Turtle t = new Turtle();
     t.hide();
     t.speed(0);
-    drawCircle(t,10.,-70.7109126647,70.7104435718,"black");
-    drawCircle(t,10.,-70.7105373907,-70.7108188464,"black");
-    drawCircle(t,10.,70.7107250279,-70.7106312094,"black");
-    drawCircle(t,10.,70.7107250279,70.7106312094,"black");
-    drawCircle(t,10.,-99.9999999996,-0.00026535897938,"black");
-    drawCircle(t,10.,0.000132679489668,-99.9999999999,"black");
-    drawCircle(t,10.,100.,0.,"black");
-    drawCircle(t,10.,0.000132679489668,99.9999999999,"black");
+    drawCircle(t,10.,-127.279642796,127.278798429,"black");
+    drawCircle(t,10.,-179.999999999,-0.000477646162883,"black");
+    drawCircle(t,10.,-127.278967303,-127.279473923,"black");
+    drawCircle(t,10.,0.000238823081402,-180.,"black");
+    drawCircle(t,10.,127.27930505,-127.279136177,"black");
+    drawCircle(t,10.,180.,0.,"black");
+    drawCircle(t,10.,127.27930505,127.279136177,"black");
+    drawCircle(t,10.,0.000238823081402,180.,"black");
+    drawCircle(t,10.,-113.137460263,113.136709715,"black");
+    drawCircle(t,10.,-159.999999999,-0.000424574367007,"black");
+    drawCircle(t,10.,-113.136859825,-113.137310154,"black");
+    drawCircle(t,10.,0.000212287183468,-160.,"black");
+    drawCircle(t,10.,113.137160045,-113.137009935,"black");
+    drawCircle(t,10.,160.,0.,"black");
+    drawCircle(t,10.,113.137160045,113.137009935,"black");
+    drawCircle(t,10.,0.000212287183468,160.,"black");
+    drawCircle(t,10.,-28.2843650659,28.2841774287,"black");
+    drawCircle(t,10.,-39.9999999999,-0.000106143591752,"black");
+    drawCircle(t,10.,-28.2842149563,-28.2843275385,"black");
+    drawCircle(t,10.,5.30717958671e-05,-40.,"black");
+    drawCircle(t,10.,28.2842900112,-28.2842524837,"black");
+    drawCircle(t,10.,40.,0.,"black");
+    drawCircle(t,10.,28.2842900112,28.2842524837,"black");
+    drawCircle(t,10.,5.30717958671e-05,40.,"black");
 try {
   Thread.sleep(3000);
 } catch(InterruptedException ex) {

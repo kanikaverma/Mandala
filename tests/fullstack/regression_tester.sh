@@ -38,7 +38,7 @@ do
 
   #COMPARING
   j_filename=${m_file%.*}
-  j_filename=${j_filename##*/}$".java"
+  j_filename=${j_filename##*/}$".txt"
   compareTo=$"solutions/"$j_filename
 
   diff=$(python $compare Program.java $compareTo)

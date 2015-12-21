@@ -48,14 +48,7 @@ public static void drawTriangle(Turtle t, double size, double x, double y, doubl
     Turtle t = new Turtle();
     t.hide();
     t.speed(0);
-    drawCircle(t,10.,-70.7109126647,70.7104435718,"black");
-    drawCircle(t,10.,-70.7105373907,-70.7108188464,"black");
-    drawCircle(t,10.,70.7107250279,-70.7106312094,"black");
-    drawCircle(t,10.,70.7107250279,70.7106312094,"black");
-    drawCircle(t,10.,-99.9999999996,-0.00026535897938,"black");
-    drawCircle(t,10.,0.000132679489668,-99.9999999999,"black");
-    drawCircle(t,10.,100.,0.,"black");
-    drawCircle(t,10.,0.000132679489668,99.9999999999,"black");
+    drawCircle(t,50.,0.,0.,"black");
 try {
   Thread.sleep(3000);
 } catch(InterruptedException ex) {
