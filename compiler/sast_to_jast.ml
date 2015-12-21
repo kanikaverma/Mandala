@@ -23,7 +23,7 @@ let find_function (scope: environment) fid =
 
 let find_variable (scope: environment) name=
 	try
-		List.find (fun (s,_) -> s=name) scope.drawing.variables 
+		List.find (fun (s,_) -> s=name) (List.rev scope.drawing.variables)
 	with Not_found -> raise (Error ("Didn't find variable in Sast_to_jast! "^name))
 let find_variable_check_return_type (scope, return_typ: environment * smndlt) name=
 	try
@@ -66,12 +66,15 @@ let rec get_layer_info(env, actual_args, layer_list: environment * Sast.sexpr li
 		(*Now we ahve checked the arguemnts *)
 		(* now we want to look in the variables to see if the layer is defined *)
 		let layer_name = match layer_arg 
-			with Sast.Id(layer_arg) -> let l_arg = layer_arg in l_arg
+			with Sast.Id(l) -> l
 			| _ -> raise (Error("This layer is not a string name "));
 		in 
 		let (my_layer_name, my_layer_typ) = find_variable new_env layer_name in 
+		(*let get_that_out_of_there = List.filter ( fun (l_name, l_typ) -> if (l_name=my_layer_name) then false else true) new_env.drawing.variables in 
+		let new_drawing = {new_env.drawing with variables = get_that_out_of_there} in
+		let new_new_env = {new_env with drawing = new_drawing} in*)
 		let my_layer_info = match my_layer_typ 
-			with Jast.JLayert(my_layer_typ) -> let result_layer = my_layer_typ in result_layer 
+			with Jast.JLayert(m) -> m
 			| _ -> raise (Error ("Getting layer info failed!"));
 		in 
 		(layer_list @[my_layer_info], new_env)
@@ -79,12 +82,15 @@ let rec get_layer_info(env, actual_args, layer_list: environment * Sast.sexpr li
 		(*Now we ahve checked the arguemnts *)
 		(* now we want to look in the variables to see if the layer is defined *)
 		let layer_name = match layer_arg 
-			with Sast.Id(layer_arg) -> let l_arg = layer_arg in l_arg
+			with Sast.Id(l) -> l
 			| _ -> raise (Error("This layer is not a string name "));
 		in 
 		let (my_layer_name, my_layer_typ) = find_variable new_env layer_name in 
+		(*let get_that_out_of_there = List.filter ( fun (l_name, l_typ) -> if (l_name=my_layer_name) then false else true) new_env.drawing.variables in 
+		let new_drawing = {new_env.drawing with variables = get_that_out_of_there} in
+		let new_new_env = {new_env with drawing = new_drawing} in *)
 		let my_layer_info = match my_layer_typ 
-			with Jast.JLayert(my_layer_typ) -> let result_layer = my_layer_typ in result_layer 
+			with Jast.JLayert(m) -> m
 			| _ -> raise (Error ("Getting layer info failed!"));
 		in 
 		get_layer_info (new_env, other_layers, layer_list @ [my_layer_info])
@@ -131,8 +137,8 @@ and proc_expr (env:environment): (Sast.sexpr -> environment * Jast.jdata_type) =
 			find_variable env vname 
 		with Not_found -> 
 			raise (Error("undeclared identifier: "^vname))
-		in let (name, typ) = var_info in 
-		(env, typ)
+		in let (name, value) = var_info in 
+		(env, value)
 	| Sast.Literal(literal_var) ->
 		(* raise (Error("Hit literal var")) *)
 		(* TODO: Actually evaluate! *)
@@ -286,28 +292,26 @@ in (env, Jast.JNumbert(result))
 			(* CHECK FOR ARG PASSED IN *)
 
 			if (len == 1) 
-				then (* only have one mandala that we are drawing *)
-					(* Update environment - includes changing bool for current mandala is_draw to true *)
-					(* WILL ADD MANDALAS MULTIPLE TIMES TO THE MANDALA LIST! WHEN PARSING IT, WILL BE FINE, WILL GET ALL CORRECT ONES *)
-					(* let curr_mandala = find_mandala new_env args in *)
-					(* CHANGE EVERYTHING SO THAT IT WILL JUST LOOK AT SAST.ID! *)
+				then (*Drawing one mandala*)
 					let check_arg = List.hd args in 
 					let curr_name = match check_arg
-						with Sast.Id(check_arg) -> let new_check_arg = check_arg in new_check_arg (*raise (Error("CHECK ARG IS A STRING!!! "^check_arg));*) (*check_arg*)
+						with Sast.Id(check_arg) -> let new_check_arg = check_arg in new_check_arg
 						| _ -> raise (Error("This mandala has not been defined"))
 
 					in 
-					let (mandala_name, untyped_mandala) = find_variable env curr_name in 
+					(*let (mandala_name, untyped_mandala) = find_variable env curr_name in *)
+					let (mandala_name, untyped_mandala) =  List.find (fun (s,_) -> s=curr_name) env.drawing.variables in
 					let actual_mandala = match untyped_mandala
 						with Jast.JMandalat(untyped_mandala) -> untyped_mandala
 						| _ -> raise(Error("The variable returned is invalid because it is not of type mandala. "))
 					in 
+					(*let actual_mandala = untyped_mandala in*)
 					(* TODO: add this and find_mandala func and change updated_current_manda let mandala_info = find_mandala new_env curr_name in *)
 					(* NOTE: Below is a series of list.Filters that are intended to do the same thing as removing an element from a list, updating 
 					that element and then adding it back to the list *)
 					let drawn_mandalas = List.filter ( fun (m_name, m_typ) -> if (m_typ.is_draw = true) then true else false) env.drawing.mandala_list in  
 					let false_mandalas = List.filter (fun (m_name, m_typ) -> if (m_typ.is_draw=false) then true else false) env.drawing.mandala_list in 
-					let other_mandalas = List.filter (fun (x, mandala_info) -> if (x = curr_name) then false else true) env.drawing.mandala_list in 
+					let other_mandalas = List.filter (fun (x, mandala_info) -> if (x = curr_name) then false else true) env.drawing.mandala_list in
 
 					let updated_current_mandala = {
 						name = curr_name;
@@ -316,6 +320,7 @@ in (env, Jast.JNumbert(result))
 						is_draw = true;
 					} in
 					let test_layer_size = List.length actual_mandala.list_of_layers in 
+					(*raise(Error("I have a mandala with this many layers: "^ string_of_int test_layer_size));*)
 					(*raise (Error("THIS IS SIZE OF LAYERS in draw func " ^ string_of_int test_layer_size));*)
 					(* list of all mandalas to draw *)
 					(* let updated_drawn_mandalas =  drawn_mandalas @ [curr_name, updated_current_mandala] in
@@ -323,6 +328,8 @@ in (env, Jast.JNumbert(result))
 					*)
 					(* Updated variables *)
 					let filtered_vars = List.filter (fun (var_name, var_typ) -> if (var_name=curr_name) then false else true) env.drawing.variables in 
+					(*let filtered_mandalas = List.filter (fun (var_name, var_typ) -> if (var_name=curr_name) then false else true) env.drawing.mandala_list in *)
+
 					let mandalas_to_be_drawn = drawn_mandalas@[(curr_name, updated_current_mandala)] in 
 					(* let l = List.length mandalas_to_be_drawn in
 					 if ( l > 1) then *)
@@ -347,41 +354,43 @@ in (env, Jast.JNumbert(result))
 						let rev_args = List.rev args in
 						let update_mandala = List.hd rev_args in 
 						let update_mandala_name = match update_mandala 
-							with Sast.Id(update_mandala) -> let m_name = update_mandala in m_name 
+							with Sast.Id(update_mandala) -> update_mandala
 							| _ -> raise (Error("This name is not a string! "))
-						(* we know that this mandala has been declared, 
-						because above when the args are mapped, they are each checked with find_variable *)
-						(* return type for proc_expr is Jast.jexpr * Jast.drawing * Jast.jdata_type *)
-						(* NEED TO WRITE A FUNCTION get_layers to call expr and check that each ID layer is defined 
-							let rec get_layers(env, actual_args, layer_list: Jast.drawing * Jast.jexpr list * Jast.layer list): (Jast.layer list * Jast.drawing) = match actual_args
-								with []-> raise (Error("INVALID, must have atleast one arg!"));
-								| [layer_arg] -> let (new_expr, new_env, ret_typ) = proc_expr env layer_arg in (layer_list @[new_expr], new_env)
-								| layer_arg :: other_layers -> let (new_expr, new_env, ret_typ) = proc_expr env layer_arg in
-								get_layers (other_layers, new_env, layer_list@[new_stmt])
-							*)
+
 						in 
 
-						let (mandala_name, untyped_mandala) = find_variable env update_mandala_name in 
+						let (mandala_name, untyped_mandala) =  List.find (fun (s,_) -> s=update_mandala_name) env.drawing.variables in
+
+						(*let (mandala_name, untyped_mandala) = find_variable env update_mandala_name in *)
+						(*let actual_mandala = physical_mandala*)
 						let actual_mandala = match untyped_mandala
 						with Jast.JMandalat(untyped_mandala) -> untyped_mandala
 						| _ -> raise(Error("The variable returned is invalid because it is not of type mandala. "))
-						in 
-						let curr_layer_list = actual_mandala.list_of_layers in 
-						let separate_layers_list = match rev_args 
-							with hd :: tail -> get_layer_info (env, tail, curr_layer_list) 
+						in
+						let old_layer_list = actual_mandala.list_of_layers in 
+
+						(*if(arg_name = "tempLayer") then 
+						raise(Error("Found these many layers"^ string_of_int l));*)
+
+						let new_layers_list = match rev_args 
+							with hd :: tail -> get_layer_info (env, tail, old_layer_list) 
 							| _ -> raise (Error("This doesn't have a mandala and layers ! "^update_mandala_name))
 						in 
 						(* separate_layers_list is of type Jast.layer list * Jast.drawing *)
-						let (actual_layer_list, layer_updated_env) = separate_layers_list 
-						in 
-						(* Now get the actual mandala with that name *)
-						(* WRITE METHOD FOR FIND MANDALA *)
-						(* WRITE FUNCTION TO Check the max layer radius *)
-						(* Now copy over the mandala info to a new mandala list, and add the layers to the mandala's layer list *)
-						let lay_len = List.length actual_layer_list in 
-						(* raise (Error("layer size"^string_of_int lay_len)); *)
+						let (actual_layer_list, layer_updated_env) = new_layers_list in
 
-						let updated_layer_list = (curr_layer_list @ actual_layer_list) in
+						let l = List.length old_layer_list in
+						(*if (l > 0) then
+						raise(Error("I have this many old layers: "^string_of_int l));
+
+						let l = List.length actual_layer_list in
+						if (l > 1) then
+						raise(Error("I have this many new layers: "^string_of_int l));*)
+
+						let updated_layer_list = ((*old_layer_list @*) actual_layer_list) in
+						let l = List.length updated_layer_list in
+						(*if (l > 1) then
+						raise(Error("I have this many layers in a mandala in addTo: "^string_of_int l)); *)
 
 						let rec find_max l = match l with
 							| [] -> 0.0
@@ -394,45 +403,31 @@ in (env, Jast.JNumbert(result))
 
 						let updated_current_mandala = {
 							name = update_mandala_name;
-							list_of_layers = updated_layer_list;(* (actual_mandala.list_of_layers :: actual_layer_list); *) (*@ actual_layer_list; *)(* mandala_object.list_of_layers; *)
-							max_layer_radius = get_max_layer_radius updated_layer_list; (*mandala_object.list_of_layers;*)
-							(*is_draw = actual_mandala.is_draw;*)
+							list_of_layers = updated_layer_list;
+							max_layer_radius = get_max_layer_radius updated_layer_list;
 							is_draw = false;
-
 						} in
-						(* JCall of string * jexpr list *)
-						(* return type for proc_expr is Jast.jexpr * Jast.drawing * Jast.jdata_type *)
-						(* get a list of all mandalas except the one that has just been updated, then add that mandala *)
-						(* ADD BACK!! let other_unchanged_mandalas = List.filter (fun (x, mandala_info) -> if (x = update_mandala_name) then false else true) env.mandala_list in  
-						let updated_drawn_mandalas =  other_unchanged_mandalas @ [update_mandala_name, updated_current_mandala] in *)
 						
-						(* Filter out all mandalas except the current mandala *)
+						let env = layer_updated_env in
+						(* Leave in all mandalas except the current mandala (pull this one out) *)
+						let unchanged_variables = List.filter ( fun (m_name, m_typ) -> if (m_name=update_mandala_name) then false else true) env.drawing.variables in 
 
-						let unchanged_mandalas = List.filter ( fun (m_name, m_typ) -> if (m_name=actual_mandala.name) then false else true) env.drawing.variables in 
+						(* Then add back in the updated mandala to the list of all variables *)
+						let updated_variables = unchanged_variables@[(update_mandala_name, Jast.JMandalat(updated_current_mandala))] in 
 
-						(* Also filter out variables from variable list to update *)
-						(* let unchanges_variables =  *)
+						(*Take out this mandala and add it back in with updated stuff*)
+						let unchanged_mandalas = List.filter ( fun (m_name, m_typ) -> if (m_name=update_mandala_name) then false else true) env.drawing.mandala_list in 
+						let updated_mandala_list = env.drawing.mandala_list@[update_mandala_name, updated_current_mandala] in
 
-						(* let unchanged_mandalas = List.Filter ( fun (m_name, m_typ) -> if(m_typ.name=update_mandala_name) then false else true) env.mandala_list in *)
-						(* Then add back in the updated mandala to the list of all mandalas *)
-
-						let updated_variables = unchanged_mandalas@[(update_mandala_name, Jast.JMandalat(updated_current_mandala))] in 
-						(* let testing_layer_size = List.length test_updated_mandalas in 
-						raise (Error("HERE IS MANDALA SIEZ!!!!!! "^ string_of_int testing_layer_size)); *)
-						let new_draw_env = {mandala_list = env.drawing.mandala_list; variables = updated_variables; java_shapes_list = env.drawing.java_shapes_list;} in
+						let new_draw_env = {mandala_list = updated_mandala_list; variables = updated_variables; java_shapes_list = env.drawing.java_shapes_list;} in
 						let new_env = {drawing = new_draw_env; functions = env.functions} in
 
-						(* (Jast.JCall(func_name, actual_expr_list), new_draw_env, Jast.JMandalat(updated_current_mandala)) *)
 						(new_env, Jast.JMandalat(updated_current_mandala))
-						(* (Jast.JCall(func_name, actual_expr_list), Sast.Mandalat, env)*)
 					else 
 						raise (Error( "addTo function has incorrect parameters "))
 				else
-					(* (Jast.JCall(func_name, args_info), env, Jast.JVoid) *)
 					(env, Jast.JVoid)
 
-			(* Want to set the bool is_draw to true for the list of mandalas *)
-			(* return Jast.jexpr * Jast.drawing * Jast.jdata_type *)
 
 	| _ -> raise(Error("Other call found"))
 
@@ -607,6 +602,8 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 
 				(*i_cur is the data type to insert into variable table*)
 				let i_cur = Jast.JNumbert(k_cur) in 
+				(*if (k_cur > 1.0) then
+				raise(Error("current i is "^string_of_float k_cur));*)
 				(*Need to update actual value of i in the table and then update environment*)
 				let new_variables = List.filter ( fun (n, v) -> if (n = var_name) then false else true) env.drawing.variables in  
 				let updated_vars = new_variables @[(var_name, i_cur)] in 
@@ -652,7 +649,7 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 		let old_variables_minus_i = List.filter ( fun (n, v) -> if (n = i) then false else true) store_old_vars in  
 		let old_vars_with_update_i = old_variables_minus_i @[(i, i_end)] in 
 
-		let updated_drawing = {new_env.drawing with variables = old_vars_with_update_i} in
+		let updated_drawing = new_env.drawing in
 		let updated_env = {new_env with drawing = updated_drawing} in 
 		updated_env
 
@@ -830,7 +827,7 @@ let extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer * float ->
 			 let rad_offset = my_layer.offset *. pi /. 180.0 in 
 			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count) in 
 			 let x_pos = cos (my_angle) *. my_layer.radius in
-			 let y_pos = sin (my_angle) *. my_layer.radius -. big_radius in
+			 let y_pos = sin (my_angle) *. my_layer.radius in
 			 let extra_rotation = 
 			 	if (my_layer.angularshift = 1)
 			 	then
@@ -856,7 +853,7 @@ let extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer * float ->
 			 let rad_offset = my_layer.offset *. pi /. 180.0 in 
  			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count) in 
 			 let x_pos = cos (my_angle) *. my_layer.radius in
-			 let y_pos = sin (my_angle) *. my_layer.radius -. big_radius in
+			 let y_pos = sin (my_angle) *. my_layer.radius  in
 			 let color = listed_shape.color in 
 			 let new_shape = Jast.Circle(listed_shape.size, x_pos, y_pos, color) in 
 				 if (k > 0) then 
@@ -874,7 +871,7 @@ let extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer * float ->
 			 let rad_offset = my_layer.offset *. pi /. 180.0 in 
 			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int my_layer.count) in 
 			 let x_pos = cos (my_angle) *. my_layer.radius in
-			 let y_pos = sin (my_angle) *. my_layer.radius -. big_radius in
+			 let y_pos = sin (my_angle) *. my_layer.radius in
 			 let extra_rotation = 
 			 	if (my_layer.angularshift = 1)
 			 	then
