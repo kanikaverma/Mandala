@@ -21,7 +21,7 @@ type translation_environment ={
 }
 
 (*List of java built-in colors, for use for color in shape*)
-(*let list_of_colors = ["red" ; "blue"] in*)
+let list_of_colors = ["black"; "red"; "blue"; "cyan"; "darkGray"; "gray"; "green"; "lightGray"; "orange"; "pink"; "white"; "yellow"]
 
 (* returns the name, type and value *)
 let find_variable (scope: symbol_table) name=
@@ -84,20 +84,25 @@ let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * sm
 			let name = vname in 
 			(Sast.Id(name), geo_typ, env)
 		
-		else if (vname="yellow" || vname="green" || vname="blue" || vname="red" || vname="black" || vname="blue")
-			(* TODO: @Edo INSTEAD MAKE DICTIONARY OF COLORS AND CHECK ALL COLORS *)
-			then let color_typ = Sast.Colort in 
-			let name = vname in 
-			(Sast.Id(name), color_typ, env)
-		else
-		let vdecl = try
-			find_variable env.var_scope vname
-		with Not_found ->
-			raise (Error("undeclared identifier: "^vname))
-			(* Want to add the symbol to our symbol table *)
-		in 
-		let (name, typ (*, val*)) =vdecl in 
-		(Sast.Id(name), typ, (*val,*) env)
+
+		else (*Checks for build in Id of color *)
+			let return_thing = try let color = List.find (fun s -> s=vname) list_of_colors in
+				let color_typ = Sast.Colort in 
+				let name = vname in 
+				(Sast.Id(name), color_typ, env)
+			
+			with Not_found ->
+			(*Otherwise name is treated as a variable*)
+			let vdecl = try
+				find_variable env.var_scope vname
+			with Not_found ->
+				raise (Error("undeclared identifier: "^vname))
+				(* Want to add the symbol to our symbol table *)
+			in 
+			let (name, typ) =vdecl in 
+			(Sast.Id(name), typ, env) 
+
+		in return_thing
 	
 		(* AST Call of string * expr list*)
 	| Ast.Float_Literal(num) ->
