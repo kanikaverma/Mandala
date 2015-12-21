@@ -75,6 +75,7 @@ basic_types:
   | BOOLEAN                                                  { Booleant }
   | GEO                                                      { Geot }
   | COLOR                                                    { Colort }
+  | VOID                                                     { Voidt }
 
 stmt_list:
   /* nothing */                                              { [] }

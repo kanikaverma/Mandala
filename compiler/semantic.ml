@@ -3,89 +3,41 @@ open Sast
 
 exception Error of string
 
-(* In semantic just want to check that statments have the correct types *)
-(* In our symbol table just want to store the type of the variable, the variable name and the value if it is a float, int or geo of string, 
-otherwise it is just an sdata_type like Sast.SMandala for the value *)
-(* The value itself of that variable is passed along in our statement list and handled in sast_to_jast *)
-(* For example, when we are doing Number n = 5; we want to check that 5 is of type Number *)
-(* We only care about checking the types here and the actual value of 5 is passed along in the list of Sast.sstmt's *)
-(* When we define a Mandala, we want to store the type of Mandala, we can just store it as name_of_mandala, Sast.Mandalat, Sast.SMandala *)
-(* When declaring variables they have to be done in the form Number n = 5; cannot just declare a variable and you cannot just assign a value
-to a variable *)
-(* When reassigning a value to a variable, you must also write the type fo the variable, like Number n = 7; *)
-(* When you encounter an assignment, check if that variable has already been declared in the symbol table, if yes, just update the value in
-the table, otherwise add the variable to the symbol table *)
-(* When updating the symbol table, look for the triplet, and match on the variable name, if it exists, modify it to include that new value
-and then add it back in, if it is new just add it *)
-(* To modify the element you can search using List.filter *)
-
-(*symbol table *)
+(*Storing all variables, including parent for coping*)
 type symbol_table={
 	parent : symbol_table option;
-	variables: (string * smndlt (** sdata_type*) ) list (* adding the name, type *)
+	variables: (string * smndlt) list 
 }
 
+(*Storing all functions*)
 type function_table={
 	functions: (string * smndlt * svar_decl list * sstmt list) list
 } 
 
-(*envioronment*)
+(*Complete environment*)
 type translation_environment ={
-	(* return_type: datatype; fnctions return type 
-		return_seen: bool does the function have a  return statemtn
-	location: string;  using for global or local checking 
-	global_scope: symbol_table; *)
 	var_scope: symbol_table;
 	fun_scope: function_table;
 }
-(* scope is env.var_scope *)
-(* scope.variabkles is a list of (string * sdata_type) *)
+
+(*List of java built-in colors, for use for color in shape*)
+(*let list_of_colors = ["red" ; "blue"] in*)
+
 (* returns the name, type and value *)
 let find_variable (scope: symbol_table) name=
 	try
 		List.find (fun (s,_) -> s=name) scope.variables
  
-	(* with Not_found -> try List.find (fun (s, _) -> s=name) scope.parent.variables*) 
-	with Not_found -> raise (Error ("Semantic not finding variable in lookup table "^name))
-		(*	Some(parent)-> find_variable parent name
-		| _ -> raise (Error("THIS IS NOT FOUND "^name)) *)
+	with Not_found -> raise (Error ("Unable to find variable in lookup table "^name))
 
 let rec find_function (scope: function_table) name =
 	try
 		List.find (fun (s, _, _, _) -> s=name) scope.functions
 	with Not_found ->
-		raise (Error("adding function to func_table FAILED! "^name))
-(* PROBABLY WON'T USE
-Part of comment
-update variables 
-let update_var env (name, datatype) = 
-	let ((_,_), location ) =
-		try (fun var_scope -> ((List.find (fun (dtype, id) -> id = name) var_scope), 1)) env.var_scope.variables
-	with Not_found -> try (fun var_scope -> ((List.find (fun (_,id) -> id=name) var_scope), 2))
-	env.global_scope.variables
-with Not_found -> raise Not_found in
-let new_envf =
-match location with
-	1 ->
-		let new_vars = List.map(fun(t, n) ->
-			if (n=name) then (datatype, name)
-		else (t, n)) env.var_scope.variables in
-		let new_sym_table = {parent = env.var_scope.parent; variables = new_vars;} in
-		let new_env = {env with var_scope = new_sym_table} in
-		new_env
-	| 2 ->
-		let new_vars = List.map (fun (t, n) ->
-			if (n=name) then (datatype, name) else (t,n)) env.global_scope.variables in
-		let new_sym_table = {parent = env.var_scope.parent; variables = new_vars;}
-	in 
-	let new_env = {env with global_scope = new_sym_table} in
-	new_env
-	| _ -> raise(Error("undefined scope"))
-in new_envf
-*)
-(* CURRENTLY CANNOT UPDATE VARIABLES, CAN ONLY DECLARE THEM *)
+		raise (Error("Function not found in function table! "^name))
 
-(* TODO: check to make sure it doesn't already exist before adding  *)
+
+(*Doesn't check if variable has previously been added*)
 let add_to_var_table (env, name, typ)  =
  	try
 		let (n, t) = List.find (fun(s,_)-> s=name) env.var_scope.variables in
@@ -114,21 +66,19 @@ let add_to_var_table (env, name, typ)  =
 
 let rec find_function (scope: function_table) name=
 		List.find (fun (s, _, _, _) -> s = name) scope.functions
-	(*with Not_found -> raise Not_found*)
+
 let rec extract_type (scope: function_table) name = function
 	(smndlt, string) -> (smndlt)
+
 let get_formal_arg_types env = function
 	(smndlt, string) -> (smndlt)
-(* let eval_math
-let eval_conditionals *)
-(* SBinop ( sexpr , binop , sexp r2 , datatype) −> Binop ( gen_tb_expr
-sexp r , binop , gen_tv_expr sexpr2 )*)
 
+(*Process a single expression, checking for type matching and compatibility*)
 let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * smndlt  * translation_environment) = function
 
 	Ast.Id(vname) ->
+		(* Check for built-in Ids for shapes like circle, triangle, and square *)
 		if (vname="circle" || vname="triangle" || vname="square")
-			(* Check for built-in Ids for shapes like circle, triangle, and square *)
 			then
 			let geo_typ = Sast.Geot in 
 			let name = vname in 
@@ -197,6 +147,18 @@ let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * sm
 *)
 
 	| Ast.Call(fid, args) ->
+
+		if not (  ((List.length args) > 0) ) then ( 
+			(*Make sure that func_decl has no formal arguments*)
+			let (_, ret_typ, decl_list, _) = find_function env.fun_scope fid in
+			let decl_size = List.length decl_list in
+			if (decl_size > 0) then
+				raise (Error("This function expects paramaters but none were provided"))
+			else 
+				(Sast.Call(fid, []), ret_typ, env)
+		)
+		 else 
+
 		
 		let actual_types = List.map (fun expr -> semantic_expr env expr) args in
 		(*let actual_type_names = List.iter extract_type actual_types*)
@@ -269,6 +231,7 @@ let proc_type = function
 	| Ast.Mandalat -> Sast.Mandalat
 	| Ast.Arrayt -> Sast.Arrayt
 	| Ast.Numbert -> Sast.Numbert
+	| Ast.Voidt -> Sast.Voidt
 
 let proc_var_decl = function 
 	(var_decl, env) -> 
