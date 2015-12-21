@@ -388,7 +388,7 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 		let (env, j_count) = proc_expr env v_count in 
 			(* Match with jdata_typ to get the float count *)
 			let actual_count = match j_count 
-				with Jast.JNumbert(j_count) -> let new_count = j_count in new_count 
+				with Jast.JInt(j_count) -> let new_count = j_count in new_count 
 				| _ -> raise (Error("Incorrect type for count")) 
 			in 
 		let (env, j_offset) = proc_expr env v_offset in 
@@ -650,12 +650,12 @@ let extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer * float ->
 				big_radius
 			in
 		let count = my_layer.count in
-		if (count >= 1.0 && listed_shape.geo = "square")
+		if (count >= 1 && listed_shape.geo = "square")
 		then 
 			let rec loop = function
 			(new_list, k) -> 
 			 let rad_offset = my_layer.offset *. pi /. 180.0 in 
-			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (k) *. 2.0*.pi /.my_layer.count in 
+			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /.(float_of_int) my_layer.count in 
 			 let x_pos = cos (my_angle) *. my_layer.radius in
 			 let y_pos = sin (my_angle) *. my_layer.radius in
 			 let extra_rotation = 
@@ -668,38 +668,38 @@ let extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer * float ->
 			 let rotat = listed_shape.rotation +. extra_rotation in
 			 let color = listed_shape.color in 
 			 let new_shape = Jast.Square(listed_shape.size, x_pos, y_pos, rotat, color) in 
-				 if (k > 0.0) then 
-				 let updated_k = k -. 1.0 in 
+				 if (k > 0) then 
+				 let updated_k = k - 1 in 
 				 	loop (new_list@[new_shape], updated_k)
 				 else
 					new_list@[new_shape]
 			in 
-			loop(new_list, count -. 1.0)
+			loop(new_list, count - 1)
 
-		else if (count >= 1.0 && listed_shape.geo = "circle")
+		else if (count >= 1 && listed_shape.geo = "circle")
 		then 
 			let rec loop = function
 			(new_list, k) ->
 			 let rad_offset = my_layer.offset *. pi /. 180.0 in 
- 			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (k) *. 2.0*.pi /. my_layer.count in 
+ 			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /. (float_of_int) my_layer.count in 
 			 let x_pos = cos (my_angle) *. my_layer.radius in
 			 let y_pos = sin (my_angle) *. my_layer.radius  in
 			 let color = listed_shape.color in 
 			 let new_shape = Jast.Circle(listed_shape.size, x_pos, y_pos, color) in 
-				 if (k > 0.0) then 
-				 let updated_k = k -. 1.0 in 
+				 if (k > 0) then 
+				 let updated_k = k - 1 in 
 				 	loop (new_list@[new_shape], updated_k)
 				 else
 					new_list@[new_shape] 
 			in 
-			loop(new_list, count -. 1.0)
+			loop(new_list, count - 1)
 
-		else if (count >= 1.0 && listed_shape.geo = "triangle")
+		else if (count >= 1 && listed_shape.geo = "triangle")
 		then 
 			let rec loop = function
 			(new_list, k) -> 
 			 let rad_offset = my_layer.offset *. pi /. 180.0 in 
-			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (k) *. 2.0*.pi /. my_layer.count in 
+			 let my_angle = -1.0 *. rad_offset +. pi/.2.0 -. (float_of_int k) *. 2.0*.pi /. (float_of_int my_layer.count) in 
 			 let x_pos = cos (my_angle) *. my_layer.radius in
 			 let y_pos = sin (my_angle) *. my_layer.radius in
 			 let extra_rotation = 
@@ -712,13 +712,13 @@ let extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer * float ->
 			 let rotat = listed_shape.rotation +. extra_rotation in
 			 let color = listed_shape.color in 
 			 let new_shape = Jast.Triangle(listed_shape.size, x_pos, y_pos, rotat, color) in 
-				 if (k > 0.0) then 
-				 let updated_k = k -. 1.0 in 
+				 if (k > 0) then 
+				 let updated_k = k - 1 in 
 				 	loop (new_list@[new_shape], updated_k)
 				 else
 					new_list@[new_shape]
 			in 
-			loop(new_list, count-.1.0)
+			loop(new_list, count - 1)
 
 	else 
 
