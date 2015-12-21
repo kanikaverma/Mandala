@@ -183,7 +183,8 @@ if __name__ == "__main__":
 
   # get the path 
   filename = os.path.basename(infile.name)
-  directory = os.path.dirname(infile.name) + '/'
+  try:
+    directory = os.path.dirname(infile.name) + '/'
 
   # get the filename without extension 
   if filename.lower().endswith(extensions):

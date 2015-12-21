@@ -1,4 +1,5 @@
 # compile a single mandala program and display the result 
+# save the output
 
 #!/bin/bash
 
