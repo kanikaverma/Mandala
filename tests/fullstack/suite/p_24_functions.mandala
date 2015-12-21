@@ -1,0 +1,22 @@
+Mandala m = Create Mandala
+
+Def Shape make_shape(Number x):
+  Shape s = Create Shape:
+    Geo square
+    Size 10.0
+    Color blue
+    Rotation 45.0
+  Return s 
+
+Number s = make_shape: (0.0)
+
+Layer l = Create Layer:
+  Radius 50.0 
+  Shape s 
+  Count 8 
+  Offset 0.0 
+  AngularShift 0
+
+addTo: (m, l)
+
+draw: (m)

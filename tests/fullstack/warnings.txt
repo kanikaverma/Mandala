@@ -1,22 +1,22 @@
-File "semantic.ml", line 127, characters 115-5781:
+File "semantic.ml", line 77, characters 115-6177:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Noexpr|Color _|Number _|Geo _)
-File "semantic.ml", line 265, characters 16-217:
+File "semantic.ml", line 227, characters 16-245:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Geot|Colort)
-File "semantic.ml", line 91, characters 10-11:
+File "semantic.ml", line 43, characters 10-11:
 Warning 26: unused variable t.
-File "semantic.ml", line 91, characters 7-8:
+File "semantic.ml", line 43, characters 7-8:
 Warning 26: unused variable n.
-File "semantic.ml", line 353, characters 6-9:
+File "semantic.ml", line 316, characters 6-9:
 Warning 26: unused variable typ.
-File "semantic.ml", line 429, characters 5-6:
+File "semantic.ml", line 392, characters 5-6:
 Warning 11: this match case is unused.
-File "semantic.ml", line 433, characters 10-20:
+File "semantic.ml", line 396, characters 10-20:
 Warning 26: unused variable returntype.
-File "semantic.ml", line 438, characters 5-6:
+File "semantic.ml", line 401, characters 5-6:
 Warning 11: this match case is unused.
 File "jast.mli", line 30, characters 1-13:
 Warning 30: the label name is defined in both types shape and layer.
@@ -38,106 +38,104 @@ Here is an example of a value that is not matched:
 File "sast_to_jast.ml", line 53, characters 15-215:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
-(Equal|Neq|Less|Leq|Greater|Geq)
+Equal
 File "sast_to_jast.ml", line 40, characters 73-769:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Noexpr|Call (_, _))
-File "sast_to_jast.ml", line 96, characters 5-351:
+File "sast_to_jast.ml", line 102, characters 5-351:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 _::_::_
-File "sast_to_jast.ml", line 121, characters 29-111:
+File "sast_to_jast.ml", line 127, characters 29-111:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Noexpr|Binop (_, _, _)|Call (_, _))
-File "sast_to_jast.ml", line 123, characters 43-125:
+File "sast_to_jast.ml", line 129, characters 43-125:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Noexpr|Binop (_, _, _)|Call (_, _))
-File "sast_to_jast.ml", line 167, characters 8-31:
+File "sast_to_jast.ml", line 173, characters 8-31:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (JInt _|JVoid|JBooleant _|JShapet _|JGeot _|JLayert _|JMandalat _|JArrayt|
 JColort _)
-File "sast_to_jast.ml", line 176, characters 8-31:
+File "sast_to_jast.ml", line 182, characters 8-31:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (JInt _|JVoid|JBooleant _|JShapet _|JGeot _|JLayert _|JMandalat _|JArrayt|
 JColort _)
-File "sast_to_jast.ml", line 181, characters 15-225:
+File "sast_to_jast.ml", line 187, characters 15-225:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
-(Equal|Neq|Less|Leq|Greater|Geq)
-File "sast_to_jast.ml", line 529, characters 6-22:
+Equal
+File "sast_to_jast.ml", line 508, characters 6-22:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (SInt|SLiteral|SFloat|SVoid|SNumber _|SBoolean _|SShape|SLayer|SMandala|
 SArray|SColor _)
-File "sast_to_jast.ml", line 534, characters 7-30:
+File "sast_to_jast.ml", line 513, characters 7-30:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (JInt _|JVoid|JBooleant _|JShapet _|JGeot _|JLayert _|JMandalat _|JArrayt|
 JColort _)
-File "sast_to_jast.ml", line 531, characters 20-206:
+File "sast_to_jast.ml", line 510, characters 20-206:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Noexpr|Binop (_, _, _)|Call (_, _))
-File "sast_to_jast.ml", line 537, characters 6-26:
+File "sast_to_jast.ml", line 516, characters 6-26:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (SInt|SLiteral|SFloat|SVoid|SNumber _|SBoolean _|SShape|SGeo _|SLayer|
 SMandala|SArray)
-File "sast_to_jast.ml", line 544, characters 7-30:
+File "sast_to_jast.ml", line 523, characters 7-30:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (JInt _|JVoid|JBooleant _|JShapet _|JGeot _|JLayert _|JMandalat _|JArrayt|
 JColort _)
-File "sast_to_jast.ml", line 541, characters 24-222:
+File "sast_to_jast.ml", line 520, characters 24-222:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Noexpr|Binop (_, _, _)|Call (_, _))
-File "sast_to_jast.ml", line 579, characters 6-16:
+File "sast_to_jast.ml", line 558, characters 6-16:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Float_Literal _|Noexpr|Binop (_, _, _)|Call (_, _))
-File "sast_to_jast.ml", line 601, characters 6-33:
+File "sast_to_jast.ml", line 580, characters 6-33:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Noexpr|Id _|Binop (_, _, _)|Call (_, _))
-File "sast_to_jast.ml", line 602, characters 6-31:
+File "sast_to_jast.ml", line 581, characters 6-31:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Noexpr|Id _|Binop (_, _, _)|Call (_, _))
-File "sast_to_jast.ml", line 950, characters 2-20:
+File "sast_to_jast.ml", line 931, characters 2-20:
 Warning 10: this expression should have type unit.
-File "sast_to_jast.ml", line 962, characters 2-20:
+File "sast_to_jast.ml", line 943, characters 2-20:
 Warning 10: this expression should have type unit.
-File "sast_to_jast.ml", line 258, characters 7-8:
+File "sast_to_jast.ml", line 254, characters 7-8:
 Warning 26: unused variable l.
-File "sast_to_jast.ml", line 309, characters 9-23:
-Warning 26: unused variable false_mandalas.
-File "sast_to_jast.ml", line 310, characters 9-23:
-Warning 26: unused variable other_mandalas.
-File "sast_to_jast.ml", line 318, characters 9-24:
+File "sast_to_jast.ml", line 305, characters 9-24:
 Warning 26: unused variable test_layer_size.
-File "sast_to_jast.ml", line 381, characters 10-17:
-Warning 26: unused variable lay_len.
-File "sast_to_jast.ml", line 572, characters 6-16:
-Warning 26: unused variable layer_size.
-File "sast_to_jast.ml", line 663, characters 6-13:
-Warning 26: unused variable new_var.
-File "sast_to_jast.ml", line 789, characters 7-18:
-Warning 26: unused variable update_list.
-File "sast_to_jast.ml", line 793, characters 7-8:
+File "sast_to_jast.ml", line 366, characters 10-11:
 Warning 26: unused variable l.
-File "sast_to_jast.ml", line 817, characters 6-29:
+File "sast_to_jast.ml", line 375, characters 10-11:
+Warning 26: unused variable l.
+File "sast_to_jast.ml", line 551, characters 6-16:
+Warning 26: unused variable layer_size.
+File "sast_to_jast.ml", line 644, characters 6-13:
+Warning 26: unused variable new_var.
+File "sast_to_jast.ml", line 770, characters 7-18:
+Warning 26: unused variable update_list.
+File "sast_to_jast.ml", line 774, characters 7-8:
+Warning 26: unused variable l.
+File "sast_to_jast.ml", line 798, characters 6-29:
 Warning 26: unused variable multiple_mandala_offset.
-File "sast_to_jast.ml", line 903, characters 5-6:
+File "sast_to_jast.ml", line 884, characters 5-6:
 Warning 26: unused variable n.
-File "sast_to_jast.ml", line 918, characters 6-16:
+File "sast_to_jast.ml", line 899, characters 6-16:
 Warning 26: unused variable num_layers.
-File "sast_to_jast.ml", line 954, characters 6-17:
+File "sast_to_jast.ml", line 935, characters 6-17:
 Warning 26: unused variable new_mandala.
 File "gen_java.ml", line 170, characters 4-32:
 Warning 10: this expression should have type unit.

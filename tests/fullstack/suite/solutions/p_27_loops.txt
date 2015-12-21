@@ -1,0 +1,160 @@
+public class Program{
+
+public static void drawCircle(Turtle t, double radius, double x, double y, String color) {
+   t.penColor(color);
+   t.up(); t.setPosition(x , y + radius); t.down();
+		for (int i = 0; i < 360; i++) {
+			t.forward(radius * 2 * Math.PI / 360);
+			t.right(1);
+       }
+}
+public static void drawSquare(Turtle t, double size, double x, double y, double rotation, String color) {
+    t.penColor(color);
+	  t.up();
+    t.setPosition(x - size/2, y + size/2);
+    rotation = rotation % 90;
+    double radius = Math.sqrt(2) * size / 2;
+    if (rotation > 0 ) t.left(45);
+	  for (int i = 0; i < rotation; i++) {
+			t.forward(radius * 2 * Math.PI / 360);
+			t.right(1);
+       }
+	  t.down();
+    if (rotation > 0) t.right(45);
+    int turn = 90;
+    t.forward( size ); t.right( turn );
+    t.forward( size ); t.right( turn );
+    t.forward( size ); t.right( turn );
+    t.forward( size ); t.right( turn );
+    t.left( rotation );
+}
+public static void drawTriangle(Turtle t, double size, double x, double y, double rotation, String color) {
+    t.penColor(color);
+    t.up(); t.setPosition(x - size/2, y + Math.sqrt(3)*size/6);
+    rotation = rotation % 120;
+    double radius = size / Math.sqrt(3);
+    if (rotation > 0) t.left(60);
+    for (int i = 0; i < rotation; i++) {
+      t.forward(radius*2*Math.PI / 360); t.right(1);
+    }
+    t.down(); if (rotation > 0) t.right(60); int turn = 120;
+    t.forward(size); t.right(turn);
+    t.forward(size); t.right(turn);
+    t.forward(size); t.right(turn);
+    t.left( rotation );
+}
+  public static void main(String[] args) {
+
+    Turtle t = new Turtle();
+    t.hide();
+    t.speed(0);
+    drawCircle(t,100.,0.,0.,"red");
+    drawCircle(t,99.,0.,0.,"red");
+    drawCircle(t,98.,0.,0.,"red");
+    drawCircle(t,97.,0.,0.,"red");
+    drawCircle(t,96.,0.,0.,"red");
+    drawCircle(t,95.,0.,0.,"red");
+    drawCircle(t,94.,0.,0.,"red");
+    drawCircle(t,93.,0.,0.,"red");
+    drawCircle(t,92.,0.,0.,"red");
+    drawCircle(t,91.,0.,0.,"red");
+    drawCircle(t,90.,0.,0.,"red");
+    drawCircle(t,89.,0.,0.,"red");
+    drawCircle(t,88.,0.,0.,"red");
+    drawCircle(t,87.,0.,0.,"red");
+    drawCircle(t,86.,0.,0.,"red");
+    drawCircle(t,85.,0.,0.,"red");
+    drawCircle(t,84.,0.,0.,"red");
+    drawCircle(t,83.,0.,0.,"red");
+    drawCircle(t,82.,0.,0.,"red");
+    drawCircle(t,81.,0.,0.,"red");
+    drawCircle(t,80.,0.,0.,"red");
+    drawCircle(t,79.,0.,0.,"red");
+    drawCircle(t,78.,0.,0.,"red");
+    drawCircle(t,77.,0.,0.,"red");
+    drawCircle(t,76.,0.,0.,"red");
+    drawCircle(t,75.,0.,0.,"red");
+    drawCircle(t,74.,0.,0.,"red");
+    drawCircle(t,73.,0.,0.,"red");
+    drawCircle(t,72.,0.,0.,"red");
+    drawCircle(t,71.,0.,0.,"red");
+    drawCircle(t,70.,0.,0.,"red");
+    drawCircle(t,69.,0.,0.,"red");
+    drawCircle(t,68.,0.,0.,"red");
+    drawCircle(t,67.,0.,0.,"red");
+    drawCircle(t,66.,0.,0.,"red");
+    drawCircle(t,65.,0.,0.,"red");
+    drawCircle(t,64.,0.,0.,"red");
+    drawCircle(t,63.,0.,0.,"red");
+    drawCircle(t,62.,0.,0.,"red");
+    drawCircle(t,61.,0.,0.,"red");
+    drawCircle(t,60.,0.,0.,"red");
+    drawCircle(t,59.,0.,0.,"red");
+    drawCircle(t,58.,0.,0.,"red");
+    drawCircle(t,57.,0.,0.,"red");
+    drawCircle(t,56.,0.,0.,"red");
+    drawCircle(t,55.,0.,0.,"red");
+    drawCircle(t,54.,0.,0.,"red");
+    drawCircle(t,53.,0.,0.,"red");
+    drawCircle(t,52.,0.,0.,"red");
+    drawCircle(t,51.,0.,0.,"red");
+    drawCircle(t,50.,0.,0.,"red");
+    drawCircle(t,49.,0.,0.,"red");
+    drawCircle(t,48.,0.,0.,"red");
+    drawCircle(t,47.,0.,0.,"red");
+    drawCircle(t,46.,0.,0.,"red");
+    drawCircle(t,45.,0.,0.,"red");
+    drawCircle(t,44.,0.,0.,"red");
+    drawCircle(t,43.,0.,0.,"red");
+    drawCircle(t,42.,0.,0.,"red");
+    drawCircle(t,41.,0.,0.,"red");
+    drawCircle(t,40.,0.,0.,"red");
+    drawCircle(t,39.,0.,0.,"red");
+    drawCircle(t,38.,0.,0.,"red");
+    drawCircle(t,37.,0.,0.,"red");
+    drawCircle(t,36.,0.,0.,"red");
+    drawCircle(t,35.,0.,0.,"red");
+    drawCircle(t,34.,0.,0.,"red");
+    drawCircle(t,33.,0.,0.,"red");
+    drawCircle(t,32.,0.,0.,"red");
+    drawCircle(t,31.,0.,0.,"red");
+    drawCircle(t,30.,0.,0.,"red");
+    drawCircle(t,29.,0.,0.,"red");
+    drawCircle(t,28.,0.,0.,"red");
+    drawCircle(t,27.,0.,0.,"red");
+    drawCircle(t,26.,0.,0.,"red");
+    drawCircle(t,25.,0.,0.,"red");
+    drawCircle(t,24.,0.,0.,"red");
+    drawCircle(t,23.,0.,0.,"red");
+    drawCircle(t,22.,0.,0.,"red");
+    drawCircle(t,21.,0.,0.,"red");
+    drawCircle(t,20.,0.,0.,"red");
+    drawCircle(t,19.,0.,0.,"red");
+    drawCircle(t,18.,0.,0.,"red");
+    drawCircle(t,17.,0.,0.,"red");
+    drawCircle(t,16.,0.,0.,"red");
+    drawCircle(t,15.,0.,0.,"red");
+    drawCircle(t,14.,0.,0.,"red");
+    drawCircle(t,13.,0.,0.,"red");
+    drawCircle(t,12.,0.,0.,"red");
+    drawCircle(t,11.,0.,0.,"red");
+    drawCircle(t,10.,0.,0.,"red");
+    drawCircle(t,9.,0.,0.,"red");
+    drawCircle(t,8.,0.,0.,"red");
+    drawCircle(t,7.,0.,0.,"red");
+    drawCircle(t,6.,0.,0.,"red");
+    drawCircle(t,5.,0.,0.,"red");
+    drawCircle(t,4.,0.,0.,"red");
+    drawCircle(t,3.,0.,0.,"red");
+    drawCircle(t,2.,0.,0.,"red");
+    drawCircle(t,1.,0.,0.,"red");
+    drawCircle(t,0.,0.,0.,"red");
+try {
+  Thread.sleep(3000);
+} catch(InterruptedException ex) {
+ Thread.currentThread().interrupt();
+}
+  t.save("Program.jpg");
+  }
+
+}
