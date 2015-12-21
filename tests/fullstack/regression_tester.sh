@@ -3,6 +3,7 @@
 
 #!/bin/bash
 
+# COMPONENTS
 preprocessor="../../compiler/preprocessor.py"
 run="../../compiler/run"
 j_file="Program.java"
@@ -11,7 +12,6 @@ warnings="../tests/fullstack/warnings.txt"
 compare="compare.py"
 
 # BUILDING
-
 cd ../../compiler
 echo "" > $warnings 
 make 2> $warnings
@@ -33,9 +33,6 @@ do
   cd suite 
   javac $j_file
 
-  # EXECUTION 
-  java $exe
-
   #COMPARING
   j_filename=${m_file%.*}
   j_filename=${j_filename##*/}$".txt"
@@ -52,7 +49,7 @@ do
   # CLEANING 
   rm -f *.proc
   mv Turtle.java Turtle.java.keep
-  #rm -f *.java
+  rm -f *.java
   mv Turtle.java.keep Turtle.java
   rm -f *.class
   cd ..
