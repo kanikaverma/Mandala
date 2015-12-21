@@ -1,0 +1,33 @@
+Mandala m = Create Mandala
+
+Def Number myfunc (Number a, Number b):
+  Return a - b
+
+
+Number x = myfunc: (200.0, 50.0)
+
+Shape triangle1 = Create Shape:
+  Geo triangle 
+  Size x
+  Color red 
+  Rotation 0.0
+
+Layer layer0 = Create Layer:
+  Radius 10.0 
+  Shape triangle1 
+  Count 10 
+  Offset 0.0 
+  AngularShift 0
+
+Layer layer1 = Create Layer:
+  Radius 100.0 
+  Shape triangle1 
+  Count 10 
+  Offset 180.0 
+  AngularShift 1
+
+
+addTo: (m, layer0)
+addTo: (m, layer1)
+
+draw: (m)
