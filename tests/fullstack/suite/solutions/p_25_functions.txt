@@ -48,12 +48,8 @@ public static void drawTriangle(Turtle t, double size, double x, double y, doubl
     Turtle t = new Turtle();
     t.hide();
     t.speed(0);
-    drawCircle(t,50.,0.,0.,"red");
-    drawCircle(t,40.,0.,0.,"red");
-    drawCircle(t,30.,0.,0.,"red");
-    drawCircle(t,20.,0.,0.,"red");
-    drawCircle(t,10.,0.,0.,"red");
-    drawCircle(t,0.,0.,0.,"red");
+    t.setPosition(0,0);
+    t.dot();
 try {
   Thread.sleep(3000);
 } catch(InterruptedException ex) {

@@ -1,0 +1,6 @@
+Def Number draw_m (Number a):
+  Mandala m = Create Mandala
+  draw: (m)
+  Return a
+
+Number x = draw_m: (0.0)

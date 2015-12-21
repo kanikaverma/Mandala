@@ -1,9 +1,9 @@
 Mandala m = Create Mandala
 
-Def Number myfunc (Number a, Number b):
-  Return a + b
+Def Number myfunc(Number a, Number b, Number c):
+  Return a + b - c * a + b / c - 3.0
 
-Number r = myfunc: (50.0, 50.0)
+Number x = myfunc: (3.0, 4.0, 2.0)
 
 Shape s = Create Shape:
   Geo circle
@@ -12,17 +12,17 @@ Shape s = Create Shape:
   Rotation 0.0 
 
 Layer l = Create Layer:
-  Radius 100.0
+  Radius 50.0 
   Shape s 
   Count 4 
   Offset 0.0 
   AngularShift 0
 
 Layer l2 = Create Layer:
-  Radius r
+  Radius 50.0 
   Shape s 
   Count 4 
-  Offset 45.0 
+  Offset x 
   AngularShift 0
 
 addTo: (m, l, l2)
