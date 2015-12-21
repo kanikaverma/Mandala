@@ -9,6 +9,7 @@ type mndlt =
 	| Mandalat
 	| Arrayt
 	| Colort
+	| Voidt
 
 type expr =
 	 Literal of int

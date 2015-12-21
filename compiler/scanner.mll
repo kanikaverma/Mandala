@@ -2,6 +2,7 @@
 
 { open Parser;; }
 
+(*numbers and literals*)
 let digit = ['0'-'9']
 let alpha = ['a'-'z' 'A'-'Z' '_']
 let number = '-'? digit+ '.' digit* | '-'? digit* '.' digit+
@@ -30,21 +31,11 @@ rule token = parse
 | "<"          { LT }       | ">"     { GT }
 | "<="         { LEQ }      | ">="    { GEQ }
 
-(* boolean operators *)
-(*| "true"       { TRUE }     | "false" { FALSE }
-| "and"        { AND }      | "or"    { OR }
-| "not"        { NOT }      | "xor"   { XOR }*)
-
 (* assignment *)
 | '='          { ASSIGN }   | ':'     { COLON }  
 
-(* conditional words *)
-| "If"         { IF }
-| "Else"       { ELSE }
-
 (* loop words *)
-| "Break" { BREAK }			| "Foreach"    { FOREACH }  
-| "To"    { TO }			| "Continue"   { CONTINUE } 
+| "To" { TO }			| "Foreach"    { FOREACH }  
 
 (* punctuation and delimiters *)
 | '('          { LPAREN }     | ')'       { RPAREN }

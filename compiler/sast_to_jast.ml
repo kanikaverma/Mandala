@@ -32,7 +32,7 @@ let find_variable_check_return_type (scope, return_typ: environment * smndlt) na
 	if (not(return_typ = Sast.Voidt)) then 
 		raise (Error ("Didn't find return statement for non-void function"))
 	else
-		raise (Error("We failed"))
+		("", Jast.JVoid)
 let find_mandala (scope: environment) mandala_name = 
 	try List.find ( fun (str, mandala) -> str = mandala_name) scope.drawing.mandala_list
 	with Not_found -> raise (Error ("MANDALA WAS NOT FOUND IN MANDALA LIST! "^mandala_name))
@@ -206,46 +206,26 @@ and proc_expr (env:environment): (Sast.sexpr -> environment * Jast.jdata_type) =
 	| _ -> raise (Error("FAILURE!!!")) *)
 in (env, Jast.JNumbert(result)) 
 
-		(* 
-
-		and jdata_type =
-	JInt of int 
-	| JVoid
-	| JNumbert of float
-	| JBooleant of int 
-	| JShapet of shape 
-	| JGeot of string 
-	| JLayert of layer
-	| JMandalat of mandala
-	| JArrayt
-	| JColort of string
-		*)
-
-		(* WANT TO TERM JInt ot JBooleant or JNumbert *)
-			(* Check what the operator is *)
-			(* let opertaor_typ = match operator 
-				with Add -> eval_math typ1 typ2 
-				| Sub -> eval_math typ1 typ2 
-				| Mult -> eval_math typ1 typ2 
-				| Div -> eval_math typ1 typ2
-				| Equal -> eval_conditionals typ1 typ2
-				| Neq -> eval_conditionals typ1 typ2 
-				| Less -> eval_conditionals typ1 typ2 
-				| Leq -> eval_conditionals typ1 typ2 
-				| Greater -> eval_conditionals typ1 typ2
-				| Geq -> eval_conditionals typ1 typ2  *)
-			(* Jast.drawing * Jast.jdata_type *)
-			(* so instead of using jexpr can just store in drawing table *)
-			(* Can make Float of float adn Litearl of Int, then when you get it back, can just look up value in the table *)
-
+	(*Process function calls*)
 	|Sast.Call(fid, args) ->
+
+		let old_variables = env.drawing.variables in
 
 		if not (  List.length args > 0 ) then ( 
 			(*Make sure that func_decl has no formal arguments*)
 			let my_func_decl = find_function env fid in
 			let my_body = my_func_decl.sbody in
-			let new_env = separate_statements_s(my_body, env) in
-			(new_env, Jast.JVoid)
+			let env_with_return = separate_statements_s(my_body, env) in
+			let return_name = "return" in 
+
+			let var = find_variable_check_return_type (env_with_return, my_func_decl.sreturntype) return_name in
+
+			let (n, v) = var in
+			let new_env = {
+				drawing = {mandala_list = env_with_return.drawing.mandala_list; variables = old_variables; java_shapes_list = env_with_return.drawing.java_shapes_list};
+				functions =  env_with_return.functions;
+			} in
+			(new_env, v)
 
 		)
 		 else 
@@ -253,7 +233,7 @@ in (env, Jast.JNumbert(result))
 		(* let (new_env, actual_types) = List.map (fun expr -> proc_expr env expr) args in *)
 			(*Add all variables only to my scope -- everything same except for variables*)
 			(*empty out variables, store them, put in the arg variables, later add back at end (but remove arg variables)*)
-		let old_variables = env.drawing.variables in
+
 
 		let all_param_names = process_arguments (args, []) in
 		let only_param_variables = List.filter ( fun (n, v) -> if ( List.mem n all_param_names ) then true else false) env.drawing.variables in  
@@ -275,14 +255,6 @@ in (env, Jast.JNumbert(result))
 			(*Need to process statements!!*)
 			let env_with_return = separate_statements_s(func_stmts, new_env) in 
 			let return_name = "return" in 
-
-			(*let var = find_variable env_with_return return_name in *)
-			(*let h = try ( List.find (fun (s,_) -> s=return_name) env_with_return.drawing.variables )
-
-			with Not_found -> (
-				let return_typ = my_func_decl.sreturntype in
-				if (return_typ = Sast.Voidt) then 
-				raise (Error ("Didn't find return statement for non-void function"^return_name)); )*)
 
 			let var = find_variable_check_return_type (env_with_return, my_func_decl.sreturntype) return_name in
 
