@@ -1,0 +1,17 @@
+Mandala n = Create Mandala 
+
+Foreach i = 1.0 To 10.0:
+  Number x = i * 10.0
+  Shape mysquare = Create Shape:
+    Geo square
+    Size x
+    Color cyan 
+    Rotation 45.0
+  Layer tempLayer = Create Layer:
+    Radius x 
+    Shape mysquare 
+    Count 12 
+    Offset 0.0 
+    AngularShift 1
+  addTo:(n, tempLayer)
+draw:(n)
