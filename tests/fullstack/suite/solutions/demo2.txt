@@ -1,0 +1,191 @@
+public class Program{
+
+public static void drawCircle(Turtle t, double radius, double x, double y, String color) {
+   t.penColor(color);
+   t.up(); t.setPosition(x , y + radius); t.down();
+		for (int i = 0; i < 360; i++) {
+			t.forward(radius * 2 * Math.PI / 360);
+			t.right(1);
+       }
+}
+public static void drawSquare(Turtle t, double size, double x, double y, double rotation, String color) {
+    t.penColor(color);
+	  t.up();
+    t.setPosition(x - size/2, y + size/2);
+    rotation = rotation % 90;
+    double radius = Math.sqrt(2) * size / 2;
+    if (rotation > 0 ) t.left(45);
+	  for (int i = 0; i < rotation; i++) {
+			t.forward(radius * 2 * Math.PI / 360);
+			t.right(1);
+       }
+	  t.down();
+    if (rotation > 0) t.right(45);
+    int turn = 90;
+    t.forward( size ); t.right( turn );
+    t.forward( size ); t.right( turn );
+    t.forward( size ); t.right( turn );
+    t.forward( size ); t.right( turn );
+    t.left( rotation );
+}
+public static void drawTriangle(Turtle t, double size, double x, double y, double rotation, String color) {
+    t.penColor(color);
+    t.up(); t.setPosition(x - size/2, y + Math.sqrt(3)*size/6);
+    rotation = rotation % 120;
+    double radius = size / Math.sqrt(3);
+    if (rotation > 0) t.left(60);
+    for (int i = 0; i < rotation; i++) {
+      t.forward(radius*2*Math.PI / 360); t.right(1);
+    }
+    t.down(); if (rotation > 0) t.right(60); int turn = 120;
+    t.forward(size); t.right(turn);
+    t.forward(size); t.right(turn);
+    t.forward(size); t.right(turn);
+    t.left( rotation );
+}
+  public static void main(String[] args) {
+
+    Turtle t = new Turtle();
+    t.hide();
+    t.speed(0);
+    drawTriangle(t,200.,-50.0003064098,86.6023634719,375.,"red");
+    drawTriangle(t,200.,-86.6026951708,49.9997318909,345.,"red");
+    drawTriangle(t,200.,-99.9999999996,-0.000265358979291,315.,"red");
+    drawTriangle(t,200.,-86.602429812,-50.0001915062,285.,"red");
+    drawTriangle(t,200.,-49.9998467948,-86.6026288313,255.,"red");
+    drawTriangle(t,200.,0.000132679489712,-99.9999999999,225.,"red");
+    drawTriangle(t,200.,50.0000766025,-86.6024961519,195.,"red");
+    drawTriangle(t,200.,86.6025624917,-49.9999616987,165.,"red");
+    drawTriangle(t,200.,100.,2.22044604925e-14,135.,"red");
+    drawTriangle(t,200.,86.6025624917,49.9999616987,105.,"red");
+    drawTriangle(t,200.,50.0000766025,86.6024961519,75.,"red");
+    drawTriangle(t,200.,0.000132679489668,99.9999999999,45.,"red");
+    drawTriangle(t,190.,-47.5002910894,82.2722452983,375.,"red");
+    drawTriangle(t,190.,-82.2725604122,47.4997452963,345.,"red");
+    drawTriangle(t,190.,-94.9999999997,-0.000252091030326,315.,"red");
+    drawTriangle(t,190.,-82.2723083214,-47.5001819309,285.,"red");
+    drawTriangle(t,190.,-47.4998544551,-82.2724973897,255.,"red");
+    drawTriangle(t,190.,0.000126045515227,-94.9999999999,225.,"red");
+    drawTriangle(t,190.,47.5000727724,-82.2723713443,195.,"red");
+    drawTriangle(t,190.,82.2724343671,-47.4999636138,165.,"red");
+    drawTriangle(t,190.,95.,2.10942374679e-14,135.,"red");
+    drawTriangle(t,190.,82.2724343671,47.4999636138,105.,"red");
+    drawTriangle(t,190.,47.5000727724,82.2723713443,75.,"red");
+    drawTriangle(t,190.,0.000126045515184,94.9999999999,45.,"red");
+    drawTriangle(t,180.,-45.0002757689,77.9421271247,375.,"red");
+    drawTriangle(t,180.,-77.9424256537,44.9997587018,345.,"red");
+    drawTriangle(t,180.,-89.9999999997,-0.000238823081362,315.,"red");
+    drawTriangle(t,180.,-77.9421868308,-45.0001723556,285.,"red");
+    drawTriangle(t,180.,-44.9998621154,-77.9423659482,255.,"red");
+    drawTriangle(t,180.,0.000119411540741,-89.9999999999,225.,"red");
+    drawTriangle(t,180.,45.0000689423,-77.9422465367,195.,"red");
+    drawTriangle(t,180.,77.9423062425,-44.9999655289,165.,"red");
+    drawTriangle(t,180.,90.,1.99840144433e-14,135.,"red");
+    drawTriangle(t,180.,77.9423062425,44.9999655289,105.,"red");
+    drawTriangle(t,180.,45.0000689423,77.9422465367,75.,"red");
+    drawTriangle(t,180.,0.000119411540701,89.9999999999,45.,"red");
+    drawTriangle(t,170.,-42.5002604484,73.6120089511,375.,"red");
+    drawTriangle(t,170.,-73.6122908952,42.4997721072,345.,"red");
+    drawTriangle(t,170.,-84.9999999997,-0.000225555132397,315.,"red");
+    drawTriangle(t,170.,-73.6120653402,-42.5001627803,285.,"red");
+    drawTriangle(t,170.,-42.4998697756,-73.6122345066,255.,"red");
+    drawTriangle(t,170.,0.000112777566255,-84.9999999999,225.,"red");
+    drawTriangle(t,170.,42.5000651121,-73.6121217291,195.,"red");
+    drawTriangle(t,170.,73.6121781179,-42.4999674439,165.,"red");
+    drawTriangle(t,170.,85.,1.88737914186e-14,135.,"red");
+    drawTriangle(t,170.,73.6121781179,42.4999674439,105.,"red");
+    drawTriangle(t,170.,42.5000651121,73.6121217291,75.,"red");
+    drawTriangle(t,170.,0.000112777566218,84.9999999999,45.,"red");
+    drawTriangle(t,160.,-40.0002451279,69.2818907775,375.,"red");
+    drawTriangle(t,160.,-69.2821561366,39.9997855127,345.,"red");
+    drawTriangle(t,160.,-79.9999999997,-0.000212287183433,315.,"red");
+    drawTriangle(t,160.,-69.2819438496,-40.000153205,285.,"red");
+    drawTriangle(t,160.,-39.9998774359,-69.282103065,255.,"red");
+    drawTriangle(t,160.,0.00010614359177,-79.9999999999,225.,"red");
+    drawTriangle(t,160.,40.000061282,-69.2819969215,195.,"red");
+    drawTriangle(t,160.,69.2820499933,-39.999969359,165.,"red");
+    drawTriangle(t,160.,80.,1.7763568394e-14,135.,"red");
+    drawTriangle(t,160.,69.2820499933,39.999969359,105.,"red");
+    drawTriangle(t,160.,40.000061282,69.2819969215,75.,"red");
+    drawTriangle(t,160.,0.000106143591734,79.9999999999,45.,"red");
+    drawTriangle(t,150.,-37.5002298074,64.9517726039,375.,"red");
+    drawTriangle(t,150.,-64.9520213781,37.4997989182,345.,"red");
+    drawTriangle(t,150.,-74.9999999997,-0.000199019234468,315.,"red");
+    drawTriangle(t,150.,-64.951822359,-37.5001436297,285.,"red");
+    drawTriangle(t,150.,-37.4998850961,-64.9519716235,255.,"red");
+    drawTriangle(t,150.,9.95096172841e-05,-74.9999999999,225.,"red");
+    drawTriangle(t,150.,37.5000574519,-64.9518721139,195.,"red");
+    drawTriangle(t,150.,64.9519218688,-37.499971274,165.,"red");
+    drawTriangle(t,150.,75.,1.66533453694e-14,135.,"red");
+    drawTriangle(t,150.,64.9519218688,37.499971274,105.,"red");
+    drawTriangle(t,150.,37.5000574519,64.9518721139,75.,"red");
+    drawTriangle(t,150.,9.95096172508e-05,74.9999999999,45.,"red");
+    drawTriangle(t,140.,-35.0002144869,60.6216544303,375.,"red");
+    drawTriangle(t,140.,-60.6218866195,34.9998123236,345.,"red");
+    drawTriangle(t,140.,-69.9999999998,-0.000185751285504,315.,"red");
+    drawTriangle(t,140.,-60.6217008684,-35.0001340544,285.,"red");
+    drawTriangle(t,140.,-34.9998927564,-60.6218401819,255.,"red");
+    drawTriangle(t,140.,9.28756427985e-05,-69.9999999999,225.,"red");
+    drawTriangle(t,140.,35.0000536218,-60.6217473063,195.,"red");
+    drawTriangle(t,140.,60.6217937442,-34.9999731891,165.,"red");
+    drawTriangle(t,140.,70.,1.55431223448e-14,135.,"red");
+    drawTriangle(t,140.,60.6217937442,34.9999731891,105.,"red");
+    drawTriangle(t,140.,35.0000536218,60.6217473063,75.,"red");
+    drawTriangle(t,140.,9.28756427674e-05,69.9999999999,45.,"red");
+    drawTriangle(t,130.,-32.5001991664,56.2915362567,375.,"red");
+    drawTriangle(t,130.,-56.291751861,32.4998257291,345.,"red");
+    drawTriangle(t,130.,-64.9999999998,-0.000172483336539,315.,"red");
+    drawTriangle(t,130.,-56.2915793778,-32.500124479,285.,"red");
+    drawTriangle(t,130.,-32.4999004166,-56.2917087403,255.,"red");
+    drawTriangle(t,130.,8.62416683129e-05,-64.9999999999,225.,"red");
+    drawTriangle(t,130.,32.5000497916,-56.2916224987,195.,"red");
+    drawTriangle(t,130.,56.2916656196,-32.4999751042,165.,"red");
+    drawTriangle(t,130.,65.,1.44328993201e-14,135.,"red");
+    drawTriangle(t,130.,56.2916656196,32.4999751042,105.,"red");
+    drawTriangle(t,130.,32.5000497916,56.2916224987,75.,"red");
+    drawTriangle(t,130.,8.6241668284e-05,64.9999999999,45.,"red");
+    drawTriangle(t,120.,-30.0001838459,51.9614180831,375.,"red");
+    drawTriangle(t,120.,-51.9616171025,29.9998391345,345.,"red");
+    drawTriangle(t,120.,-59.9999999998,-0.000159215387575,315.,"red");
+    drawTriangle(t,120.,-51.9614578872,-30.0001149037,285.,"red");
+    drawTriangle(t,120.,-29.9999080769,-51.9615772988,255.,"red");
+    drawTriangle(t,120.,7.96076938273e-05,-59.9999999999,225.,"red");
+    drawTriangle(t,120.,30.0000459615,-51.9614976911,195.,"red");
+    drawTriangle(t,120.,51.961537495,-29.9999770192,165.,"red");
+    drawTriangle(t,120.,60.,1.33226762955e-14,135.,"red");
+    drawTriangle(t,120.,51.961537495,29.9999770192,105.,"red");
+    drawTriangle(t,120.,30.0000459615,51.9614976911,75.,"red");
+    drawTriangle(t,120.,7.96076938007e-05,59.9999999999,45.,"red");
+    drawTriangle(t,110.,-27.5001685254,47.6312999096,375.,"red");
+    drawTriangle(t,110.,-47.6314823439,27.49985254,345.,"red");
+    drawTriangle(t,110.,-54.9999999998,-0.00014594743861,315.,"red");
+    drawTriangle(t,110.,-47.6313363966,-27.5001053284,285.,"red");
+    drawTriangle(t,110.,-27.4999157372,-47.6314458572,255.,"red");
+    drawTriangle(t,110.,7.29737193417e-05,-55.,225.,"red");
+    drawTriangle(t,110.,27.5000421314,-47.6313728836,195.,"red");
+    drawTriangle(t,110.,47.6314093704,-27.4999789343,165.,"red");
+    drawTriangle(t,110.,55.,1.22124532709e-14,135.,"red");
+    drawTriangle(t,110.,47.6314093704,27.4999789343,105.,"red");
+    drawTriangle(t,110.,27.5000421314,47.6313728836,75.,"red");
+    drawTriangle(t,110.,7.29737193173e-05,55.,45.,"red");
+    drawTriangle(t,100.,-25.0001532049,43.301181736,375.,"red");
+    drawTriangle(t,100.,-43.3013475854,24.9998659454,345.,"red");
+    drawTriangle(t,100.,-49.9999999998,-0.000132679489645,315.,"red");
+    drawTriangle(t,100.,-43.301214906,-25.0000957531,285.,"red");
+    drawTriangle(t,100.,-24.9999233974,-43.3013144157,255.,"red");
+    drawTriangle(t,100.,6.63397448561e-05,-50.,225.,"red");
+    drawTriangle(t,100.,25.0000383013,-43.301248076,195.,"red");
+    drawTriangle(t,100.,43.3012812458,-24.9999808494,165.,"red");
+    drawTriangle(t,100.,50.,1.11022302463e-14,135.,"red");
+    drawTriangle(t,100.,43.3012812458,24.9999808494,105.,"red");
+    drawTriangle(t,100.,25.0000383013,43.301248076,75.,"red");
+    drawTriangle(t,100.,6.63397448339e-05,50.,45.,"red");
+try {
+  Thread.sleep(3000);
+} catch(InterruptedException ex) {
+ Thread.currentThread().interrupt();
+}
+  t.save("Program.jpg");
+  }
+
+}
