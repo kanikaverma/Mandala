@@ -48,12 +48,30 @@ public static void drawTriangle(Turtle t, double size, double x, double y, doubl
     Turtle t = new Turtle();
     t.hide();
     t.speed(0);
-    drawCircle(t,50.,0.,0.,"red");
-    drawCircle(t,40.,0.,0.,"red");
-    drawCircle(t,30.,0.,0.,"red");
-    drawCircle(t,20.,0.,0.,"red");
-    drawCircle(t,10.,0.,0.,"red");
-    drawCircle(t,0.,0.,0.,"red");
+    drawCircle(t,25.,-35.3554563323,35.3552217859,"red");
+    drawCircle(t,25.,-49.9999999998,-0.00013267948969,"red");
+    drawCircle(t,25.,-35.3552686953,-35.3554094232,"red");
+    drawCircle(t,25.,6.63397448339e-05,-50.,"red");
+    drawCircle(t,25.,35.355362514,-35.3553156047,"red");
+    drawCircle(t,25.,50.,0.,"red");
+    drawCircle(t,25.,35.355362514,35.3553156047,"red");
+    drawCircle(t,25.,6.63397448339e-05,50.,"red");
+    drawCircle(t,25.,-70.7109126647,70.7104435718,"blue");
+    drawCircle(t,25.,-99.9999999996,-0.00026535897938,"blue");
+    drawCircle(t,25.,-70.7105373907,-70.7108188464,"blue");
+    drawCircle(t,25.,0.000132679489668,-99.9999999999,"blue");
+    drawCircle(t,25.,70.7107250279,-70.7106312094,"blue");
+    drawCircle(t,25.,100.,0.,"blue");
+    drawCircle(t,25.,70.7107250279,70.7106312094,"blue");
+    drawCircle(t,25.,0.000132679489668,99.9999999999,"blue");
+    drawCircle(t,25.,-47.8358504136,115.484767027,"green");
+    drawCircle(t,25.,-115.485084366,47.8350842896,"green");
+    drawCircle(t,25.,-115.484830495,-47.835697189,"green");
+    drawCircle(t,25.,-47.8352375145,-115.485020899,"green");
+    drawCircle(t,25.,47.8355439642,-115.484893963,"green");
+    drawCircle(t,25.,115.484957431,-47.8353907394,"green");
+    drawCircle(t,25.,115.484957431,47.8353907394,"green");
+    drawCircle(t,25.,47.8355439642,115.484893963,"green");
 try {
   Thread.sleep(3000);
 } catch(InterruptedException ex) {

@@ -1,0 +1,22 @@
+Mandala m = Create Mandala
+
+Foreach i=1.0 To 20.0:
+
+  Number r = i * 10.0
+
+  Shape s = Create Shape:
+    Geo square 
+    Size 10.0
+    Color red 
+    Rotation 0.0
+
+  Layer l = Create Layer:
+    Radius r 
+    Shape s 
+    Count 8 
+    Offset 0.0 
+    AngularShift 0
+
+  addTo: (m, l)
+
+draw: (m)

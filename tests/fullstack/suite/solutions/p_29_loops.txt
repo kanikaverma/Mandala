@@ -1,0 +1,219 @@
+public class Program{
+
+public static void drawCircle(Turtle t, double radius, double x, double y, String color) {
+   t.penColor(color);
+   t.up(); t.setPosition(x , y + radius); t.down();
+		for (int i = 0; i < 360; i++) {
+			t.forward(radius * 2 * Math.PI / 360);
+			t.right(1);
+       }
+}
+public static void drawSquare(Turtle t, double size, double x, double y, double rotation, String color) {
+    t.penColor(color);
+	  t.up();
+    t.setPosition(x - size/2, y + size/2);
+    rotation = rotation % 90;
+    double radius = Math.sqrt(2) * size / 2;
+    if (rotation > 0 ) t.left(45);
+	  for (int i = 0; i < rotation; i++) {
+			t.forward(radius * 2 * Math.PI / 360);
+			t.right(1);
+       }
+	  t.down();
+    if (rotation > 0) t.right(45);
+    int turn = 90;
+    t.forward( size ); t.right( turn );
+    t.forward( size ); t.right( turn );
+    t.forward( size ); t.right( turn );
+    t.forward( size ); t.right( turn );
+    t.left( rotation );
+}
+public static void drawTriangle(Turtle t, double size, double x, double y, double rotation, String color) {
+    t.penColor(color);
+    t.up(); t.setPosition(x - size/2, y + Math.sqrt(3)*size/6);
+    rotation = rotation % 120;
+    double radius = size / Math.sqrt(3);
+    if (rotation > 0) t.left(60);
+    for (int i = 0; i < rotation; i++) {
+      t.forward(radius*2*Math.PI / 360); t.right(1);
+    }
+    t.down(); if (rotation > 0) t.right(60); int turn = 120;
+    t.forward(size); t.right(turn);
+    t.forward(size); t.right(turn);
+    t.forward(size); t.right(turn);
+    t.left( rotation );
+}
+  public static void main(String[] args) {
+
+    Turtle t = new Turtle();
+    t.hide();
+    t.speed(0);
+    drawSquare(t,10.,-141.421825329,141.420887144,0.,"red");
+    drawSquare(t,10.,-199.999999999,-0.000530717958759,0.,"red");
+    drawSquare(t,10.,-141.421074781,-141.421637693,0.,"red");
+    drawSquare(t,10.,0.000265358979336,-200.,0.,"red");
+    drawSquare(t,10.,141.421450056,-141.421262419,0.,"red");
+    drawSquare(t,10.,200.,0.,0.,"red");
+    drawSquare(t,10.,141.421450056,141.421262419,0.,"red");
+    drawSquare(t,10.,0.000265358979336,200.,0.,"red");
+    drawSquare(t,10.,-134.350734063,134.349842787,0.,"red");
+    drawSquare(t,10.,-189.999999999,-0.000504182060821,0.,"red");
+    drawSquare(t,10.,-134.350021042,-134.350555808,0.,"red");
+    drawSquare(t,10.,0.000252091030369,-190.,0.,"red");
+    drawSquare(t,10.,134.350377553,-134.350199298,0.,"red");
+    drawSquare(t,10.,190.,0.,0.,"red");
+    drawSquare(t,10.,134.350377553,134.350199298,0.,"red");
+    drawSquare(t,10.,0.000252091030369,190.,0.,"red");
+    drawSquare(t,10.,-127.279642796,127.278798429,0.,"red");
+    drawSquare(t,10.,-179.999999999,-0.000477646162883,0.,"red");
+    drawSquare(t,10.,-127.278967303,-127.279473923,0.,"red");
+    drawSquare(t,10.,0.000238823081402,-180.,0.,"red");
+    drawSquare(t,10.,127.27930505,-127.279136177,0.,"red");
+    drawSquare(t,10.,180.,0.,0.,"red");
+    drawSquare(t,10.,127.27930505,127.279136177,0.,"red");
+    drawSquare(t,10.,0.000238823081402,180.,0.,"red");
+    drawSquare(t,10.,-120.20855153,120.207754072,0.,"red");
+    drawSquare(t,10.,-169.999999999,-0.000451110264945,0.,"red");
+    drawSquare(t,10.,-120.207913564,-120.208392039,0.,"red");
+    drawSquare(t,10.,0.000225555132435,-170.,0.,"red");
+    drawSquare(t,10.,120.208232547,-120.208073056,0.,"red");
+    drawSquare(t,10.,170.,0.,0.,"red");
+    drawSquare(t,10.,120.208232547,120.208073056,0.,"red");
+    drawSquare(t,10.,0.000225555132435,170.,0.,"red");
+    drawSquare(t,10.,-113.137460263,113.136709715,0.,"red");
+    drawSquare(t,10.,-159.999999999,-0.000424574367007,0.,"red");
+    drawSquare(t,10.,-113.136859825,-113.137310154,0.,"red");
+    drawSquare(t,10.,0.000212287183468,-160.,0.,"red");
+    drawSquare(t,10.,113.137160045,-113.137009935,0.,"red");
+    drawSquare(t,10.,160.,0.,0.,"red");
+    drawSquare(t,10.,113.137160045,113.137009935,0.,"red");
+    drawSquare(t,10.,0.000212287183468,160.,0.,"red");
+    drawSquare(t,10.,-106.066368997,106.065665358,0.,"red");
+    drawSquare(t,10.,-149.999999999,-0.00039803846907,0.,"red");
+    drawSquare(t,10.,-106.065806086,-106.06622827,0.,"red");
+    drawSquare(t,10.,0.000199019234502,-150.,0.,"red");
+    drawSquare(t,10.,106.066087542,-106.065946814,0.,"red");
+    drawSquare(t,10.,150.,0.,0.,"red");
+    drawSquare(t,10.,106.066087542,106.065946814,0.,"red");
+    drawSquare(t,10.,0.000199019234502,150.,0.,"red");
+    drawSquare(t,10.,-98.9952777306,98.9946210006,0.,"red");
+    drawSquare(t,10.,-140.,-0.000371502571132,0.,"red");
+    drawSquare(t,10.,-98.9947523469,-98.9951463849,0.,"red");
+    drawSquare(t,10.,0.000185751285535,-140.,0.,"red");
+    drawSquare(t,10.,98.9950150391,-98.9948836931,0.,"red");
+    drawSquare(t,10.,140.,0.,0.,"red");
+    drawSquare(t,10.,98.9950150391,98.9948836931,0.,"red");
+    drawSquare(t,10.,0.000185751285535,140.,0.,"red");
+    drawSquare(t,10.,-91.9241864641,91.9235766434,0.,"red");
+    drawSquare(t,10.,-130.,-0.000344966673194,0.,"red");
+    drawSquare(t,10.,-91.9236986079,-91.9240645003,0.,"red");
+    drawSquare(t,10.,0.000172483336568,-130.,0.,"red");
+    drawSquare(t,10.,91.9239425363,-91.9238205722,0.,"red");
+    drawSquare(t,10.,130.,0.,0.,"red");
+    drawSquare(t,10.,91.9239425363,91.9238205722,0.,"red");
+    drawSquare(t,10.,0.000172483336568,130.,0.,"red");
+    drawSquare(t,10.,-84.8530951976,84.8525322862,0.,"red");
+    drawSquare(t,10.,-120.,-0.000318430775256,0.,"red");
+    drawSquare(t,10.,-84.8526448688,-84.8529826156,0.,"red");
+    drawSquare(t,10.,0.000159215387601,-120.,0.,"red");
+    drawSquare(t,10.,84.8528700335,-84.8527574512,0.,"red");
+    drawSquare(t,10.,120.,0.,0.,"red");
+    drawSquare(t,10.,84.8528700335,84.8527574512,0.,"red");
+    drawSquare(t,10.,0.000159215387601,120.,0.,"red");
+    drawSquare(t,10.,-77.7820039312,77.781487929,0.,"red");
+    drawSquare(t,10.,-110.,-0.000291894877318,0.,"red");
+    drawSquare(t,10.,-77.7815911297,-77.781900731,0.,"red");
+    drawSquare(t,10.,0.000145947438635,-110.,0.,"red");
+    drawSquare(t,10.,77.7817975307,-77.7816943303,0.,"red");
+    drawSquare(t,10.,110.,0.,0.,"red");
+    drawSquare(t,10.,77.7817975307,77.7816943303,0.,"red");
+    drawSquare(t,10.,0.000145947438635,110.,0.,"red");
+    drawSquare(t,10.,-70.7109126647,70.7104435718,0.,"red");
+    drawSquare(t,10.,-99.9999999996,-0.00026535897938,0.,"red");
+    drawSquare(t,10.,-70.7105373907,-70.7108188464,0.,"red");
+    drawSquare(t,10.,0.000132679489668,-99.9999999999,0.,"red");
+    drawSquare(t,10.,70.7107250279,-70.7106312094,0.,"red");
+    drawSquare(t,10.,100.,0.,0.,"red");
+    drawSquare(t,10.,70.7107250279,70.7106312094,0.,"red");
+    drawSquare(t,10.,0.000132679489668,99.9999999999,0.,"red");
+    drawSquare(t,10.,-63.6398213982,63.6393992147,0.,"red");
+    drawSquare(t,10.,-89.9999999997,-0.000238823081442,0.,"red");
+    drawSquare(t,10.,-63.6394836516,-63.6397369617,0.,"red");
+    drawSquare(t,10.,0.000119411540701,-89.9999999999,0.,"red");
+    drawSquare(t,10.,63.6396525251,-63.6395680884,0.,"red");
+    drawSquare(t,10.,90.,0.,0.,"red");
+    drawSquare(t,10.,63.6396525251,63.6395680884,0.,"red");
+    drawSquare(t,10.,0.000119411540701,89.9999999999,0.,"red");
+    drawSquare(t,10.,-56.5687301317,56.5683548575,0.,"red");
+    drawSquare(t,10.,-79.9999999997,-0.000212287183504,0.,"red");
+    drawSquare(t,10.,-56.5684299125,-56.5686550771,0.,"red");
+    drawSquare(t,10.,0.000106143591734,-79.9999999999,0.,"red");
+    drawSquare(t,10.,56.5685800223,-56.5685049675,0.,"red");
+    drawSquare(t,10.,80.,0.,0.,"red");
+    drawSquare(t,10.,56.5685800223,56.5685049675,0.,"red");
+    drawSquare(t,10.,0.000106143591734,79.9999999999,0.,"red");
+    drawSquare(t,10.,-49.4976388653,49.4973105003,0.,"red");
+    drawSquare(t,10.,-69.9999999998,-0.000185751285566,0.,"red");
+    drawSquare(t,10.,-49.4973761735,-49.4975731925,0.,"red");
+    drawSquare(t,10.,9.28756427674e-05,-69.9999999999,0.,"red");
+    drawSquare(t,10.,49.4975075195,-49.4974418465,0.,"red");
+    drawSquare(t,10.,70.,0.,0.,"red");
+    drawSquare(t,10.,49.4975075195,49.4974418465,0.,"red");
+    drawSquare(t,10.,9.28756427674e-05,69.9999999999,0.,"red");
+    drawSquare(t,10.,-42.4265475988,42.4262661431,0.,"red");
+    drawSquare(t,10.,-59.9999999998,-0.000159215387628,0.,"red");
+    drawSquare(t,10.,-42.4263224344,-42.4264913078,0.,"red");
+    drawSquare(t,10.,7.96076938007e-05,-59.9999999999,0.,"red");
+    drawSquare(t,10.,42.4264350168,-42.4263787256,0.,"red");
+    drawSquare(t,10.,60.,0.,0.,"red");
+    drawSquare(t,10.,42.4264350168,42.4263787256,0.,"red");
+    drawSquare(t,10.,7.96076938007e-05,59.9999999999,0.,"red");
+    drawSquare(t,10.,-35.3554563323,35.3552217859,0.,"red");
+    drawSquare(t,10.,-49.9999999998,-0.00013267948969,0.,"red");
+    drawSquare(t,10.,-35.3552686953,-35.3554094232,0.,"red");
+    drawSquare(t,10.,6.63397448339e-05,-50.,0.,"red");
+    drawSquare(t,10.,35.355362514,-35.3553156047,0.,"red");
+    drawSquare(t,10.,50.,0.,0.,"red");
+    drawSquare(t,10.,35.355362514,35.3553156047,0.,"red");
+    drawSquare(t,10.,6.63397448339e-05,50.,0.,"red");
+    drawSquare(t,10.,-28.2843650659,28.2841774287,0.,"red");
+    drawSquare(t,10.,-39.9999999999,-0.000106143591752,0.,"red");
+    drawSquare(t,10.,-28.2842149563,-28.2843275385,0.,"red");
+    drawSquare(t,10.,5.30717958671e-05,-40.,0.,"red");
+    drawSquare(t,10.,28.2842900112,-28.2842524837,0.,"red");
+    drawSquare(t,10.,40.,0.,0.,"red");
+    drawSquare(t,10.,28.2842900112,28.2842524837,0.,"red");
+    drawSquare(t,10.,5.30717958671e-05,40.,0.,"red");
+    drawSquare(t,10.,-21.2132737994,21.2131330716,0.,"red");
+    drawSquare(t,10.,-29.9999999999,-7.96076938139e-05,0.,"red");
+    drawSquare(t,10.,-21.2131612172,-21.2132456539,0.,"red");
+    drawSquare(t,10.,3.98038469003e-05,-30.,0.,"red");
+    drawSquare(t,10.,21.2132175084,-21.2131893628,0.,"red");
+    drawSquare(t,10.,30.,0.,0.,"red");
+    drawSquare(t,10.,21.2132175084,21.2131893628,0.,"red");
+    drawSquare(t,10.,3.98038469003e-05,30.,0.,"red");
+    drawSquare(t,10.,-14.1421825329,14.1420887144,0.,"red");
+    drawSquare(t,10.,-19.9999999999,-5.30717958759e-05,0.,"red");
+    drawSquare(t,10.,-14.1421074781,-14.1421637693,0.,"red");
+    drawSquare(t,10.,2.65358979336e-05,-20.,0.,"red");
+    drawSquare(t,10.,14.1421450056,-14.1421262419,0.,"red");
+    drawSquare(t,10.,20.,0.,0.,"red");
+    drawSquare(t,10.,14.1421450056,14.1421262419,0.,"red");
+    drawSquare(t,10.,2.65358979336e-05,20.,0.,"red");
+    drawSquare(t,10.,-7.07109126647,7.07104435718,0.,"red");
+    drawSquare(t,10.,-9.99999999996,-2.6535897938e-05,0.,"red");
+    drawSquare(t,10.,-7.07105373907,-7.07108188464,0.,"red");
+    drawSquare(t,10.,1.32679489668e-05,-9.99999999999,0.,"red");
+    drawSquare(t,10.,7.07107250279,-7.07106312094,0.,"red");
+    drawSquare(t,10.,10.,0.,0.,"red");
+    drawSquare(t,10.,7.07107250279,7.07106312094,0.,"red");
+    drawSquare(t,10.,1.32679489668e-05,9.99999999999,0.,"red");
+try {
+  Thread.sleep(3000);
+} catch(InterruptedException ex) {
+ Thread.currentThread().interrupt();
+}
+  t.save("Program.jpg");
+  }
+
+}
