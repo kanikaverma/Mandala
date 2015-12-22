@@ -2,11 +2,12 @@
 
 #!/bin/bash
 
+# Author: Harsha Vemuri
+
 # COMPONENTS
 preprocessor="../../compiler/preprocessor.py"
 run="../../compiler/run"
 j_file="Program.java"
-exe="Program"
 warnings="../tests/fullstack/warnings.txt"
 compare="compare.py"
 

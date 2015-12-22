@@ -1,3 +1,7 @@
+#! /usr/bin/python
+
+# Author: Harsha Vemuri 
+
 import sys
 
 hashmap = {} 
@@ -18,6 +22,7 @@ def main():
   else:
     print -1 # unequal
 
+# hashmap of lines from first file 
 def build_hash_1():
   for line in f:
     line = line.strip()
@@ -26,6 +31,7 @@ def build_hash_1():
     else:
       hashmap[line] = 1
 
+# hashmap of lines from second file 
 def build_hash_2():
   for line in f2:
     line = line.strip()

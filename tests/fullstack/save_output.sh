@@ -1,7 +1,8 @@
-# compile a single mandala program 
-# save the output
+# Compile a single mandala program and save the output
 
 #!/bin/bash
+
+# Author: Harsha Vemuri 
 
 filename=$"suite/"$1
 
