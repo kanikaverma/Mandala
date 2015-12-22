@@ -221,7 +221,6 @@ in (env, Jast.JNumbert(result))
 			let my_formals = my_func_decl.sformals in
 			let new_env = match_formals(my_formals, args, env_with_param_vars) in
 			let func_stmts = my_func_decl.sbody in 
-			let l = List.length func_stmts in
 			(*Process statements with limited scope*)
 			let env_with_return = separate_statements_s(func_stmts, new_env) in 
 			let return_name = "return" in 
@@ -303,8 +302,6 @@ in (env, Jast.JNumbert(result))
 							| _ -> raise (Error("This doesn't have a mandala and layers ! "^update_mandala_name))
 						in 
 						let (actual_layer_list, layer_updated_env) = new_layers_list in
-
-						let l = List.length old_layer_list in
 
 						let updated_layer_list = actual_layer_list in
 
@@ -454,9 +451,6 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 		let updated_expr = proc_expr env expression in 
 		let (new_env, j_typ) = updated_expr in
 		(* Now return new environment and java statement *)
-		let (update_names,updated_env_mandalas) = List.hd new_env.drawing.mandala_list in 
-		let let_layers_listss = updated_env_mandalas.list_of_layers in 
-		let layer_size = List.length let_layers_listss in 
 		new_env
 
  	(*Process foreach loop*)
@@ -552,7 +546,6 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 		let return_val = eval_expr in
 		(*Signal for a function call to grab the return statement*)
 		let return_name = "return" in 
-		let new_var = (return_name, return_val) in
 		let updated_vars = new_env.drawing.variables @ [(return_name, return_val)] in 
 		let updated_drawing = {mandala_list= new_env.drawing.mandala_list; variables = updated_vars; java_shapes_list= new_env.drawing.java_shapes_list;} 
 		in let updated_env = {drawing = updated_drawing; functions = new_env.functions} in 
@@ -618,12 +611,9 @@ let gen_java (env:environment):(Sast.sprogram -> environment)= function
 		(* Check if the program has at least one statement *)
 		let x = List.length s in
 		if (x>0) then (
-			(*Check order of statements *)
-			let update_list = []  in 
 			(* Already reversed the statements in semantic when going from ast to jast, so don't need to reverse again *)
 			let updated_env = separate_functions_s (f, env) in 
 			let updated_env = separate_statements_s (s, updated_env) in  (* List.map( fun stmt_part -> separate_statements_s prog_stmts env ) in *)
-			let l = List.length updated_env.functions in
 			updated_env
 		)	
 
@@ -635,14 +625,7 @@ let extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer * float ->
 	(my_layer, big_radius) -> 
 
 		let listed_shape = my_layer.shape in
-		(*Allows possibility for offsetting multiple mandala*)
-		let multiple_mandala_offset = 
-			if (big_radius > 0.0) 
-			then 
-				big_radius +. listed_shape.size
-			else
-				big_radius
-			in
+
 		let count = my_layer.count in
 
 		(*Goes through the layer and calculates position and size for all squares*)
@@ -725,7 +708,6 @@ let extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer * float ->
 (*Pulls out all layers and deals with max radius given a mandala*)
 let get_layers  = function 
 	mandala ->
-	let n = List.length mandala.list_of_layers in 
 	let radius = mandala.max_layer_radius in
 	let list_of_layers = mandala.list_of_layers in
 	let result = List.fold_left (fun a layer -> (layer, radius) :: a) [] list_of_layers in
@@ -735,9 +717,7 @@ let get_layers  = function
 let process_mandala = function
 	mandala ->
 	if (mandala.is_draw = true) then
-	(*raise (Error("Some truth exists!"));*)
 	let layers_with_radii = get_layers mandala in
-		let num_layers = List.length layers_with_radii in
 		List.fold_left extract_shapes_from_layer [] layers_with_radii
 	else
 		[]
@@ -759,25 +739,21 @@ let empty_environment = {
 let rec process_mandalas (mandalas, shapes, total:Jast.mandala list * Jast.jShape list * float) = match mandalas 
 	with [] -> shapes
 	| [mandala] -> 
-		let x = mandala.max_layer_radius in 
 		let new_mandala = {
 			name = mandala.name;
 			list_of_layers = mandala.list_of_layers;
 			max_layer_radius = total;
 			is_draw = mandala.is_draw
 		} in
-		total = total +. x;
 		(shapes @ process_mandala new_mandala)
 	| mandala :: other_mandalas -> 
-		let x = mandala.max_layer_radius in 
 		let new_mandala = {
 			name = mandala.name;
 			list_of_layers = mandala.list_of_layers;
 			max_layer_radius = total;
 			is_draw = mandala.is_draw
 		} in
-		total = total +. x;
-		(let new_shapes = process_mandala mandala in
+		(let new_shapes = process_mandala new_mandala in
 		process_mandalas (other_mandalas, (shapes @ new_shapes),total))
 
 (*Final conversion from Sast program to Jast program which runs all statements and moves into final structure*)
