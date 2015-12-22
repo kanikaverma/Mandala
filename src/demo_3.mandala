@@ -1,40 +1,22 @@
-Mandala m = Create Mandala
+Foreach i=1.0 To 600.0:
+  
+  Mandala m = Create Mandala
 
-Shape rightRotTriangle = Create Shape:
-  Geo triangle 
-  Size 25.0
-  Color yellow 
-  Rotation 45.0
-Shape largeTriangle = Create Shape:
-  Geo triangle
-  Size 120.0
-  Color blue
-  Rotation 90.0
-Shape largeSquare = Create Shape:
-  Geo square
-  Size 70.0
-  Color blue
-  Rotation 0.0
-Layer inner = Create Layer:
-  Radius 30.0 
-  Shape rightRotTriangle 
-  Count 48 
-  Offset 0.0 
-  AngularShift 1
-Layer outer = Create Layer:
-  Radius 100.0
-  Shape largeTriangle
-  Count 6
-  Offset 0.0
-  AngularShift 1
-addTo: (m, inner, outer)
-Foreach i=1.0 To 6.0:
-  Number x = i * 10.0 + 70.0
-  Layer middle = Create Layer:
-    Radius x
-    Shape largeSquare
-    Count 6
-    Offset 0.0
-    AngularShift 1
-  addTo:(m, middle)
-draw: (m)
+  Number r = i / 3.0
+
+  Shape s = Create Shape:
+    Geo circle
+    Size 1.0
+    Color black
+    Rotation 0.0
+
+  Layer l = Create Layer:
+    Radius r
+    Shape s
+    Count 1
+    Offset i * 3.0 
+    AngularShift 0 
+
+  addTo: (m, l)
+
+  draw: (m) 
