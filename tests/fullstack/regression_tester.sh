@@ -1,5 +1,4 @@
-# Automated regression testing on full programs
-# Functionality for multiple files included 
+# Automated regression testing
 
 #!/bin/bash
 
@@ -22,28 +21,49 @@ mandala_files=$(find suite -name *\.mandala)
 
 for m_file in $mandala_files
 do
-  # PREPROCESSING
-  python $preprocessor $m_file
-  p_file=$(find suite -name *\.proc) 
 
-  # JAVA GENERATION
-  ./$run < $p_file > "suite/Program.java" & 
+  # PASSING TESTS 
+  if [[ $m_file == *"p_"* ]]
+  then 
 
-  # JAVA COMPILATION
-  cd suite 
-  javac $j_file
+    # PREPROCESSING
+    python $preprocessor $m_file
+    p_file=$(find suite -name *\.proc) 
 
-  #COMPARING
-  j_filename=${m_file%.*}
-  j_filename=${j_filename##*/}$".txt"
-  compareTo=$"solutions/"$j_filename
+    # JAVA GENERATION
+    ./$run < $p_file > "suite/Program.java" 
 
-  diff=$(python $compare Program.java $compareTo)
+    # JAVA COMPILATION
+    cd suite 
+    javac $j_file
 
-  if [[ $diff -eq 0 ]]; then
-    echo "Output Correct: [y]"$" for ${m_file##*/}"
+    #COMPARING
+    t_filename=${m_file%.*}
+    t_filename=${t_filename##*/}$".txt"
+    compareTo=$"solutions/"$t_filename
+
+    diff=$(python $compare Program.java $compareTo)
+
+    if [[ $diff -eq 0 ]]; then
+      echo "Output Correct: [y]"$" for ${m_file##*/}"
+    else
+      echo "Output Correct: [n]"$" for ${m_file##*/}"
+    fi
+
+  # TESTS THAT FAIL 
   else
-    echo "Output Correct: [n]"$" for ${m_file##*/}"
+    t_filename=${m_file%.*}
+    t_filename=$"suite/solutions/"${t_filename##*/}$".txt"
+    err=$(<$t_filename)
+    if [[ $err == "ERROR" ]]
+    then
+      echo "Output Correct: [y]"$" for ${m_file##*/}"
+    else
+      echo "Output Correct: [n]"$" for ${m_file##*/}"
+    fi
+
+    cd suite 
+    
   fi
 
   # CLEANING 
@@ -53,4 +73,5 @@ do
   mv Turtle.java.keep Turtle.java
   rm -f *.class
   cd ..
+
 done

@@ -123,7 +123,7 @@ let define_methods = function
       print_string "}\n"
 		)
 
-		else print_string "not defining methods"
+		else print_string ""
 
 (*Default classname is set to "Program"*)
 let get_string_of_classname = function 
@@ -132,12 +132,14 @@ let get_string_of_classname = function
 (*Final function that parses Jast program and generates code*)
 let gen_java_final = function
 	Jast.JavaProgram(classname, shapes) ->
+		let l = List.length shapes in 
 		let string_of_classname = get_string_of_classname classname in
 			print_string "public class ";
 			print_string string_of_classname; (*Print the string of class name for class header *)
 			print_string "{\n\n";
 
-			define_methods 1;
+			(*Only defines method if we need to use them to create shapes*)
+			define_methods l;
 
 	 		print_string "  public static void main(String[] args) {\n\n";
 	 		print_string "    Turtle t = new Turtle();\n";
@@ -145,7 +147,6 @@ let gen_java_final = function
 			print_string "    t.speed(0);\n";
 
 			(*Go through and print all the shapes*)
-			let l = List.length shapes in 
 			if (l > 0) then 
 				(List.map proc_shape shapes)
 			else if (l == 0) then
@@ -155,15 +156,7 @@ let gen_java_final = function
 				List.map proc_shape shapes)
 			else 
 				(List.map proc_shape shapes);
-				
-		    print_string "try {\n";
-		    print_string "  Thread.sleep(3000);\n";            
-		    print_string "} catch(InterruptedException ex) {\n";
-		    print_string " Thread.currentThread().interrupt();\n";
-		    print_string "}\n";
-			print_string "  t.save(\"";
-			print_string string_of_classname; (*Print the string of class name for jpg file*)
-			print_string ".jpg\");\n";
+        
 			print_string "  }\n\n}\n"
 
 let _ =	

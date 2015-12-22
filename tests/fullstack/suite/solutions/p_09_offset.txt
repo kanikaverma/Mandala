@@ -56,12 +56,6 @@ public static void drawTriangle(Turtle t, double size, double x, double y, doubl
     drawSquare(t,25.,-56.5684299125,-56.5686550771,0.,"black");
     drawSquare(t,25.,56.5685800223,-56.5685049675,0.,"black");
     drawSquare(t,25.,56.5685800223,56.5685049675,0.,"black");
-try {
-  Thread.sleep(3000);
-} catch(InterruptedException ex) {
- Thread.currentThread().interrupt();
-}
-  t.save("Program.jpg");
   }
 
 }

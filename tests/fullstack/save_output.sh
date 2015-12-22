@@ -1,4 +1,4 @@
-# compile a single mandala program and display the result 
+# compile a single mandala program 
 # save the output
 
 #!/bin/bash
@@ -22,24 +22,32 @@ python $preprocessor $filename
 p_file=$(find suite -name *\.proc) 
 
 # JAVA GENERATION
-./$run < $p_file > "suite/Program.java" & 
+./$run < $p_file > "suite/Program.java" || {
+  t_filename=${filename%.*}
+  t_filename=$"suite/solutions/"${t_filename##*/}$".txt"
+  echo "ERROR" > $t_filename
+  cd suite
+  rm -f *.proc
+  mv Turtle.java Turtle.java.keep
+  rm -f *.java
+  mv Turtle.java.keep Turtle.java
+  cd ..
+  exit 0
+}
 
 # JAVA COMPILATION
 cd suite
-javac $j_file
-
-# EXECUTION
-java $exe 
+javac $j_file 
 
 # SAVE OUTPUT
-j_filename=${filename%.*}
-j_filename=${j_filename##*/}$".txt"
-cat "Program.java" > $"solutions/"$j_filename
+t_filename=${filename%.*}
+t_filename=${t_filename##*/}$".txt"
+cat "Program.java" > $"solutions/"$t_filename
 
 # CLEANING
 rm -f *.proc
 mv Turtle.java Turtle.java.keep
-rm -f *.java
+#rm -f *.java
 mv Turtle.java.keep Turtle.java
 rm -f *.class
 cd ..
