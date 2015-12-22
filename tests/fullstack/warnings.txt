@@ -1,4 +1,5 @@
-File "semantic.ml", line 77, characters 115-6201:
+make: *** [scanner] Hangup: 1
+haracters 115-6201:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Noexpr|Color _|Number _|Geo _)
@@ -103,7 +104,8 @@ File "sast_to_jast.ml", line 470, characters 6-16:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Float_Literal _|Noexpr|Binop (_, _, _)|Call (_, _))
-File "sast_to_jast.ml", line 492, characters 6-33:
+make: *** [sast_to_jast] Hangup: 1
+haracters 6-33:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Noexpr|Id _|Binop (_, _, _)|Call (_, _))

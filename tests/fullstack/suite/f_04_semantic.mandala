@@ -1,0 +1,18 @@
+Mandala m = Create Mandala
+
+Shape s = Create Shape:
+  Geo diamond
+  Size 50.0
+  Color black
+  Rotation 0.0
+
+Layer l = Create Layer: 
+  Radius 0.0
+  Shape s
+  Count 1
+  Offset 0.0
+  AngularShift 0
+
+addTo: (m, l)
+
+draw: (m)
