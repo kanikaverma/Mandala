@@ -1,4 +1,4 @@
-# compile a single mandala program and display the result 
+# compile a single mandala program 
 # save the output
 
 #!/bin/bash
@@ -27,9 +27,6 @@ p_file=$(find suite -name *\.proc)
 # JAVA COMPILATION
 cd suite
 javac $j_file
-
-# EXECUTION
-java $exe 
 
 # SAVE OUTPUT
 j_filename=${filename%.*}
