@@ -69,7 +69,6 @@ let proc_shape = function
 		draw_square(side,x,y,rotation,color)
   | Jast.Triangle(side,x,y,rotation,color) ->
     draw_triangle(side,x,y,rotation,color)
-	|  _ -> raise (Error("other shapes unsupported"))
 
 (*Build primitive methods in java*)
 let define_methods = function
@@ -150,7 +149,6 @@ let gen_java_final = function
 			if (l > 0) then 
 				(List.map proc_shape shapes)
 			else if (l == 0) then
-				(*(List.map proc_shape shapes);*)
 				(*Just draw a dot if we have no shapes*)
 				(print_string "    t.setPosition(0,0);\n    t.dot();\n";
 				List.map proc_shape shapes)

@@ -3,40 +3,49 @@ open Sast
 open Jast
 open Semantic
 
+(*Define constant for mathematical calculations*)
 let pi = 3.14159
 
-
+(*Environment used to store all variables, functions, and drawing structure*)
 type environment = {
 	drawing: Jast.drawing;
 	functions: Sast.sfuncdecl list;
 }
 
+(*Creates an SAST by going through the scanner, parser, and semantic_check*)
 let sast =
 	let lexbuf = Lexing.from_channel stdin in
 	let ast = Parser.program Scanner.token lexbuf in
 	Semantic.semantic_check ast
 
+(*Looks up function from function table*)
 let find_function (scope: environment) fid = 
 	try
 		List.find (fun s -> s.sfname = fid) scope.functions
-	with Not_found -> raise (Error ("Didn't find function in Sast_to_jast! "^fid))
+	with Not_found -> raise (Error ("Function not properly declared: "^fid))
 
+(*Looks up variable from variable table*)
 let find_variable (scope: environment) name=
 	try
 		List.find (fun (s,_) -> s=name) (List.rev scope.drawing.variables)
-	with Not_found -> raise (Error ("Didn't find variable in Sast_to_jast! "^name))
+	with Not_found -> raise (Error ("Variable not properly declared: "^name))
+
+(*Looks up return value and ensures return type matches the specification in function declaration*)	
 let find_variable_check_return_type (scope, return_typ: environment * smndlt) name=
 	try
 		List.find (fun (s,_) -> s=name) scope.drawing.variables 
 	with Not_found -> 
 	if (not(return_typ = Sast.Voidt)) then 
-		raise (Error ("Didn't find return statement for non-void function"))
+		raise (Error ("No return statement found for non-void function. Must return a value of corresponding type."))
 	else
 		("", Jast.JVoid)
+
+(*Looks up mandala from mandala table*)
 let find_mandala (scope: environment) mandala_name = 
 	try List.find ( fun (str, mandala) -> str = mandala_name) scope.drawing.mandala_list
-	with Not_found -> raise (Error ("MANDALA WAS NOT FOUND IN MANDALA LIST! "^mandala_name))
+	with Not_found -> raise (Error ("Mandala not properly created: "^mandala_name))
 
+(*Processes a binary operation recursively*)
 let rec proc_bin_expr (scope: environment):(Sast.sexpr -> Sast.sexpr)  = function
 	Sast.Float_Literal(term1) -> Sast.Float_Literal(term1)
 	| Sast.Id(var) -> 
@@ -58,43 +67,35 @@ let rec proc_bin_expr (scope: environment):(Sast.sexpr -> Sast.sexpr)  = functio
 
 		in Sast.Float_Literal(result)
 
-
-
+(*Looks up given layer names and returns the actual structure of these layers to add to a Mandala structure*)
 let rec get_layer_info(env, actual_args, layer_list: environment * Sast.sexpr list * Jast.layer list): (Jast.layer list * environment) = match actual_args
-	with []-> raise (Error("INVALID, must have atleast one arg!"));
+	with []-> raise (Error("Invalid call of addTo: must be adding at least one layer."));
 	| [layer_arg] -> let (new_env, ret_typ) = proc_expr env layer_arg in 
-		(*Now we ahve checked the arguemnts *)
-		(* now we want to look in the variables to see if the layer is defined *)
+		(* Check to see if the layer has been defined *)
 		let layer_name = match layer_arg 
 			with Sast.Id(l) -> l
-			| _ -> raise (Error("This layer is not a string name "));
+			| _ -> raise (Error("Parameter provided to addTo is not a layer."));
 		in 
 		let (my_layer_name, my_layer_typ) = find_variable new_env layer_name in 
-		(*let get_that_out_of_there = List.filter ( fun (l_name, l_typ) -> if (l_name=my_layer_name) then false else true) new_env.drawing.variables in 
-		let new_drawing = {new_env.drawing with variables = get_that_out_of_there} in
-		let new_new_env = {new_env with drawing = new_drawing} in*)
 		let my_layer_info = match my_layer_typ 
 			with Jast.JLayert(m) -> m
-			| _ -> raise (Error ("Getting layer info failed!"));
+			| _ -> raise (Error ("Failure in retrieving layer information"));
 		in 
 		(layer_list @[my_layer_info], new_env)
 	| layer_arg :: other_layers -> let (new_env, ret_typ) = proc_expr env layer_arg in
-		(*Now we ahve checked the arguemnts *)
-		(* now we want to look in the variables to see if the layer is defined *)
+		(*Check to see if the layer has been defined*)
 		let layer_name = match layer_arg 
 			with Sast.Id(l) -> l
-			| _ -> raise (Error("This layer is not a string name "));
+			| _ -> raise (Error("Parameter provided to addTo is not a layer."));
 		in 
 		let (my_layer_name, my_layer_typ) = find_variable new_env layer_name in 
-		(*let get_that_out_of_there = List.filter ( fun (l_name, l_typ) -> if (l_name=my_layer_name) then false else true) new_env.drawing.variables in 
-		let new_drawing = {new_env.drawing with variables = get_that_out_of_there} in
-		let new_new_env = {new_env with drawing = new_drawing} in *)
 		let my_layer_info = match my_layer_typ 
 			with Jast.JLayert(m) -> m
-			| _ -> raise (Error ("Getting layer info failed!"));
+			| _ -> raise (Error ("Failure in retrieveing layer information"));
 		in 
 		get_layer_info (new_env, other_layers, layer_list @ [my_layer_info])
 
+(*Match the declared arguments of a function with its given parameters in a function call*)
 and match_formals (formals, params, env: Sast.svar_decl list * Sast.sexpr list * environment)  = match formals
 with [] -> env
 | [formal] -> let namer = formal.svname in
@@ -121,7 +122,7 @@ with [] -> env
 			   match_formals (other_formals, other_params, new_env) 
 			
 
-
+(*Pull out the values of the arguments passed into a function*)
 and process_arguments  (params, l: Sast.sexpr list * string list) = match params
 			with [] -> l
 			| [param] -> let result = match param with Sast.Float_Literal(term1) -> l
@@ -130,6 +131,7 @@ and process_arguments  (params, l: Sast.sexpr list * string list) = match params
 							|Sast.Id(var) -> l @ [var] in 
 							process_arguments (other_params, result)
 
+(*Process an SAST expression and return the new environment along with resulting JAST type*)
 and proc_expr (env:environment): (Sast.sexpr -> environment * Jast.jdata_type) = function
 	Sast.Id(vname) ->
 		(* Want to go from Sast.Id to Jast.jexpr or Jast.JId, and Jast.drawing *)
@@ -219,7 +221,6 @@ in (env, Jast.JNumbert(result))
 			let my_formals = my_func_decl.sformals in
 			let new_env = match_formals(my_formals, args, env_with_param_vars) in
 			let func_stmts = my_func_decl.sbody in 
-			let l = List.length func_stmts in
 			(*Process statements with limited scope*)
 			let env_with_return = separate_statements_s(func_stmts, new_env) in 
 			let return_name = "return" in 
@@ -302,8 +303,6 @@ in (env, Jast.JNumbert(result))
 						in 
 						let (actual_layer_list, layer_updated_env) = new_layers_list in
 
-						let l = List.length old_layer_list in
-
 						let updated_layer_list = actual_layer_list in
 
 						let rec find_max l = match l with
@@ -345,14 +344,15 @@ in (env, Jast.JNumbert(result))
 
 	| _ -> raise(Error("Other call found"))
 
+(*Process an entire statement list by recursively processing each statement in the list*)
 and separate_statements_s (stmts, env:Sast.sstmt list * environment) = match stmts 
 	with [] -> env
 	| [stmt] -> proc_stmt env stmt (*let new_env = proc_stmt env stmt in new_env*)
 	| stmt :: other_stmts ->
 		let new_env = proc_stmt env stmt in
-		(* let (nm, tp) = List.hd new_env.var_scope.variables in *)
 		separate_statements_s (other_stmts, new_env)
 
+(*Process an individual statement and return the resulting environment*)
 and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 	Sast.Mandala(var_decl) ->
 		(*Create new mandala object of name vname*)
@@ -417,7 +417,6 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 		new_env
 
 	| Sast.Shape(v_name, v_geo, v_size, v_color, v_rotation) ->
-		(* 	| Shape of svar_decl * sdata_type  Sast.Geot * sdata_type * sdata_type * sdata_type *)
 		let {skind = typ; svname = name;} = v_name in 
 		let Sast.SGeo(s_geo) = v_geo in 
 
@@ -426,16 +425,12 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 		| Sast.Id(var_name) -> let (name, value) = find_variable env var_name in
 			let Jast.JNumbert(real_val) = value in real_val in
 
-		(*let Sast.SNumber(s_size) = v_size in *)
 		let Sast.SColor(s_color) = v_color in 
-		(*let Sast.SNumber(s_rotation) = v_rotation in *)
-
 
 		let actual_rotation = match v_rotation with
 		Sast.Float_Literal(s_rotation) ->  s_rotation
 		| Sast.Id(var_name) -> let (name, value) = find_variable env var_name in
 			let Jast.JNumbert(real_val) = value in real_val in
-
 
 		let new_shape = {
 			name = name;
@@ -452,15 +447,10 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 
 	(*Process an expression*)
 	| Sast.Expr(expression)->
-		(* Want to add this expression to the mandala list *)
-		(* proc_expr returns a jexpr and an updated drawing *)
+		(* Add this expression to the mandala list *)
 		let updated_expr = proc_expr env expression in 
-		(* Return type of proc_expr is Jast.jexpr * Jast.drawing * Jast.jdata_type *)
 		let (new_env, j_typ) = updated_expr in
-		(* Now want to return new environment and jstmt *)
-		let (update_names,updated_env_mandalas) = List.hd new_env.drawing.mandala_list in 
-		let let_layers_listss = updated_env_mandalas.list_of_layers in 
-		let layer_size = List.length let_layers_listss in 
+		(* Now return new environment and java statement *)
 		new_env
 
  	(*Process foreach loop*)
@@ -556,7 +546,6 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 		let return_val = eval_expr in
 		(*Signal for a function call to grab the return statement*)
 		let return_name = "return" in 
-		let new_var = (return_name, return_val) in
 		let updated_vars = new_env.drawing.variables @ [(return_name, return_val)] in 
 		let updated_drawing = {mandala_list= new_env.drawing.mandala_list; variables = updated_vars; java_shapes_list= new_env.drawing.java_shapes_list;} 
 		in let updated_env = {drawing = updated_drawing; functions = new_env.functions} in 
@@ -570,8 +559,7 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 		(* now get the variable *)
 		let {skind = typ; svname = name;} = vardecl in 
 
-	(* Already checked types in semantic, so just need to make sure adding correct type for Jast *)
-	(* doing this to make sure we are adding the correct value for Jast to the drawing with includes all variables *)
+		(* Adds correct type for JAST since types have been checked in semantic *)
 		let get_val_and_type = match eval_expr
 			with Jast.JNumbert(eval_expr) -> Jast.JNumbert(eval_expr)
 			| Jast.JBooleant(eval_expr) -> Jast.JBooleant(eval_expr)
@@ -597,7 +585,7 @@ and proc_stmt (env:environment):(Sast.sstmt -> environment) = function
 	| _ -> raise (Error("unsupported statement found")) 
 
 
-(*Simply add function declaration to our environment *)
+(*Add function declaration to our environment *)
 let proc_func (env: environment):(Sast.sfuncdecl -> environment) = function
 	my_func ->
 
@@ -608,8 +596,7 @@ let proc_func (env: environment):(Sast.sfuncdecl -> environment) = function
 		new_env
 
 
-(* Parse each statement and keep track of environment*)
-(* returns Jast.jStmt list * env *)
+(*Processes list of functions and keeps track of environment by recursively processing individual functions*)
 let rec separate_functions_s (funcs, env: Sast.sfuncdecl list * environment) = match funcs
 	with [] -> env
 	| [func] -> proc_func env func
@@ -618,38 +605,30 @@ let rec separate_functions_s (funcs, env: Sast.sfuncdecl list * environment) = m
 		separate_functions_s (other_funcs, new_env)
 
 
-
-(* TODO: Can change so gen_java doesn't return javaprogram, can just return javaclass list *)
+(*Given the entire SAST program, creates the resulting environment by processing the entire program*)
 let gen_java (env:environment):(Sast.sprogram -> environment)= function 
 	Sast.SProg(s,f)-> 
 		(* Check if the program has at least one statement *)
 		let x = List.length s in
 		if (x>0) then (
-			(*Check order of statements *)
-			let update_list = []  in 
 			(* Already reversed the statements in semantic when going from ast to jast, so don't need to reverse again *)
 			let updated_env = separate_functions_s (f, env) in 
 			let updated_env = separate_statements_s (s, updated_env) in  (* List.map( fun stmt_part -> separate_statements_s prog_stmts env ) in *)
-			let l = List.length updated_env.functions in
 			updated_env
 		)	
 
 		else 
-			raise (Error("Input has no arguments"))
+			raise (Error("A valid Mandala program must consist of at least one statement."))
 
 (*Process a layer and load them all into the shapes structure in environment *)
 let extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer * float -> Jast.jShape list) = function
 	(my_layer, big_radius) -> 
 
 		let listed_shape = my_layer.shape in
-		let multiple_mandala_offset = 
-			if (big_radius > 0.0) 
-			then 
-				big_radius +. listed_shape.size +. 200.0
-			else
-				big_radius
-			in
+
 		let count = my_layer.count in
+
+		(*Goes through the layer and calculates position and size for all squares*)
 		if (count >= 1 && listed_shape.geo = "square")
 		then 
 			let rec loop = function
@@ -676,6 +655,7 @@ let extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer * float ->
 			in 
 			loop(new_list, count - 1)
 
+	    (*Goes through the layer and calculates position and size for all circles*)
 		else if (count >= 1 && listed_shape.geo = "circle")
 		then 
 			let rec loop = function
@@ -694,6 +674,7 @@ let extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer * float ->
 			in 
 			loop(new_list, count - 1)
 
+		(*Goes through the layer and calculates position and size for all triangles*)
 		else if (count >= 1 && listed_shape.geo = "triangle")
 		then 
 			let rec loop = function
@@ -722,12 +703,11 @@ let extract_shapes_from_layer (new_list:Jast.jShape list):(Jast.layer * float ->
 
 	else 
 
-	raise (Error ("Only circles, squares, and triangles supported."))
+	raise (Error ("Only circles, squares, and triangles supported. Must have count at least 1."))
 
 (*Pulls out all layers and deals with max radius given a mandala*)
 let get_layers  = function 
 	mandala ->
-	let n = List.length mandala.list_of_layers in 
 	let radius = mandala.max_layer_radius in
 	let list_of_layers = mandala.list_of_layers in
 	let result = List.fold_left (fun a layer -> (layer, radius) :: a) [] list_of_layers in
@@ -737,15 +717,12 @@ let get_layers  = function
 let process_mandala = function
 	mandala ->
 	if (mandala.is_draw = true) then
-	(*raise (Error("Some truth exists!"));*)
 	let layers_with_radii = get_layers mandala in
-		let num_layers = List.length layers_with_radii in
 		List.fold_left extract_shapes_from_layer [] layers_with_radii
 	else
 		[]
 
 (* Create empty initial environment *)
-(* The environment keeps track of the drawing we are creating *)
 let empty_drawing_env=
 {
 	mandala_list = [];
@@ -762,25 +739,21 @@ let empty_environment = {
 let rec process_mandalas (mandalas, shapes, total:Jast.mandala list * Jast.jShape list * float) = match mandalas 
 	with [] -> shapes
 	| [mandala] -> 
-		let x = mandala.max_layer_radius in 
 		let new_mandala = {
 			name = mandala.name;
 			list_of_layers = mandala.list_of_layers;
 			max_layer_radius = total;
 			is_draw = mandala.is_draw
 		} in
-		total = total +. x;
 		(shapes @ process_mandala new_mandala)
 	| mandala :: other_mandalas -> 
-		let x = mandala.max_layer_radius in 
 		let new_mandala = {
 			name = mandala.name;
 			list_of_layers = mandala.list_of_layers;
 			max_layer_radius = total;
 			is_draw = mandala.is_draw
 		} in
-		total = total +. x;
-		(let new_shapes = process_mandala mandala in
+		(let new_shapes = process_mandala new_mandala in
 		process_mandalas (other_mandalas, (shapes @ new_shapes),total))
 
 (*Final conversion from Sast program to Jast program which runs all statements and moves into final structure*)
