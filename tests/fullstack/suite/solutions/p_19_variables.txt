@@ -56,12 +56,6 @@ public static void drawTriangle(Turtle t, double size, double x, double y, doubl
     drawCircle(t,25.,100.,0.,"black");
     drawCircle(t,25.,70.7107250279,70.7106312094,"black");
     drawCircle(t,25.,0.000132679489668,99.9999999999,"black");
-try {
-  Thread.sleep(3000);
-} catch(InterruptedException ex) {
- Thread.currentThread().interrupt();
-}
-  t.save("Program.jpg");
   }
 
 }

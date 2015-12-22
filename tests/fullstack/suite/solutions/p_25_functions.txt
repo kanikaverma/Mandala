@@ -7,12 +7,6 @@ public class Program{
     t.speed(0);
     t.setPosition(0,0);
     t.dot();
-try {
-  Thread.sleep(3000);
-} catch(InterruptedException ex) {
- Thread.currentThread().interrupt();
-}
-  t.save("Program.jpg");
   }
 
 }

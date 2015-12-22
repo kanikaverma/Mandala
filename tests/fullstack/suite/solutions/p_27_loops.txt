@@ -149,12 +149,6 @@ public static void drawTriangle(Turtle t, double size, double x, double y, doubl
     drawCircle(t,2.,0.,0.,"red");
     drawCircle(t,1.,0.,0.,"red");
     drawCircle(t,0.,0.,0.,"red");
-try {
-  Thread.sleep(3000);
-} catch(InterruptedException ex) {
- Thread.currentThread().interrupt();
-}
-  t.save("Program.jpg");
   }
 
 }
