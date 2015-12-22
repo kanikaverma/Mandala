@@ -7,16 +7,15 @@ let digit = ['0'-'9']
 let alpha = ['a'-'z' 'A'-'Z' '_']
 let number = '-'? digit+ '.' digit* | '-'? digit* '.' digit+
 
-
 rule token = parse
 
 (* white space *)
 | [' ' '\t' '\r' '\n']                { token lexbuf }
 
 (* literals and variables *)
-| '-'? digit+ as lit                       { LITERAL(int_of_string lit) }
-| number as lit                		    { FLOAT_LITERAL(float_of_string lit) }
-| ['a'-'z']+ (alpha | digit)* as lxm        { ID(lxm) }
+| '-'? digit+ as lit                  { LITERAL(int_of_string lit) }
+| number as lit                       { FLOAT_LITERAL(float_of_string lit) }
+| ['a'-'z']+ (alpha | digit)* as lxm  { ID(lxm) }
 
 (* comments *)
 | "/#"         { comment lexbuf }
@@ -24,7 +23,6 @@ rule token = parse
 (* arithmetic operators *)
 | '+'          { PLUS }     | '*'     { TIMES }
 | '-'          { MINUS }    | '/'     { DIVIDE }
-(*| '%'          { MODULUS }  | '^'     { EXP } *)
 
 (* conditional operators *)
 | "=="         { EQ }       | "!="    { NEQ }
@@ -35,18 +33,17 @@ rule token = parse
 | '='          { ASSIGN }   | ':'     { COLON }  
 
 (* loop words *)
-| "To" { TO }			| "Foreach"    { FOREACH }  
+| "To"         { TO }       | "Foreach" { FOREACH }  
 
 (* punctuation and delimiters *)
-| '('          { LPAREN }     | ')'       { RPAREN }
-| '['          { LBRACKET }   | ']'       { RBRACKET }
-| '{'          { LBRACE }     | '}'       { RBRACE }
-| ','          { COMMA }      (*| '.'       { PERIOD }*)
-| ';' 		   { SEMI }
+| '('          { LPAREN }   | ')'       { RPAREN }
+| '['          { LBRACKET } | ']'       { RBRACKET }
+| '{'          { LBRACE }   | '}'       { RBRACE }
+| ','          { COMMA }      
+| ';'          { SEMI }
 
 (* built-in functions and constructors *)
 | "Def"        { DEF }      | "Return"  { RETURN }
-(*| "draw"       { DRAW }     | "addTo"   { ADDTO }*)    
 | "Create"     { CREATE }
 
 (* language specific keywords *)
@@ -56,8 +53,7 @@ rule token = parse
 | "AngularShift" { ANGULARSHIFT }
 
 (* types *)
-| "Number"     { NUMBER }   (*| "String"     { STRING }*)
-| "Boolean"    { BOOLEAN }  | "Void"       { VOID }
+| "Number"     { NUMBER }   | "Void"       { VOID }
 | "Shape"      { SHAPE }    | "Geo"        { GEO }
 | "Layer"      { LAYER }    | "Mandala"    { MANDALA }  
 

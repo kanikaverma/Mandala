@@ -88,6 +88,7 @@ def process(input_file):
 
   return output 
 
+# remove semicolons from custom type creation 
 def remove_semis(text_io):
   text = text_io.getvalue()
   in_braces = False 
@@ -110,37 +111,10 @@ def remove_semis(text_io):
  
   return output_text
 
+# fixes semicolons in functions and loops 
 def handle_funcs_and_loops(text_io):
   text = text_io.getvalue()
-  # in_func = False 
-  # in_loop = False 
   output_text = ""
-
-  # for line in text.splitlines():
-  #   if 'Def' in line:
-  #     in_func = True 
-  #   if in_func:
-  #     if '}' in line:
-  #       in_func = False 
-  #   if in_func and line[-1] != '{':
-  #     output_text += line + ';'
-  #     output_text += "\n"
-  #   else:
-  #     output_text += line
-  #     output_text += "\n"
-
-  # for line in text.splitlines():
-  #   if 'Foreach' in line:
-  #     in_loop = True 
-  #   if in_loop and not in_func:
-  #     if '}' in line:
-  #       in_loop = False
-  #   if in_loop and line[-1] != '{':
-  #     output_text += line + ';'
-  #     output_text += "\n"
-  #   else:
-  #     output_text += line
-  #     output_text += "\n"
 
   for line in text.splitlines():
     if line[-1] == '{' or ';' in line:
