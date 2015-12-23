@@ -1,6 +1,9 @@
 open Sast
 
-type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq
+(* Operators for jast *)
+type op = Add | Sub | Mult | Div 
+
+(* Mandala specific types for java ast *)
 type jmndlt =
 	| Numbert
 	| Booleant
@@ -18,6 +21,7 @@ type jPrimative =
 type jValue =
 	JValue of jPrimative
 
+(* Create shape to store attributes of shape *)
 type shape = {
 	name: string;
 	geo : string;
@@ -25,7 +29,7 @@ type shape = {
 	color: string;
 	rotation: float
 }
-
+(* Create layer to define shape drawn in layer *)
 and layer = {
 	name: string;
 	radius : float;
@@ -35,10 +39,11 @@ and layer = {
 	angularshift : int
 }
 
+(* Create mandala to store list of layers *)
 and mandala={
 	name: string;
 	list_of_layers : layer list;
-	max_layer_radius : float; (* define the max layer radius as the maximum of the sum of the the layer radius + shape radius *)
+	max_layer_radius : float;
 	is_draw: bool
 }
 
@@ -53,63 +58,29 @@ and jdata_type =
 	| JMandalat of mandala
 	| JArrayt
 	| JColort of string
+
+(* Defines orientation of the shapes *)	
 type jShape = 
-	(*size, x, y, color*)
 	Circle of float * float * float * string
-		(*size, x, y, rotation, color*)
 	| Square of float * float * float * float * string
-		(*size, x, y, rotation, color*)
 	| Triangle of float * float * float * float * string
 
+(* drawing stores information about figures we will draw *)
 type drawing={
-	mandala_list : (string * mandala) list;
-	variables: (string * jdata_type) list;
-	java_shapes_list: jShape list;
+	mandala_list : (string * mandala) list; 	(* figures to be drawn *)
+	variables: (string * jdata_type) list; 		(* store variables and type *)
+	java_shapes_list: jShape list; 				(* store shapes coordinates *)
 }
 
 type java_shapes = {
 	shape_list : shape list
 }
-
+(* Our environment stores a drawing *)
 type symbol_table = {
 	draw_stmts : drawing	
 }
 
-(* type jFuncID = 
-	JFunc of jdata_type * string
-type jexpr =
-	JLiteral of int
-	| JFloat_Literal of float
-	| JId of string
-	| JBinop of jexpr * op * jexpr
-	| JCall of string * jexpr list
-	| JLayer of string * layer
-	| JMandala of string * mandala 
-and jIF = 
-	JavaIF of jexpr * javaBlock
-and jStmt =
-	JStmt of jexpr
-and javaBlock =
-	JavaBlock of jStmt list
-and javaFuncCall =
-	JFuncCall of jdata_type * string *)
-
-(* type javaFunctionHeader =
-	JavaFunctionHeader of javaFunctionType *string *)
-(* type javaMethod =
-	JavaMain of javaBlock
-	| JavaDefaultConstructor of string * javaBlock
-	| JavaFunction of javaFuncCall * javaBlock *)
-	(* JavaFunction of Ast.functionHeader * javaBlock *)
-	(* type functionHeader = {
-returnType : platoFunctionType;
-functionName : string;
-parameters : parameter list;
-}) *)
-
-type javaClass = CreateClass of string
-	(*JavaClass of javaMethod (* string * string * javaMethod *)
-	 type javaClassName =*) 
+type javaClass = CreateClass of string 
 
 type javaprogram = 
 	JavaProgram of javaClass * jShape list

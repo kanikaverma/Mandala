@@ -39,7 +39,7 @@ let rec find_function (scope: function_table) name =
 
 let add_to_var_table (env, name, typ)  =
  	try
-		let (n, t) = List.find (fun(s,_)-> s=name) env.var_scope.variables in
+		let (n, v) = List.find (fun(s,_)-> s=name) env.var_scope.variables in
 		env 
 	with Not_found ->
 		let new_vars = (name, typ)::env.var_scope.variables in
