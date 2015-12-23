@@ -1,5 +1,6 @@
 open Ast
 
+(* Mandala specific data types *)
 type smndlt =
 	| Numbert
 	| Booleant
@@ -13,8 +14,8 @@ type smndlt =
 	| Voidt
 	| Loopt
 
-(* RENAME SDATA_TYPE to svalue because it is really the VALUES!!!!! *)
-type sdata_type =
+(* Stores the values and types *)
+type sdata_val =
 	SInt
 	| SLiteral
 	| SFloat
@@ -31,14 +32,11 @@ type sdata_type =
 type sexpr =
  	Literal of int
 	| Float_Literal of float
-	| Noexpr
 	| Id of string
 	| Binop of sexpr * op * sexpr
 	| Call of string * sexpr list
 
-(*Formal variable has type and name*)
 and svar_decl = {
-
 	skind : smndlt;
 	svname : string;
 }
@@ -51,20 +49,16 @@ and sfuncdecl = {
 }
 
 and sstmt =
-	| Block of sstmt list
 	| Assign of svar_decl * sexpr
 	| Expr of sexpr
 	| Return of sexpr
-	| IF of sexpr * sstmt * sstmt
 	| Foreach of sexpr * sexpr * sexpr * sstmt list
-	| While of sexpr * sstmt
-	| Shape of svar_decl * sdata_type * sexpr * sdata_type * sexpr
+	| Shape of svar_decl * sdata_val * sexpr * sdata_val * sexpr
 	| Mandala of svar_decl
 	| Layer of svar_decl * sexpr * sexpr * sexpr * sexpr * sexpr 
-	| FuncCall of sexpr
 
 type sfunc_decltype =
-	SFunc_Decl  of sfuncdecl * smndlt(** sdata_type*)
+	SFunc_Decl  of sfuncdecl * smndlt
 
 type sprogram =
-	SProg of sstmt list  * sfuncdecl list(* need to add back * sfunc_decl list *)
+	SProg of sstmt list  * sfuncdecl list

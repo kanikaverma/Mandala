@@ -24,11 +24,6 @@ rule token = parse
 | '+'          { PLUS }     | '*'     { TIMES }
 | '-'          { MINUS }    | '/'     { DIVIDE }
 
-(* conditional operators *)
-| "=="         { EQ }       | "!="    { NEQ }
-| "<"          { LT }       | ">"     { GT }
-| "<="         { LEQ }      | ">="    { GEQ }
-
 (* assignment *)
 | '='          { ASSIGN }   | ':'     { COLON }  
 
