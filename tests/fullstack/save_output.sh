@@ -48,7 +48,7 @@ cat "Program.java" > $"solutions/"$t_filename
 # CLEANING
 rm -f *.proc
 mv Turtle.java Turtle.java.keep
-#rm -f *.java
+rm -f *.java
 mv Turtle.java.keep Turtle.java
 rm -f *.class
 cd ..
