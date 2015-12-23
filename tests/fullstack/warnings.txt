@@ -1,9 +1,8 @@
-make: *** [scanner] Hangup: 1
-haracters 115-6201:
+File "semantic.ml", line 77, characters 115-3901:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Noexpr|Color _|Number _|Geo _)
-File "semantic.ml", line 232, characters 16-245:
+File "semantic.ml", line 185, characters 16-245:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Geot|Colort)
@@ -11,133 +10,104 @@ File "semantic.ml", line 43, characters 10-11:
 Warning 26: unused variable t.
 File "semantic.ml", line 43, characters 7-8:
 Warning 26: unused variable n.
-File "semantic.ml", line 89, characters 30-35:
+File "semantic.ml", line 89, characters 29-34:
 Warning 26: unused variable color.
-File "semantic.ml", line 321, characters 6-9:
+File "semantic.ml", line 260, characters 6-9:
 Warning 26: unused variable typ.
-File "semantic.ml", line 397, characters 5-6:
+File "semantic.ml", line 318, characters 5-6:
 Warning 11: this match case is unused.
-File "semantic.ml", line 401, characters 10-20:
+File "semantic.ml", line 322, characters 10-20:
 Warning 26: unused variable returntype.
-File "semantic.ml", line 406, characters 5-6:
-Warning 11: this match case is unused.
 File "jast.mli", line 30, characters 1-13:
 Warning 30: the label name is defined in both types shape and layer.
 File "jast.mli", line 39, characters 1-13:
 Warning 30: the label name is defined in both types shape and mandala.
-File "sast_to_jast.ml", line 44, characters 6-29:
+File "sast_to_jast.ml", line 53, characters 6-29:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (JInt _|JVoid|JBooleant _|JShapet _|JGeot _|JLayert _|JMandalat _|JArrayt|
 JColort _)
-File "sast_to_jast.ml", line 50, characters 6-40:
+File "sast_to_jast.ml", line 59, characters 6-40:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Noexpr|Id _|Binop (_, _, _)|Call (_, _))
-File "sast_to_jast.ml", line 51, characters 6-40:
+File "sast_to_jast.ml", line 60, characters 6-40:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Noexpr|Id _|Binop (_, _, _)|Call (_, _))
-File "sast_to_jast.ml", line 53, characters 15-215:
+File "sast_to_jast.ml", line 62, characters 15-215:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 Equal
-File "sast_to_jast.ml", line 40, characters 73-769:
+File "sast_to_jast.ml", line 49, characters 73-769:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Noexpr|Call (_, _))
-File "sast_to_jast.ml", line 102, characters 5-351:
+File "sast_to_jast.ml", line 103, characters 5-351:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 _::_::_
-File "sast_to_jast.ml", line 127, characters 29-111:
+File "sast_to_jast.ml", line 128, characters 29-111:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Noexpr|Binop (_, _, _)|Call (_, _))
-File "sast_to_jast.ml", line 129, characters 43-125:
+File "sast_to_jast.ml", line 130, characters 43-125:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Noexpr|Binop (_, _, _)|Call (_, _))
-File "sast_to_jast.ml", line 159, characters 8-31:
+File "sast_to_jast.ml", line 161, characters 8-31:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (JInt _|JVoid|JBooleant _|JShapet _|JGeot _|JLayert _|JMandalat _|JArrayt|
 JColort _)
-File "sast_to_jast.ml", line 168, characters 8-31:
+File "sast_to_jast.ml", line 170, characters 8-31:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (JInt _|JVoid|JBooleant _|JShapet _|JGeot _|JLayert _|JMandalat _|JArrayt|
 JColort _)
-File "sast_to_jast.ml", line 174, characters 15-225:
+File "sast_to_jast.ml", line 176, characters 15-225:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 Equal
-File "sast_to_jast.ml", line 422, characters 6-22:
+File "sast_to_jast.ml", line 421, characters 6-22:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (SInt|SLiteral|SFloat|SVoid|SNumber _|SBoolean _|SShape|SLayer|SMandala|
 SArray|SColor _)
-File "sast_to_jast.ml", line 427, characters 7-30:
+File "sast_to_jast.ml", line 426, characters 7-30:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (JInt _|JVoid|JBooleant _|JShapet _|JGeot _|JLayert _|JMandalat _|JArrayt|
 JColort _)
-File "sast_to_jast.ml", line 424, characters 20-206:
+File "sast_to_jast.ml", line 423, characters 20-206:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Noexpr|Binop (_, _, _)|Call (_, _))
-File "sast_to_jast.ml", line 430, characters 6-26:
+File "sast_to_jast.ml", line 428, characters 6-26:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (SInt|SLiteral|SFloat|SVoid|SNumber _|SBoolean _|SShape|SGeo _|SLayer|
 SMandala|SArray)
-File "sast_to_jast.ml", line 437, characters 7-30:
+File "sast_to_jast.ml", line 433, characters 7-30:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (JInt _|JVoid|JBooleant _|JShapet _|JGeot _|JLayert _|JMandalat _|JArrayt|
 JColort _)
-File "sast_to_jast.ml", line 434, characters 24-222:
+File "sast_to_jast.ml", line 430, characters 24-222:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Noexpr|Binop (_, _, _)|Call (_, _))
-File "sast_to_jast.ml", line 470, characters 6-16:
+File "sast_to_jast.ml", line 460, characters 6-16:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Float_Literal _|Noexpr|Binop (_, _, _)|Call (_, _))
-make: *** [sast_to_jast] Hangup: 1
-haracters 6-33:
+File "sast_to_jast.ml", line 482, characters 6-33:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Noexpr|Id _|Binop (_, _, _)|Call (_, _))
-File "sast_to_jast.ml", line 493, characters 6-31:
+File "sast_to_jast.ml", line 483, characters 6-31:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a value that is not matched:
 (Literal _|Noexpr|Id _|Binop (_, _, _)|Call (_, _))
-File "sast_to_jast.ml", line 772, characters 2-20:
+File "gen_java.ml", line 150, characters 4-32:
 Warning 10: this expression should have type unit.
-File "sast_to_jast.ml", line 782, characters 2-20:
-Warning 10: this expression should have type unit.
-File "sast_to_jast.ml", line 222, characters 7-8:
-Warning 26: unused variable l.
-File "sast_to_jast.ml", line 305, characters 10-11:
-Warning 26: unused variable l.
-File "sast_to_jast.ml", line 463, characters 6-16:
-Warning 26: unused variable layer_size.
-File "sast_to_jast.ml", line 559, characters 6-13:
-Warning 26: unused variable new_var.
-File "sast_to_jast.ml", line 629, characters 7-18:
-Warning 26: unused variable update_list.
-File "sast_to_jast.ml", line 633, characters 7-8:
-Warning 26: unused variable l.
-File "sast_to_jast.ml", line 645, characters 6-29:
-Warning 26: unused variable multiple_mandala_offset.
-File "sast_to_jast.ml", line 730, characters 5-6:
-Warning 26: unused variable n.
-File "sast_to_jast.ml", line 742, characters 6-16:
-Warning 26: unused variable num_layers.
-File "sast_to_jast.ml", line 776, characters 6-17:
-Warning 26: unused variable new_mandala.
-File "gen_java.ml", line 151, characters 4-32:
-Warning 10: this expression should have type unit.
-File "gen_java.ml", line 72, characters 4-5:
-Warning 11: this match case is unused.
