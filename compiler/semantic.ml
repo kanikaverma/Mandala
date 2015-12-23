@@ -3,7 +3,7 @@ open Sast
 
 exception Error of string
 
-(*Storing all variables, including parent for scoping*)
+(*Storing all variables, including parent for coping*)
 type symbol_table={
 	parent : symbol_table option;
 	variables: (string * smndlt) list 
@@ -23,21 +23,20 @@ type translation_environment ={
 (*List of java built-in colors, for use for color in shape*)
 let list_of_colors = ["black"; "red"; "blue"; "cyan"; "darkGray"; "gray"; "green"; "lightGray"; "orange"; "pink"; "white"; "yellow"]
 
-(* Returns the name, type and value *)
+(* returns the name, type and value *)
 let find_variable (scope: symbol_table) name=
 	try
 		List.find (fun (s,_) -> s=name) scope.variables
  
 	with Not_found -> raise (Error ("Unable to find variable in lookup table "^name))
 
-(*Returns function with all parameters*)
 let rec find_function (scope: function_table) name =
 	try
 		List.find (fun (s, _, _, _) -> s=name) scope.functions
 	with Not_found ->
 		raise (Error("Function not found in function table! "^name))
 
-(*Adds a variable to variable table*)
+
 let add_to_var_table (env, name, typ)  =
  	try
 		let (n, t) = List.find (fun(s,_)-> s=name) env.var_scope.variables in
@@ -50,7 +49,6 @@ let add_to_var_table (env, name, typ)  =
 		new_env
 
 
- (*Adds a function to the table*)
  let add_to_func_table env sfunc_decl =
 	let func_table = env.fun_scope in 
 	let old_functions = func_table.functions in 
@@ -86,7 +84,7 @@ let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * sm
 		
 
 		else (*Checks for build in Id of color *)
-			let return_name = try let color = List.find (fun s -> s=vname) list_of_colors in
+			let return_thing = try let color = List.find (fun s -> s=vname) list_of_colors in
 				let color_typ = Sast.Colort in 
 				let name = vname in 
 				(Sast.Id(name), color_typ, env)
@@ -102,11 +100,11 @@ let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * sm
 			let (name, typ) =vdecl in 
 			(Sast.Id(name), typ, env) 
 
-		in return_name
+		in return_thing
 	
 		(* AST Call of string * expr list*)
 	| Ast.Float_Literal(num) ->
-		(Sast.Float_Literal(num), Sast.Numbert, env)
+		(Sast.Float_Literal(num), Sast.Numbert, (*Sast.SNumber(num),*) env)
 	| Ast.Literal(num) ->
 		(Sast.Literal(num), Sast.Integert, env)
 	| Ast.Binop(term1, operator, term2) ->
@@ -122,7 +120,7 @@ let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * sm
 			(Sast.Binop(eval_term1, operator, eval_term2), typ1, env)
 
 		
-	(*Process function call*)
+
 	| Ast.Call(fid, args) ->
 
 		if not (  ((List.length args) > 0) ) then ( 
@@ -138,9 +136,9 @@ let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * sm
 
 		
 		let actual_types = List.map (fun expr -> semantic_expr env expr) args in
+		(*let actual_type_names = List.iter extract_type actual_types*)
 		let actual_len = List.length args in
-		 (*get list of just types from list of (type, string) tuples, [] is an accumulator*)
-		let actual_types_list = List.fold_left (fun a (_,typ, ret_env) -> typ :: a) [] actual_types in    
+		let actual_types_list = List.fold_left (fun a (_,typ, ret_env) -> typ :: a) [] actual_types in     (*get list of just types from list of (type, string) tuples, [] is an accumulator*)
 		let actual_expr_list = List.fold_left (fun a (expr,_, ret_env) -> expr :: a) [] actual_types in
 		let len = List.length actual_expr_list in
 		if (fid = "draw")
@@ -181,7 +179,6 @@ let rec semantic_expr (env:translation_environment):(Ast.expr -> Sast.sexpr * sm
 	
 	| _ -> raise (Error("invalid expression, was not able to match expression")) 
 
-(*Convert matching types*)
 let proc_type = function
   	 Ast.Booleant -> Sast.Booleant
   	| Ast.Shapet -> Sast.Shapet
@@ -191,7 +188,6 @@ let proc_type = function
 	| Ast.Numbert -> Sast.Numbert
 	| Ast.Voidt -> Sast.Voidt
 
-(*Process a variable declaration*)
 let proc_var_decl = function 
 	(var_decl, env) -> 
 		let k = var_decl.kind in
@@ -213,7 +209,6 @@ let proc_var_decl = function
 		let new_env = add_to_var_table (env, new_svar_decl.svname, new_svar_decl.skind) in 
 	(new_svar_decl, new_env)
 
-(*Check all formal arguments of a function*)
 let rec proc_formals (var_decl_list, env, update_var_decl_list: Ast.var_decl list * translation_environment * Sast.svar_decl list) = match var_decl_list
 	with [] -> (update_var_decl_list, env)
 	| [var_decl] -> let (new_var_decl, new_env) = proc_var_decl(var_decl, env) in (update_var_decl_list@[new_var_decl], new_env)
@@ -229,7 +224,6 @@ let empty_environment =
 	fun_scope = fun_empty_table_init;
 }
 
-(*Check individual statement*)
 let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * smndlt * translation_environment) = function
 	Ast.Mandala(mandala_arg) ->
 
@@ -323,6 +317,7 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sm
 		let newExpr = semantic_expr env x in
 		let (x, typ, ret_env)= newExpr in 
 		let result = match typ with 
+			returntype -> (Sast.Return(x), typ, env)
 			| _ -> raise (Error("User defined function is returning something of the wrong type"))
 				
 		in result 
@@ -341,7 +336,7 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sm
 
 	| _ -> raise (Error("Unable to match statement"))
 	
-	(*Check a list of statements by recursively going through each one*)
+	
 	and separate_statements (stmts, env, update_list:Ast.stmt list * translation_environment * Sast.sstmt list) = match stmts 
 		with [] -> (update_list, env)
 		| [stmt] -> let (new_stmt, typ, new_env) = semantic_stmt env stmt in (update_list@[new_stmt], new_env)
@@ -351,7 +346,6 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sm
 			separate_statements (other_stmts, new_env, update_list@[new_stmt])
 			
 
-	(*Process individual function*)
 	let rec semantic_func (env: translation_environment): (Ast.func_decl -> Sast.sfuncdecl * translation_environment) = function
 		my_func ->
 		let fname = my_func.fname in
@@ -372,6 +366,8 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sm
 		(*walks through body of function, checking types etc.*)
 		let (new_stmts, func_env) = separate_statements(body, func_env, empty_list) in
 		(*check that function returned the right thing-- get the return stmt from stmt list, check its typ against returntyp*)
+		(*let rettyp = findReturnStmt new_stmts in *)
+		(*CHECK IF rettyp is same as new_returntype*)
 
 		let sfuncdecl = {
 			sfname = fname;
@@ -384,7 +380,7 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sm
 
 		(sfuncdecl, env)
 
-    (*Process list of functions*)
+
 	let rec separate_functions (functions, env, update_list: Ast.func_decl list * translation_environment * Sast.sfuncdecl list) = match functions 
 		with [] -> (update_list, env)
 		| [func] -> 
@@ -395,7 +391,7 @@ let rec semantic_stmt (env:translation_environment):(Ast.stmt -> Sast.sstmt * sm
 			
 			separate_functions (other_funcs, new_env, update_list@[new_func])
 
-	(*Process entire AST program and convert to SAST program*)	
+		
 	let rec semantic_check (check_program: Ast.program): (Sast.sprogram) =  
 		let (prog_stmts, prog_funcs) = check_program in 
 		let env = empty_environment in 

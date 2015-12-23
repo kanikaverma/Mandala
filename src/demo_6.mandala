@@ -1,0 +1,35 @@
+Mandala m = Create Mandala
+
+Foreach i=1.0 To 10.0:
+  Number y = i * 36.0
+  Number z = i * 10.0
+  Number q = i * 3.0 + 140.0
+
+  Shape s = Create Shape:
+    Geo circle
+    Size 40.0
+    Color blue
+    Rotation 0.0
+
+  Layer l = Create Layer:
+    Radius q
+    Shape s
+    Count 8
+    Offset y
+    AngularShift 1
+
+  Shape s2 = Create Shape:
+    Geo square
+    Size 30.0
+    Color cyan
+    Rotation 45.0
+
+  Layer l2 = Create Layer:
+    Radius z
+    Shape s2
+    Count 4
+    Offset 0.0 
+    AngularShift 1 
+
+  addTo: (m, l, l2)
+  draw: (m) 
